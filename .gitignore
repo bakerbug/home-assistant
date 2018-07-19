@@ -1,0 +1,7 @@
+*
+!*.yaml
+!scenes
+!.gitignore
+!/python_scripts/*.py
+secrets.yaml
+known_devices.yaml
