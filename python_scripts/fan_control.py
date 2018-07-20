@@ -2,10 +2,10 @@
 Adjust the ceiling fan speed based on the temperature difference between the upstairs and downstairs thermostats.
 """
 
-UPSTAIRS_TEMP_QUERY = 'sensor.upstairs_thermostat_temperature'
-DOWNSTAIRS_TEMP = 'sensor.downstairs_thermostat_temperature'
-OCCUPANCY = 'binary_sensor.bayberry_away'
-FAN_ID = 'THIS NAME NEEDS TO BE DISCOVERED ONCE SWITCH IS INSTALLED'
+entity_UPSTAIRS_THERMOSTAT = 'sensor.upstairs_thermostat_temperature'
+entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
+entity_OCCUPANCY = 'binary_sensor.bayberry_away'
+entity_FAN = 'THIS NAME NEEDS TO BE DISCOVERED ONCE SWITCH IS INSTALLED'
 FAN_LOW = 1
 FAN_MEDIUM = 2
 FAN_HIGH = 3
@@ -13,10 +13,10 @@ FAN_OFF = 0
 
 
 
-upstairs_temp = int(hass.states.get(UPSTAIRS_TEMP_QUERY).state)
-downstairs_temp = int(hass.states.get(DOWNSTAIRS_TEMP).state)
-away = hass.states.get(OCCUPANCY).state
-#fan_state = hass.states.get(FAN_ID)
+upstairs_temp = int(hass.states.get(entity_UPSTAIRS_THERMOSTAT).state)
+downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
+away = hass.states.get(entity_OCCUPANCY).state
+#fan_state = hass.states.get(entity_FAN)
 fan_state = 0
 
 
