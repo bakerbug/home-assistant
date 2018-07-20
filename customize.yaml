@@ -1,0 +1,8 @@
+sensor.sleepnumber_bill_bill_sleepnumber:
+    friendly_name: Bill's Sleep Number
+sensor.sleepnumber_bill_cricket_sleepnumber:
+    friendly_name: Cricket's Sleep Number
+binary_sensor.sleepnumber_bill_bill_is_in_bed:
+    friendly_name: Bill is in bed
+binary_sensor.sleepnumber_bill_cricket_is_in_bed:
+    friendly_name: Cricket is in bed

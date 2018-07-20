@@ -1,0 +1,45 @@
+- id: '1531149972632'
+  alias: Car Arrives Home
+  trigger:
+  - entity_id: cover.left_bay
+    from: closed
+    platform: state
+    to: open
+  - entity_id: cover.right_bay
+    from: closed
+    platform: state
+    to: open
+  condition:
+  - after: sunset
+    condition: sun
+  action:
+  - data:
+      entity_id: group.livingroom
+    service: switch.turn_on
+- id: '1531347206490'
+  alias: Auto Off Light
+  trigger:
+  - entity_id: switch.entry_lamp
+    for:
+      minutes: 2
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.entry_lamp
+    service: switch.turn_off
+- id: '1531918562375'
+  alias: Sunset Early Lights
+  trigger:
+  - event: sunset
+    offset: -01:00:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: switch.entry_lamp
+    service: switch.turn_on
+  - data:
+      entity_id: switch.sofa_lamp
+    service: switch.turn_on
