@@ -44,3 +44,23 @@
   - data:
       entity_id: switch.sofa_lamp
     service: switch.turn_on
+- id: '1532102191810'
+  alias: Lights out at Bedtime
+  trigger:
+  - entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
+    state: 'on'
+  - condition: state
+    entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
+    state: 'on'
+  action:
+  - data:
+      entity_id: group.living_area_lights
+    service: switch.turn_off
