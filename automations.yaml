@@ -14,7 +14,7 @@
     condition: sun
   action:
   - data:
-      entity_id: group.livingroom
+      entity_id: switch.sofa_lamp
     service: switch.turn_on
 - id: '1531347206490'
   alias: Auto Off Light
