@@ -18,6 +18,7 @@
     service: switch.turn_on
 - id: '1531347206490'
   alias: Auto Off Light
+  initial_state: 'off'
   trigger:
   - entity_id: switch.entry_lamp
     for:
