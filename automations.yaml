@@ -64,3 +64,22 @@
   - data:
       entity_id: group.living_area_lights
     service: switch.turn_off
+- id: '1532212236193'
+  alias: Late Night Light
+  trigger:
+  - entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
+    from: 'on'
+    platform: state
+    to: 'off'
+  - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: '22:00:00'
+    before: 06:00:00
+    condition: time
+  action:
+  - data:
+      entity_id: switch.sofa_lamp
+    service: switch.turn_on
