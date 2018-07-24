@@ -19,7 +19,7 @@ fan_state = 0
 
 
 delta = upstairs_temp - downstairs_temp
-logger.warning('Away state: {}  Upstairs: {} Downstairs: {}'.format(away, upstairs_temp, downstairs_temp))
+logger.warning('Upstairs: {} Downstairs: {}'.format(upstairs_temp, downstairs_temp))
 
 if delta <= 1:
     fan_speed = FAN_OFF
