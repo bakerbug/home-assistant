@@ -18,8 +18,8 @@ downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
 fan_state = 0
 
 
-delta = upstairs_temp - downstairs_temp
-logger.warning('Upstairs: {} Downstairs: {}'.format(upstairs_temp, downstairs_temp))
+delta = abs(upstairs_temp - downstairs_temp)
+logger.warning('Upstairs: {} Downstairs: {} Delta: {}'.format(upstairs_temp, downstairs_temp, delta))
 
 if delta <= 1:
     fan_speed = FAN_OFF
