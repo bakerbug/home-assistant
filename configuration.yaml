@@ -125,3 +125,9 @@ notify:
     platform: slack
     api_key: !secret slack_api_key
     default_channel: '#home'
+
+# Tuya - Jinvoo - Smart Power Strips
+tuya:
+  username: !secret tuya_username
+  password: !secret tuya_password
+  country_code: 1

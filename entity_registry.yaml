@@ -53,3 +53,53 @@ media_player.firefox:
   name:
   platform: plex
   unique_id: e1a0tabka5rneoxnjnoyjcyv
+switch.03200121dc4f221ad1cf_1:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f221ad1cf_1
+switch.03200121dc4f221ad1cf_3:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f221ad1cf_3
+switch.03200121dc4f221ad1cf_4:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f221ad1cf_4
+switch.03200121dc4f221ad1cf_5:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f221ad1cf_5
+switch.03200121dc4f22239eeb_1:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f22239eeb_1
+switch.03200121dc4f22239eeb_2:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f22239eeb_2
+switch.03200121dc4f22239eeb_3:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f22239eeb_3
+switch.03200121dc4f221ad1cf_2:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f221ad1cf_2
+switch.03200121dc4f22239eeb_4:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f22239eeb_4
+switch.03200121dc4f22239eeb_5:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.03200121dc4f22239eeb_5
