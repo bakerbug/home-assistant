@@ -9,4 +9,4 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
 group.counter:
     hidden: true
 group.ceiling:
-    hidden:true
+    hidden: true
