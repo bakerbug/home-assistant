@@ -35,12 +35,12 @@ bed:
 counter:
     name: Kitchen Counter Lights
     entities:
-        - switch.D1
-        - switch.S4
+        - switch.03200121dc4f221ad1cf_1
+        - switch.03200121dc4f22239eeb_4
 ceiling:
     name: Kitchen Ceiling Lights
     entities:
-        - switch.D3
-        - switch.D4
-        - switch.S2
-        - switch.s3
+        - switch.03200121dc4f221ad1cf_3
+        - switch.03200121dc4f221ad1cf_4
+        - switch.03200121dc4f22239eeb_2
+        - switch.03200121dc4f22239eeb_3
