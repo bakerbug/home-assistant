@@ -27,8 +27,8 @@ http:
   # api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   base_url: https://bakerbug.duckdns.org:8123
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
+  ssl_certificate: /home/homeassistant/.homeassistant/fullchain.pem
+  ssl_key: /home/homeassistant/.homeassistant/privkey.pem
   api_password: !secret api_key
   cors_allowed_origins:
     - http://10.99.10.7:7080
@@ -120,4 +120,5 @@ weather:
 sleepiq:
   username: !secret sleepnumber_user
   password: !secret sleepnumber_password
+
 
