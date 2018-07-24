@@ -19,7 +19,9 @@ fan_state = 0
 
 
 delta = abs(upstairs_temp - downstairs_temp)
-logger.warning('Upstairs: {} Downstairs: {} Delta: {}'.format(upstairs_temp, downstairs_temp, delta))
+temp_msg = 'Upstairs: {} Downstairs: {} Delta: {}'.format(upstairs_temp, downstairs_temp, delta)
+logger.info(temp_msg)
+hass.services.call('notify', 'slack_assistant', {"message":  temp_msg})
 
 if delta <= 1:
     fan_speed = FAN_OFF
@@ -32,5 +34,7 @@ elif delta >= 4:
 
 if fan_state != fan_speed:
     # Set new fan rate.
-    logger.warning('HVAC delta of {} degrees.  Setting fan to {}'.format(delta, fan_speed))
+    fan_msg = 'HVAC delta of {} degrees.  Setting fan to {}'.format(delta, fan_speed)
+    logger.info(fan_msg)
+    hass.services.call('notify', 'slack_assistant', {"message": fan_msg})
 
