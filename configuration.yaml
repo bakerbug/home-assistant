@@ -119,4 +119,9 @@ sleepiq:
   username: !secret sleepnumber_user
   password: !secret sleepnumber_password
 
-
+# Slack
+notify:
+  - name: Slack_Assistant
+    platform: slack
+    api_key: !secret slack_api_key
+    default_channel: '#home'
