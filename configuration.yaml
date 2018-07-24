@@ -85,12 +85,6 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 
-panel_iframe:
-  configurator:
-    title: Configurator
-    icon: mdi:wrench
-    url: https://10.99.10.7:3218
-
 # Python script support
 python_script:
 
