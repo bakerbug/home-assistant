@@ -10,5 +10,5 @@ group.counter:
     hidden: true
 group.ceiling:
     hidden: true
-switch:
+group.switch:
     hidden: true
