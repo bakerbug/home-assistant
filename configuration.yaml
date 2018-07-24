@@ -33,6 +33,10 @@ http:
   cors_allowed_origins:
     - http://10.99.10.7:7080
 
+duckdns:
+  domain: bakerbug
+  access_token: !secret duckdns_token
+
 # Checks for available updates
 # Note: This component will send some information about your system to
 # the developers to assist with development of Home Assistant.
