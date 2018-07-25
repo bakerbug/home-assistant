@@ -59,6 +59,7 @@ history:
         entities:
             - weather.dark_sky
             - sun.sun
+            - sensor.moon
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity
@@ -104,7 +105,7 @@ sun:
 sensor:
   - platform: yr
     name: Weather
-    
+  - platform: moon
 
 # Text to speech
 tts:
