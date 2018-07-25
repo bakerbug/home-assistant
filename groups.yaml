@@ -13,6 +13,8 @@ kitchen:
     name: Kitchen Lights
     entities:
         - switch.sink_light
+        - group.counter
+        - group.ceiling
 livingroom:
     name: Living Room Lights
     entities:
@@ -30,3 +32,15 @@ bed:
         - sensor.sleepnumber_bill_cricket_sleepnumber
         - binary_sensor.sleepnumber_bill_bill_is_in_bed
         - binary_sensor.sleepnumber_bill_cricket_is_in_bed
+counter:
+    name: Kitchen Counter Lights
+    entities:
+        - switch.03200121dc4f221ad1cf_1
+        - switch.03200121dc4f22239eeb_4
+ceiling:
+    name: Kitchen Ceiling Lights
+    entities:
+        - switch.03200121dc4f221ad1cf_3
+        - switch.03200121dc4f221ad1cf_4
+        - switch.03200121dc4f22239eeb_2
+        - switch.03200121dc4f22239eeb_3
