@@ -1,3 +1,9 @@
+# MQTT
+mqtt:
+#  broker: 10.99.10.7
+#  discovery: true
+#  discovery_prefix: homeassistant
+
 homeassistant:
   # Name of the location where Home Assistant is running
   name: Home
