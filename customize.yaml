@@ -1,3 +1,14 @@
+# Nest Thermostats
+sensor.downstairs_thermostat_humidity:
+    friendly_name: Downstairs Humidity
+sensor.downstairs_thermostat_temperature:
+    friendly_name: Downstairs Temperature
+sensor.upstairs_thermostat_humidity:
+    friendly_name: Upstairs Humidity
+sensor.upstairs_thermostat_temperature:
+    friendly_name: Upstairs Temperature
+
+# Sleep Number
 sensor.sleepnumber_bill_bill_sleepnumber:
     friendly_name: Bill's Sleep Number
 sensor.sleepnumber_bill_cricket_sleepnumber:
@@ -8,8 +19,6 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
     friendly_name: Cricket is in bed
 
 # Hide items from home page.
-sun.sun:
-    hidden: true
 sensor.bayberry_eta:
     hidden: true
 
