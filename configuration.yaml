@@ -1,7 +1,12 @@
 # MQTT
 mqtt:
-#  broker: 10.99.10.7
-#  discovery: true
+  broker: localhost
+  port: 1883
+  client_id: home-assistant-7718
+  keepalive: 60
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
 #  discovery_prefix: homeassistant
 
 homeassistant:
