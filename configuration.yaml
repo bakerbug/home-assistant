@@ -65,6 +65,35 @@ conversation:
 
 # Enables support for tracking state changes over time
 history:
+    use_include_order: True
+    include:
+        entities:
+            - weather.dark_sky
+            - sun.sun
+            - sensor.moon
+            - sensor.upstairs_thermostat_temperature
+            - sensor.downstairs_thermostat_temperature
+            - sensor.upstairs_thermostat_humidity
+            - sensor.downstairs_thermostat_humidity
+            - sensor.upstairs_thermostat_hvac_state
+            - sensor.downstairs_thermostat_hvac_state
+            - binary_sensor.bayberry_away
+            - cover.left_bay
+            - cover.right_bay
+            - sensor.sleepnumber_bill_bill_sleepnumber
+            - sensor.sleepnumber_bill_cricket_sleepnumber
+            - binary_sensor.sleepnumber_bill_bill_is_in_bed
+            - binary_sensor.sleepnumber_bill_cricket_is_in_bed
+            - media_player.living_room
+            - media_player.bedroom_tv
+            - switch.bedroom_lamp
+            - switch.bills_lamp
+            - switch.crickets_lamp
+            - switch.entry_lamp
+            - switch.sofa_lamp
+            - switch.sink_light
+            - group.counter
+            - group.ceiling
     exclude:
         domains:
             - automation
@@ -87,7 +116,7 @@ sun:
 sensor:
   - platform: yr
     name: Weather
-    
+  - platform: moon
 
 # Text to speech
 tts:
