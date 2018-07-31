@@ -2,7 +2,7 @@
 mqtt:
   broker: localhost
   port: 1883
-  client_id: home-assistant-7718
+  client_id: ha-7718
   keepalive: 60
   username: !secret mqtt_username
   password: !secret mqtt_password
@@ -171,3 +171,13 @@ tuya:
   username: !secret tuya_username
   password: !secret tuya_password
   country_code: 1
+
+# Living Room Fan
+light:
+  - platform: mqtt
+    name: Ceiling Fan
+    state_topic: "ha-7718/Ceiling Fan/switch"
+    command_topic: "ha-7718/Ceiling Fan/switch"
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
