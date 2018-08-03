@@ -78,6 +78,7 @@ history:
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
             - fan.ceiling_fan
+            - sensor.fan_speed
             - binary_sensor.bayberry_away
             - cover.left_bay
             - cover.right_bay
@@ -113,11 +114,16 @@ map:
 # Track the sun
 sun:
 
-# Weather prediction
+# Custom Sensors
 sensor:
   - platform: yr
     name: Weather
   - platform: moon
+  - platform: template
+    sensors:
+      fan_speed:
+        friendly_name: "Ceiling Fan Speed"
+        value_template: "{{ states.fan.ceiling_fan.attributes.speed }}"
 
 # Text to speech
 tts:
