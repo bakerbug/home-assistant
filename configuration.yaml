@@ -1,3 +1,14 @@
+# MQTT
+mqtt:
+  broker: localhost
+  port: 1883
+  client_id: home-assistant-7718
+  keepalive: 60
+  #username: !secret mqtt_username
+  #password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: ha-7718
+
 homeassistant:
   # Name of the location where Home Assistant is running
   name: Home
@@ -66,6 +77,8 @@ history:
             - sensor.downstairs_thermostat_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
+            - fan.ceiling_fan
+            - sensor.fan_speed
             - binary_sensor.bayberry_away
             - cover.left_bay
             - cover.right_bay
@@ -101,11 +114,16 @@ map:
 # Track the sun
 sun:
 
-# Weather prediction
+# Custom Sensors
 sensor:
   - platform: yr
     name: Weather
   - platform: moon
+  - platform: template
+    sensors:
+      fan_speed:
+        friendly_name: "Ceiling Fan Speed"
+        value_template: "{{ states.fan.ceiling_fan.attributes.speed }}"
 
 # Text to speech
 tts:
@@ -160,3 +178,18 @@ tuya:
   username: !secret tuya_username
   password: !secret tuya_password
   country_code: 1
+
+# Living Room Fan
+fan:
+  - platform: mqtt
+    name: Ceiling Fan
+    state_topic: "ha-7718/Ceiling Fan/switch"
+    command_topic: "ha-7718/Ceiling Fan/switch"
+    payload_on: "on"
+    payload_off: "off"
+    speed_state_topic: "ha-7718/Ceiling Fan/level"
+    speed_command_topic: "ha-7718/Ceiling Fan/level"
+    payload_low_speed: 33
+    payload_medium_speed: 66
+    payload_high_speed: 100
+    retain: true
