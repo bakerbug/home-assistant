@@ -2,12 +2,12 @@
 mqtt:
   broker: localhost
   port: 1883
-  client_id: ha-7718
+  client_id: home-assistant-7718
   keepalive: 60
-  username: !secret mqtt_username
-  password: !secret mqtt_password
+  #username: !secret mqtt_username
+  #password: !secret mqtt_password
   discovery: true
-#  discovery_prefix: homeassistant
+  discovery_prefix: ha-7718
 
 homeassistant:
   # Name of the location where Home Assistant is running
@@ -77,6 +77,7 @@ history:
             - sensor.downstairs_thermostat_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
+            - fan.ceiling_fan
             - binary_sensor.bayberry_away
             - cover.left_bay
             - cover.right_bay
@@ -173,11 +174,16 @@ tuya:
   country_code: 1
 
 # Living Room Fan
-light:
+fan:
   - platform: mqtt
     name: Ceiling Fan
     state_topic: "ha-7718/Ceiling Fan/switch"
     command_topic: "ha-7718/Ceiling Fan/switch"
     payload_on: "on"
     payload_off: "off"
+    speed_state_topic: "ha-7718/Ceiling Fan/level"
+    speed_command_topic: "ha-7718/Ceiling Fan/level"
+    payload_low_speed: 33
+    payload_medium_speed: 66
+    payload_high_speed: 100
     retain: true
