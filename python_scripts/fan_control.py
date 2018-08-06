@@ -20,9 +20,9 @@ if fan_speed is None:
     fan_speed = FAN_OFF
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
+new_speed = 'init'
 
 if delta <= 1:
-    new_speed = FAN_OFF
     new_state = FAN_OFF
 elif delta == 2:
     new_speed = FAN_LOW
@@ -33,16 +33,19 @@ elif delta >= 4:
 
 if fan_state != new_state:
     # Toggle the fan.
-    hass.services.call('fan', 'toggle', { 'entity_id': entity_FAN})
+    hass.services.call('fan', 'toggle', {'entity_id': entity_FAN})
     state_change = True
 
-if fan_speed != new_speed:
+if fan_speed != new_speed and new_speed != 'init':
     # Adjust the speed.
-    hass.services.call('fan', 'set_speed', { 'entity_id': entity_FAN, 'speed': new_speed})
+    hass.services.call('fan', 'set_speed', {'entity_id': entity_FAN, 'speed': new_speed})
     state_change = True
 
 if state_change:
-    fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Setting fan to {}'.format(upstairs_temp, downstairs_temp, delta, new_speed)
+    if fan_state != new_state:
+        fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Switching fan {}.'.format(upstairs_temp, downstairs_temp, delta, new_state)
+    elif fan_speed != new_speed:
+        fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Adjusting fan from {} to {}.'.format(upstairs_temp, downstairs_temp, delta, fan_speed, new_speed)
     logger.info(fan_msg)
     hass.services.call('notify', 'slack_assistant', {"message": fan_msg})
 
