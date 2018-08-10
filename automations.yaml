@@ -100,3 +100,14 @@
   condition: []
   action:
   - service: python_script.fan_control
+- id: '1533871918741'
+  alias: Leave the House
+  trigger:
+  - entity_id: binary_sensor.bayberry_away
+    platform: state
+    to: 'On'
+  condition: []
+  action:
+  - data:
+      entity_id: automation.hvac_balancing
+    service: automation.turn_on
