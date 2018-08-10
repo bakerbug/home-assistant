@@ -1,10 +1,14 @@
 # Nest Thermostats
 sensor.downstairs_thermostat_humidity:
     friendly_name: Downstairs Humidity
+sensor.downstairs_thermostat_hvac_state:
+    friendly_name: Downstairs HVAC State
 sensor.downstairs_thermostat_temperature:
     friendly_name: Downstairs Temperature
 sensor.upstairs_thermostat_humidity:
     friendly_name: Upstairs Humidity
+sensor.upstairs_thermostat_hvac_state:
+    friendly_name: Upstairs HVAC State
 sensor.upstairs_thermostat_temperature:
     friendly_name: Upstairs Temperature
 
@@ -15,8 +19,31 @@ sensor.sleepnumber_bill_cricket_sleepnumber:
     friendly_name: Cricket's Sleep Number
 binary_sensor.sleepnumber_bill_bill_is_in_bed:
     friendly_name: Bill is in bed
+    icon: mdi:sleep
 binary_sensor.sleepnumber_bill_cricket_is_in_bed:
     friendly_name: Cricket is in bed
+    icon: mdi:sleep
+
+# Tuya outlets
+switch.0120099868c63aa67ad8_3:
+    friendly_name: Sky Lights
+switch.0120099868c63aa67ad8_4:
+    friendly_name: Shelf Lights
+switch.0120099868c63aa67ad8_5:
+    friendly_name: Home Assistant Power
+    icon: mdi:home-assistant
+
+# Wemo outlets
+switch.bedroom_lamp:
+    icon: mdi:lamp
+switch.bills_lamp:
+    icon: mdi:lamp
+switch.crickets_lamp:
+    icon: mdi:lamp
+switch.entry_lamp:
+    icon: mdi:lamp
+switch.sofa_lamp:
+    icon: mdi:lamp
 
 # Hide items from home page.
 sensor.bayberry_eta:
