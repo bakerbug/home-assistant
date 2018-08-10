@@ -1,8 +1,3 @@
-media_player.living_room:
-  config_entry_id:
-  name:
-  platform: roku
-  unique_id: 6325A8134765
 switch.crickets_lamp:
   config_entry_id:
   name:
@@ -39,12 +34,12 @@ media_player.bedroom_tv:
   platform: roku
   unique_id: YN00R4752748
 climate.downstairs:
-  config_entry_id: f87e3bdc09ac41c5b981f2d906217898
+  config_entry_id: 938574aeb4c14590a8d6f5982f0a7e8f
   name:
   platform: nest
   unique_id: j9GEYZATZxaNHVgmyVJZIBD9ltXpMEgG
 climate.upstairs:
-  config_entry_id: f87e3bdc09ac41c5b981f2d906217898
+  config_entry_id: 938574aeb4c14590a8d6f5982f0a7e8f
   name:
   platform: nest
   unique_id: ts1Jg1hEnIMWcM5b-eAiABD9ltXpMEgG
@@ -103,3 +98,33 @@ switch.03200121dc4f22239eeb_5:
   name:
   platform: tuya
   unique_id: tuya.03200121dc4f22239eeb_5
+media_player.living_room:
+  config_entry_id:
+  name:
+  platform: roku
+  unique_id: 6325A8134765
+switch.0120099868c63aa67ad8_1:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.0120099868c63aa67ad8_1
+switch.0120099868c63aa67ad8_4:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.0120099868c63aa67ad8_4
+switch.0120099868c63aa67ad8_5:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.0120099868c63aa67ad8_5
+switch.0120099868c63aa67ad8_3:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.0120099868c63aa67ad8_3
+switch.0120099868c63aa67ad8_2:
+  config_entry_id:
+  name:
+  platform: tuya
+  unique_id: tuya.0120099868c63aa67ad8_2

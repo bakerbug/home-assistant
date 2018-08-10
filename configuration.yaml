@@ -93,6 +93,8 @@ history:
             - switch.crickets_lamp
             - switch.entry_lamp
             - switch.sofa_lamp
+            - switch.0120099868c63aa67ad8_3
+            - switch.0120099868c63aa67ad8_4
             - switch.sink_light
             - group.counter
             - group.ceiling
@@ -124,6 +126,9 @@ sensor:
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
         value_template: "{{ states.fan.ceiling_fan.attributes.speed }}"
+      sun_elevation:
+        friendly_name: "Sun Elevation"
+        value_template: "{{ states.sun.sun.attributes.elevation }}"
 
 # Text to speech
 tts:
