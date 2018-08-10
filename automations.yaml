@@ -105,7 +105,7 @@
   trigger:
   - entity_id: binary_sensor.bayberry_away
     platform: state
-    to: 'On'
+    to: 'on'
   condition: []
   action:
   - data:
