@@ -1,21 +1,26 @@
-bedroom:
+all_indoor_lights:
+    name: All Indoor Lights
+    entities:
+    - group.living_area_lights
+    - group.bedroom_lights
+bedroom_lights:
     name: Bedroom Lights
     entities:
     - switch.bedroom_lamp
     - switch.bills_lamp
     - switch.crickets_lamp
-garage:
+garage_doors:
     name: Garage Doors
     entities:
         - cover.left_bay
         - cover.right_bay
-kitchen:
+kitchen_lights:
     name: Kitchen Lights
     entities:
         - switch.sink_light
-        - group.counter
-        - group.ceiling
-livingroom:
+        - group.counter_lights
+        - group.ceiling_lights
+livingroom_lights:
     name: Living Room Lights
     entities:
         - switch.entry_lamp
@@ -25,8 +30,8 @@ livingroom:
 living_area_lights:
     name: Living Area Lights
     entities:
-        - group.kitchen
-        - group.livingroom
+        - group.kitchen_lights
+        - group.livingroom_lights
 bed:
     name: Master Bed
     entities:
@@ -34,12 +39,12 @@ bed:
         - sensor.sleepnumber_bill_cricket_sleepnumber
         - binary_sensor.sleepnumber_bill_bill_is_in_bed
         - binary_sensor.sleepnumber_bill_cricket_is_in_bed
-counter:
+counter_lights:
     name: Kitchen Counter Lights
     entities:
         - switch.03200121dc4f221ad1cf_1
         - switch.03200121dc4f22239eeb_4
-ceiling:
+ceiling_lights:
     name: Kitchen Ceiling Lights
     entities:
         - switch.03200121dc4f221ad1cf_3

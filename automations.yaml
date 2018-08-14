@@ -72,9 +72,9 @@
     platform: state
     to: 'off'
   - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
-    from: 'off'
+    from: 'on'
     platform: state
-    to: 'on'
+    to: 'off'
   condition:
   - after: '22:00:00'
     before: 06:00:00
@@ -111,3 +111,6 @@
   - data:
       entity_id: automation.hvac_balancing
     service: automation.turn_on
+  - data:
+      entity_id: group.all_indoor_lights
+    service: switch.turn_off
