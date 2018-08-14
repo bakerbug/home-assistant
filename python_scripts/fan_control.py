@@ -45,7 +45,7 @@ elif delta >= 4:
 
 # Sun angle
 if weather in WEATHER_SUNNY:
-    if SUN_ELEV_LOW < sun_elevation < SUN_AZ_HIGH:
+    if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
         if sun_azimuth > SUN_AZ_HIGH:
             new_state = FAN_ON
             new_speed = FAN_HIGH
