@@ -6,14 +6,16 @@ entity_UPSTAIRS_THERMOSTAT = 'sensor.upstairs_thermostat_temperature'
 entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
 entity_FAN = 'fan.ceiling_fan'
 entity_SUN = 'sun.sun'
+entity_WEATHER = 'weather.dark_sky'
 FAN_LOW = 'low'
 FAN_MEDIUM = 'medium'
 FAN_HIGH = 'high'
 FAN_OFF = 'off'
 FAN_ON = 'on'
 SUN_ELEV_HIGH = 60
-SUN_ELEV_LOW = 20
+SUN_ELEV_LOW = 25
 SUN_AZ_HIGH = 180
+WEATHER_SUNNY = ['sunny', 'partly cloudy']
 
 state_change = False
 fan_state = hass.states.get(entity_FAN).state
@@ -22,11 +24,13 @@ upstairs_temp = int(hass.states.get(entity_UPSTAIRS_THERMOSTAT).state)
 downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
 sun_elevation = int(hass.states.get(entity_SUN).attributes["elevation"])
 sun_azimuth = int(hass.states.get(entity_SUN).attributes["azimuth"])
+weather = hass.states.get(entity_WEATHER).state
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
 new_speed = 'init'
 fan_msg = 'init'
 
+# Temperature differential
 if delta <= 1:
     new_state = FAN_OFF
 elif delta == 2:
@@ -39,11 +43,13 @@ elif delta >= 4:
     new_state = FAN_ON
     new_speed = FAN_HIGH
 
-if SUN_ELEV_LOW < sun_elevation < SUN_AZ_HIGH:
-    if sun_azimuth > SUN_AZ_HIGH:
-        new_state = FAN_ON
-        new_speed = FAN_HIGH
-        fan_msg = 'Setting fan to High based on sun position.'
+# Sun angle
+if weather in WEATHER_SUNNY:
+    if SUN_ELEV_LOW < sun_elevation < SUN_AZ_HIGH:
+        if sun_azimuth > SUN_AZ_HIGH:
+            new_state = FAN_ON
+            new_speed = FAN_HIGH
+            fan_msg = 'Setting fan to High based on sun position and {} weather.'.format(weather)
 
 if fan_state != new_state:
     # Toggle the fan.
