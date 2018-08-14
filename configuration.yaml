@@ -96,8 +96,8 @@ history:
             - switch.0120099868c63aa67ad8_3
             - switch.0120099868c63aa67ad8_4
             - switch.sink_light
-            - group.counter
-            - group.ceiling
+            - group.counter_lights
+            - group.ceiling_lights
     exclude:
         domains:
             - automation
