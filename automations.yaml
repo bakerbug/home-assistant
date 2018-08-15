@@ -72,9 +72,9 @@
     platform: state
     to: 'off'
   - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
-    from: 'off'
+    from: 'on'
     platform: state
-    to: 'on'
+    to: 'off'
   condition:
   - after: '22:00:00'
     before: 06:00:00
@@ -100,3 +100,17 @@
   condition: []
   action:
   - service: python_script.fan_control
+- id: '1533871918741'
+  alias: Leave the House
+  trigger:
+  - entity_id: binary_sensor.bayberry_away
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: automation.hvac_balancing
+    service: automation.turn_on
+  - data:
+      entity_id: group.all_indoor_lights
+    service: switch.turn_off
