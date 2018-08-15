@@ -15,7 +15,7 @@ FAN_ON = 'on'
 SUN_ELEV_HIGH = 60
 SUN_ELEV_LOW = 25
 SUN_AZ_HIGH = 180
-WEATHER_SUNNY = ['sunny', 'partly cloudy']
+WEATHER_SUNNY = ['sunny', 'partlycloudy']
 
 state_change = False
 fan_state = hass.states.get(entity_FAN).state
