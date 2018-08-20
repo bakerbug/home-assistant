@@ -31,7 +31,7 @@
       entity_id: switch.entry_lamp
     service: switch.turn_off
 - id: '1531918562375'
-  alias: Sunset Early Lights
+  alias: Lights on at Early Sunset
   trigger:
   - event: sunset
     offset: -01:00:00
@@ -43,6 +43,23 @@
     service: switch.turn_on
   - data:
       entity_id: switch.sofa_lamp
+    service: switch.turn_on
+- id: '8881234567890'
+  alias: Lights on at Sunset
+  trigger:
+  - event: sunset
+    offset: -00:30:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: group.ceiling_lights
+    service: switch.turn_on
+  - data:
+      entity_id: group.counter_lights
+    service: switch.turn_on
+  - data:
+      entity_id: switch.0120099868c63aa67ad8_3
     service: switch.turn_on
 - id: '1532102191810'
   alias: Lights out at Bedtime
@@ -111,6 +128,19 @@
   - data:
       entity_id: automation.hvac_balancing
     service: automation.turn_on
+  - data:
+      entity_id: group.all_indoor_lights
+    service: switch.turn_off
+- id: '1534730679270'
+  alias: Lights Out when Away
+  trigger:
+  - at: '23:15:00'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: binary_sensor.bayberry_away
+    state: 'on'
+  action:
   - data:
       entity_id: group.all_indoor_lights
     service: switch.turn_off
