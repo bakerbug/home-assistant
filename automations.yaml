@@ -101,7 +101,7 @@
       entity_id: switch.sofa_lamp
     service: switch.turn_on
   - data:
-      entity_id: group.counter
+      entity_id: group.counter_lights
     service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
