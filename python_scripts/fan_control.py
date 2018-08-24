@@ -69,7 +69,8 @@ if fan_speed != new_speed and new_speed != 'init':
 if new_speed == 'init':
     new_speed = fan_speed
 
-if state_change:
+# Messaging
+if state_change and DEBUG:
     if fan_msg == 'init':
         if fan_state != new_state:
             fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Switching fan {} at {}.'.format(upstairs_temp, downstairs_temp, delta, new_state, new_speed)
