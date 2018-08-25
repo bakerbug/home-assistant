@@ -6,3 +6,6 @@ sudo docker build -t smartthings-mqtt-bridge -f Dockerfile-rpi https://github.co
 
 # Start Docker for SmartThings MQTT Bridge
 sudo docker run -d --name="mqtt-bridge" -v /opt/mqtt-bridge:/config -p 8080:8080 smartthings-mqtt-bridge
+
+# Restart Docker after boot
+sudo docker restart mqtt-bridge
