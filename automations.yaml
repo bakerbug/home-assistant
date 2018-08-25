@@ -9,13 +9,11 @@
     from: closed
     platform: state
     to: open
-  condition:
-  - after: sunset
-    condition: sun
+  condition: []
   action:
-  - data:
-      entity_id: switch.sofa_lamp
-    service: switch.turn_on
+  - data_template:
+      entity: '{{ trigger.entity_id }}'
+    service: python_script.garage_door
 - id: '1531347206490'
   alias: Auto Off Light
   initial_state: 'off'
