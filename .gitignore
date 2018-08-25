@@ -1,7 +1,12 @@
-*
-!*.yaml
-!scenes
-!.gitignore
-!/python_scripts/*.py
 secrets.yaml
 known_devices.yaml
+*.conf
+*.db
+*.log
+*.pem
+.*
+
+.cloud/
+.idea/
+.storage/
+tts/

@@ -1,7 +1,7 @@
 """
 Adjust the ceiling fan speed based on the temperature difference between the upstairs and downstairs thermostats.
 """
-
+DEBUG = False
 entity_UPSTAIRS_THERMOSTAT = 'sensor.upstairs_thermostat_temperature'
 entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
 entity_FAN = 'fan.ceiling_fan'
@@ -12,8 +12,8 @@ FAN_MEDIUM = 'medium'
 FAN_HIGH = 'high'
 FAN_OFF = 'off'
 FAN_ON = 'on'
-SUN_ELEV_HIGH = 60
-SUN_ELEV_LOW = 25
+SUN_ELEV_HIGH = 60.00
+SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
 WEATHER_SUNNY = ['sunny', 'partlycloudy']
 
@@ -22,8 +22,8 @@ fan_state = hass.states.get(entity_FAN).state
 fan_speed = hass.states.get(entity_FAN).attributes["speed"] or FAN_OFF
 upstairs_temp = int(hass.states.get(entity_UPSTAIRS_THERMOSTAT).state)
 downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
-sun_elevation = int(hass.states.get(entity_SUN).attributes["elevation"])
-sun_azimuth = int(hass.states.get(entity_SUN).attributes["azimuth"])
+sun_elevation = float(hass.states.get(entity_SUN).attributes["elevation"])
+sun_azimuth = float(hass.states.get(entity_SUN).attributes["azimuth"])
 weather = hass.states.get(entity_WEATHER).state
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
@@ -42,6 +42,10 @@ elif delta == 3:
 elif delta >= 4:
     new_state = FAN_ON
     new_speed = FAN_HIGH
+
+if DEBUG:
+    debug_msg = 'Weather: {} Sun Elevation: {} Sun Azimuth: {}.'.format(weather, sun_elevation, sun_azimuth)
+    hass.services.call('notify', 'slack_assistant', {"message": debug_msg})
 
 # Sun angle
 if weather in WEATHER_SUNNY:
@@ -65,7 +69,8 @@ if fan_speed != new_speed and new_speed != 'init':
 if new_speed == 'init':
     new_speed = fan_speed
 
-if state_change:
+# Messaging
+if state_change and DEBUG:
     if fan_msg == 'init':
         if fan_state != new_state:
             fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Switching fan {} at {}.'.format(upstairs_temp, downstairs_temp, delta, new_state, new_speed)
