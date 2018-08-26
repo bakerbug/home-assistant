@@ -1,14 +1,18 @@
 - id: '1531149972632'
   alias: Car Arrives Home
   trigger:
-  - entity_id: cover.left_bay
-    from: closed
-    platform: state
-    to: open
-  - entity_id: cover.right_bay
-    from: closed
-    platform: state
-    to: open
+  - event_data:
+      entity_id: cover.left_bay
+    event_type: state_change
+    platform: event
+  - event_data:
+      entity_id: cover.right_bay
+    event_type: state_change
+    platform: event
+  - event_data:
+      entity_id: switch.bills_lamp
+    event_type: state_change
+    platform: event
   condition: []
   action:
   - data_template:
