@@ -23,12 +23,16 @@ homeassistant:
   time_zone: US/Central
   # Customization file
   customize: !include customize.yaml
+  auth_providers:
+   - type: homeassistant
+   # uncomment this to enable backwards compatible API password support
+   # - type: legacy_api_password
 
 # Show links to resources in log and frontend
 introduction:
 
 # Enables the frontend
-frontend:
+frontend: !include frontend.yaml
 
 # Enables configuration UI
 config:
