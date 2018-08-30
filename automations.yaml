@@ -2,20 +2,15 @@
   alias: Car Arrives Home
   trigger:
   - entity_id: cover.left_bay
-    from: closed
     platform: state
-    to: open
   - entity_id: cover.right_bay
-    from: closed
     platform: state
-    to: open
-  condition:
-  - after: sunset
-    condition: sun
+  condition: []
   action:
-  - data:
-      entity_id: switch.sofa_lamp
-    service: switch.turn_on
+  - data_template:
+      debug: Hello world!
+      entity: '{{ trigger.entity_id }}'
+    service: python_script.garage_door
 - id: '1531347206490'
   alias: Auto Off Light
   initial_state: 'off'
@@ -34,7 +29,7 @@
   alias: Lights on at Early Sunset
   trigger:
   - event: sunset
-    offset: -01:00:00
+    offset: -01:30:00
     platform: sun
   condition: []
   action:
@@ -44,19 +39,19 @@
   - data:
       entity_id: switch.sofa_lamp
     service: switch.turn_on
+  - data:
+      entity_id: group.counter_lights
+    service: switch.turn_on
 - id: '8881234567890'
   alias: Lights on at Sunset
   trigger:
   - event: sunset
-    offset: -00:30:00
+    offset: -00:45:00
     platform: sun
   condition: []
   action:
   - data:
       entity_id: group.ceiling_lights
-    service: switch.turn_on
-  - data:
-      entity_id: group.counter_lights
     service: switch.turn_on
   - data:
       entity_id: switch.0120099868c63aa67ad8_3
