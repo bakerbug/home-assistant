@@ -139,3 +139,11 @@
   - data:
       entity_id: group.all_indoor_lights
     service: switch.turn_off
+- id: '1535862789511'
+  alias: Away Monitor
+  trigger:
+  - entity_id: binary_sensor.bayberry_away
+    platform: state
+  condition: []
+  action:
+  - service: python_script.away_monitor
