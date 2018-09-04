@@ -33,13 +33,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.entry_lamp
-    service: switch.turn_on
-  - data:
-      entity_id: switch.sofa_lamp
-    service: switch.turn_on
-  - data:
-      entity_id: group.counter_lights
+      entity_id: group.evening_early_lights
     service: switch.turn_on
 - id: '8881234567890'
   alias: Lights on at Sunset
@@ -50,10 +44,7 @@
   condition: []
   action:
   - data:
-      entity_id: group.ceiling_lights
-    service: switch.turn_on
-  - data:
-      entity_id: switch.0120099868c63aa67ad8_3
+      entity_id: group.evening_lights
     service: switch.turn_on
 - id: '1532102191810'
   alias: Lights out at Bedtime
