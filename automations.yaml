@@ -8,7 +8,6 @@
   condition: []
   action:
   - data_template:
-      debug: Hello world!
       entity: '{{ trigger.entity_id }}'
     service: python_script.garage_door
 - id: '1531347206490'
