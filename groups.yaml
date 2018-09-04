@@ -3,6 +3,18 @@ all_indoor_lights:
     entities:
     - group.living_area_lights
     - group.bedroom_lights
+evening_early_lights:
+    name: Early Evening Lights
+    entities:
+        - switch.entry_lamp
+        - switch.sofa_lamp
+        - switch.0120099868c63aa67ad8_4
+        - group.counter_lights
+evening_lights:
+    name: Evening Lights
+    entities:
+        - group.ceiling_lights
+        - switch.0120099868c63aa67ad8_3
 bedroom_lights:
     name: Bedroom Lights
     entities:
