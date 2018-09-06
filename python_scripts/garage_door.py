@@ -23,11 +23,11 @@ else:
     garage_msg = '{} is {}.'.format(label, state)
 
 if sun_elevation < SUN_ELEV_HIGH and state == 'open':
-    if hour < 22:
+    if 7 < hour < 22:
         hass.services.call('switch', 'turn_on', {'entity_id': early_LIGHTS})
         hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
         garage_msg = '{} is {}.  Turning on all lights.'.format(label, state)
-    elif hour >= 22:
+    elif 7 >= hour >= 22:
         hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
         garage_msg = '{} is {}.  Turning on some lights.'.format(label, state)
 
