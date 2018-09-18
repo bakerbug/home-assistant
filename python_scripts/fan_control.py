@@ -16,6 +16,7 @@ SUN_ELEV_HIGH = 60.00
 SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
 WEATHER_SUNNY = ['sunny', 'partlycloudy']
+HIGH_OUTDOOR_TEMP = 80
 
 state_change = False
 fan_state = hass.states.get(entity_FAN).state
@@ -24,6 +25,7 @@ upstairs_temp = int(hass.states.get(entity_UPSTAIRS_THERMOSTAT).state)
 downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
 sun_elevation = float(hass.states.get(entity_SUN).attributes["elevation"])
 sun_azimuth = float(hass.states.get(entity_SUN).attributes["azimuth"])
+outdoor_temp = int(hass.states.get(entity_WEATHER).attributes["temperature"])
 weather = hass.states.get(entity_WEATHER).state
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
@@ -49,11 +51,12 @@ if DEBUG:
 
 # Sun angle
 if weather in WEATHER_SUNNY:
-    if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
-        if sun_azimuth > SUN_AZ_HIGH:
-            new_state = FAN_ON
-            new_speed = FAN_HIGH
-            fan_msg = 'Setting fan to High based on sun position and {} weather.'.format(weather)
+    if outdoor_temp > HIGH_OUTDOOR_TEMP:
+        if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
+            if sun_azimuth > SUN_AZ_HIGH:
+                new_state = FAN_ON
+                new_speed = FAN_HIGH
+                fan_msg = 'Setting fan to High based on sun position and {} weather.'.format(weather)
 
 if fan_state != new_state:
     # Toggle the fan.
