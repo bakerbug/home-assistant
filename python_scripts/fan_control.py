@@ -2,6 +2,7 @@
 Adjust the ceiling fan speed based on the temperature difference between the upstairs and downstairs thermostats.
 """
 DEBUG = False
+entity_AWAY = 'binary_sensor.bayberry_away'
 entity_UPSTAIRS_THERMOSTAT = 'sensor.upstairs_thermostat_temperature'
 entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
 entity_FAN = 'fan.ceiling_fan'
@@ -16,19 +17,27 @@ SUN_ELEV_HIGH = 60.00
 SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
 WEATHER_SUNNY = ['sunny', 'partlycloudy']
+HIGH_OUTDOOR_TEMP = 80
+LOW_INDOOR_TEMP = 71
 
 state_change = False
+away_state = hass.states.get(entity_AWAY).state
 fan_state = hass.states.get(entity_FAN).state
 fan_speed = hass.states.get(entity_FAN).attributes["speed"] or FAN_OFF
 upstairs_temp = int(hass.states.get(entity_UPSTAIRS_THERMOSTAT).state)
 downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
 sun_elevation = float(hass.states.get(entity_SUN).attributes["elevation"])
 sun_azimuth = float(hass.states.get(entity_SUN).attributes["azimuth"])
+outdoor_temp = int(hass.states.get(entity_WEATHER).attributes["temperature"])
 weather = hass.states.get(entity_WEATHER).state
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
 new_speed = 'init'
 fan_msg = 'init'
+
+if downstairs_temp <= LOW_INDOOR_TEMP and away_state == 'off':
+    # Don't automatically adjust fan if too cool
+    exit()
 
 # Temperature differential
 if delta <= 1:
@@ -49,11 +58,12 @@ if DEBUG:
 
 # Sun angle
 if weather in WEATHER_SUNNY:
-    if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
-        if sun_azimuth > SUN_AZ_HIGH:
-            new_state = FAN_ON
-            new_speed = FAN_HIGH
-            fan_msg = 'Setting fan to High based on sun position and {} weather.'.format(weather)
+    if outdoor_temp > HIGH_OUTDOOR_TEMP:
+        if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
+            if sun_azimuth > SUN_AZ_HIGH:
+                new_state = FAN_ON
+                new_speed = FAN_HIGH
+                fan_msg = 'Setting fan to High based on sun position and {} weather.'.format(weather)
 
 if fan_state != new_state:
     # Toggle the fan.

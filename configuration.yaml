@@ -110,6 +110,7 @@ history:
             - sensor.weather_symbol
             - group.bed
             - group.garage
+            - switch.fan_control
 
 # View all events in a logbook
 logbook:
@@ -122,6 +123,9 @@ sun:
 
 # Custom Sensors
 sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
   - platform: yr
     name: Weather
   - platform: moon
@@ -133,6 +137,22 @@ sensor:
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
+
+# Custom Switches
+switch:
+  - platform: template
+    switches:
+      fan_control:
+        friendly_name: "Fan Control"
+        value_template: "{{ is_state('automation.hvac_balancing', 'on') }}"
+        turn_on:
+          service: automation.turn_on
+          data:
+            entity_id: automation.hvac_balancing
+        turn_off:
+          service: automation.turn_off
+          data:
+            entity_id: automation.hvac_balancing
 
 # Text to speech
 tts:
