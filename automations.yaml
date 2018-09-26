@@ -69,6 +69,9 @@
   - data:
       entity_id: group.living_area_lights
     service: switch.turn_off
+  - data:
+      entity_id: switch.fan_control
+    service: switch.turn_on
 - id: '1532212236193'
   alias: Late Night Light
   trigger:
