@@ -1,7 +1,7 @@
 """
 Notify when the garage doors open or close.  Turn on the lights if they open when dark.
 """
-
+SEND_MSG = False
 SUN_ELEV_HIGH = 15.00
 entity_SUN = 'sun.sun'
 early_LIGHTS = 'group.evening_early_lights'
@@ -32,4 +32,5 @@ if sun_elevation < SUN_ELEV_HIGH and garage_state == 'open' and away_state == 'o
         hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
         garage_msg = '{} is {}.  Turning on some lights.'.format(label, garage_state)
 
-hass.services.call('notify', 'slack_assistant', {"message": garage_msg})
+if SEND_MSG:
+	hass.services.call('notify', 'slack_assistant', {"message": garage_msg})
