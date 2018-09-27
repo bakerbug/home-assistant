@@ -143,3 +143,14 @@
   condition: []
   action:
   - service: python_script.away_monitor
+- id: '1537990954788'
+  alias: Lights On When Away
+  trigger:
+  - event: sunset
+    offset: -00:45:00
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: group.evening_lights
+    service: switch.turn_on

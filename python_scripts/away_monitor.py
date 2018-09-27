@@ -2,10 +2,10 @@
 Enables or disables automations based on away status.
 """
 
-away_on_list = {'automation.hvac_balancing', 'automation.lights_out_when_away', }
-away_off_list = {'automation.lights_on_at_early_sunset', }
-home_on_list = {'automation.lights_on_at_early_sunset', }
-home_off_list = {'automation.lights_out_when_away', }
+away_on_list = {'automation.hvac_balancing', 'automation.lights_out_when_away', 'automation.lights_on_when_away', }
+away_off_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
+home_on_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
+home_off_list = {'automation.lights_out_when_away', 'automation.lights_on_when_away', }
 away_state = hass.states.get('binary_sensor.bayberry_away').state
 
 if away_state == 'on':

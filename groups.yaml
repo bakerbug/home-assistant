@@ -7,6 +7,11 @@ accent_lights:
     name: Accent Lights
     entities:
     - switch.0120099868c63aa67ad8_4
+away_lights:
+    name: Away Lights
+    entities:
+    - group.ceiling_lights
+    - switch.0120099868c63aa67ad8_3
 evening_early_lights:
     name: Early Evening Lights
     entities:

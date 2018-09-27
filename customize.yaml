@@ -52,3 +52,6 @@ group.evening_lights:
     hidden: true
 group.evening_early_lights:
     hidden: true
+group.away_lights:
+    hidden: true
+
