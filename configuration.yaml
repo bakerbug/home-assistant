@@ -75,6 +75,9 @@ history:
             - weather.dark_sky
             - sun.sun
             - sensor.moon
+            - binary_sensor.bayberry_away
+            - device_tracker.billgalaxy8
+            - device_tracker.cricketmotoz
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity
@@ -83,7 +86,6 @@ history:
             - sensor.downstairs_thermostat_hvac_state
             - fan.ceiling_fan
             - sensor.fan_speed
-            - binary_sensor.bayberry_away
             - cover.left_bay
             - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber
@@ -224,3 +226,14 @@ fan:
     payload_medium_speed: 66
     payload_high_speed: 100
     retain: true
+
+# Phone Detection
+device_tracker:
+    - platform: netgear
+      host: 10.99.10.1
+      port: 80
+      username: !secret netgear_user
+      password: !secret netgear_pass
+      devices:
+          - BILLS-GALAXY-S8
+          - Cricket-Moto-Z
