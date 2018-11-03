@@ -76,8 +76,8 @@ history:
             - sun.sun
             - sensor.moon
             - binary_sensor.bayberry_away
-            - device_tracker.billgalaxy8
-            - device_tracker.cricketmotoz
+            - device_tracker.bill_cell
+            - device_tracker.cricket_cell
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity

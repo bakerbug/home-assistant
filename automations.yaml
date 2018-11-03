@@ -140,6 +140,10 @@
   trigger:
   - entity_id: binary_sensor.bayberry_away
     platform: state
+  - entity_id: device_tracker.bill_cell
+    platform: state
+  - entity_id: device_tracker.cricket_cell
+    platform: state
   condition: []
   action:
   - service: python_script.away_monitor
