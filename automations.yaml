@@ -114,7 +114,19 @@
   - entity_id: binary_sensor.bayberry_away
     platform: state
     to: 'on'
-  condition: []
+  - entity_id: device_tracker.bill_cell
+    platform: state
+    to: not_home
+  - entity_id: device_tracker.cricket_cell
+    platform: state
+    to: not_home
+  condition:
+  - condition: state
+    entity_id: device_tracker.bill_cell
+    state: not_home
+  - condition: state
+    entity_id: device_tracker.cricket_cell
+    state: not_home
   action:
   - data:
       entity_id: automation.hvac_balancing
