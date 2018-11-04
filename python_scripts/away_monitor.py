@@ -13,7 +13,7 @@ bill_phone = hass.states.get('device_tracker.bill_cell').state
 cricket_phone = hass.states.get('device_tracker.cricket_cell').state
 
 away_state = True
-if nest_away == 'off' and bill_phone == 'home' and cricket_phone == 'home':
+if nest_away == 'off' or bill_phone == 'home' or cricket_phone == 'home':
     away_state = False
 
 if away_state:
