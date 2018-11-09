@@ -2,8 +2,12 @@
 Enables or disables automations based on away status.
 """
 
-SEND_MSG = False
+SEND_MSG = True
+SUN_ELEV_HIGH = 15.00
 
+entity_SUN = 'sun.sun'
+early_LIGHTS = 'group.evening_early_lights'
+late_LIGHTS = 'group.evening_lights'
 away_on_list = {'automation.hvac_balancing', 'automation.lights_out_when_away', 'automation.lights_on_when_away', }
 away_off_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
 home_on_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
@@ -11,10 +15,31 @@ home_off_list = {'automation.lights_out_when_away', 'automation.lights_on_when_a
 nest_away = hass.states.get('binary_sensor.bayberry_away').state
 bill_phone = hass.states.get('device_tracker.bill_cell').state
 cricket_phone = hass.states.get('device_tracker.cricket_cell').state
+person_id = data.get('entity')
+person_label = hass.states.get(person_id).attributes["friendly_name"]
+person_state = hass.states.get(person_id).state
+sun_elevation = float(hass.states.get(entity_SUN).attributes["elevation"])
+time = hass.states.get('sensor.time').state
+hour, minute = time.split(':')
+hour = int(hour)
+light_msg = ''
+house_msg = ''
 
-away_state = True
-if nest_away == 'off' or bill_phone == 'home' or cricket_phone == 'home':
+
+if bill_phone == 'home' or cricket_phone == 'home':
     away_state = False
+else:
+    away_state = True
+    house_msg = '  The house is empty.'
+
+if sun_elevation < SUN_ELEV_HIGH:
+    if 7 < hour < 22:
+        hass.services.call('switch', 'turn_on', {'entity_id': early_LIGHTS})
+        hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
+        light_msg = '  Turning on all lights.'
+    elif 7 >= hour or hour >= 22:
+        hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
+        light_msg = '  Turning on some lights.'
 
 if away_state:
     for automation in away_on_list:
@@ -28,5 +53,9 @@ else:
         hass.services.call('automation', 'turn_off', {'entity_id': automation})
 
 if SEND_MSG:
-    msg = "Nest is {0}.  Bill is {1}.  Cricket is {2}.".format(nest_away, bill_phone, cricket_phone)
-    hass.services.call('notify', 'slack_assistant', {"message": msg})
+    if person_state == 'home':
+        event_msg = '{0} has arrived home.'.format(person_label)
+    else:
+        event_msg = '{0} has departed.'.format(person_label)
+    complete_msg = event_msg + house_msg + light_msg
+    hass.services.call('notify', 'slack_assistant', {"message": complete_msg})

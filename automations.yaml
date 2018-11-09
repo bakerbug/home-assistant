@@ -1,15 +1,3 @@
-- id: '1531149972632'
-  alias: Car Arrives Home
-  trigger:
-  - entity_id: cover.left_bay
-    platform: state
-  - entity_id: cover.right_bay
-    platform: state
-  condition: []
-  action:
-  - data_template:
-      entity: '{{ trigger.entity_id }}'
-    service: python_script.garage_door
 - id: '1531347206490'
   alias: Auto Off Light
   initial_state: 'off'
@@ -150,15 +138,15 @@
 - id: '1535862789511'
   alias: Away Monitor
   trigger:
-  - entity_id: binary_sensor.bayberry_away
-    platform: state
   - entity_id: device_tracker.bill_cell
     platform: state
   - entity_id: device_tracker.cricket_cell
     platform: state
   condition: []
   action:
-  - service: python_script.away_monitor
+  - data_template:
+      entity: '{{ trigger.entity_id }}'
+    service: python_script.away_monitor
 - id: '1537990954788'
   alias: Lights On When Away
   trigger:
