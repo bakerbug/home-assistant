@@ -96,32 +96,6 @@
   condition: []
   action:
   - service: python_script.fan_control
-- id: '1533871918741'
-  alias: Leave the House
-  trigger:
-  - entity_id: binary_sensor.bayberry_away
-    platform: state
-    to: 'on'
-  - entity_id: device_tracker.bill_cell
-    platform: state
-    to: not_home
-  - entity_id: device_tracker.cricket_cell
-    platform: state
-    to: not_home
-  condition:
-  - condition: state
-    entity_id: device_tracker.bill_cell
-    state: not_home
-  - condition: state
-    entity_id: device_tracker.cricket_cell
-    state: not_home
-  action:
-  - data:
-      entity_id: automation.hvac_balancing
-    service: automation.turn_on
-  - data:
-      entity_id: group.all_indoor_lights
-    service: switch.turn_off
 - id: '1534730679270'
   alias: Lights Out when Away
   trigger:

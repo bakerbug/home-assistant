@@ -6,6 +6,7 @@ SEND_MSG = True
 SUN_ELEV_HIGH = 15.00
 
 entity_SUN = 'sun.sun'
+all_LIGHTS = 'group.all_indoor_lights'
 early_LIGHTS = 'group.evening_early_lights'
 late_LIGHTS = 'group.evening_lights'
 away_on_list = {'automation.hvac_balancing', 'automation.lights_out_when_away', 'automation.lights_on_when_away', }
@@ -27,26 +28,30 @@ house_msg = ''
 
 
 if bill_phone == 'home' or cricket_phone == 'home':
-    away_state = False
+    house_is_vacant = False
 else:
-    away_state = True
+    house_is_vacant = True
     house_msg = '  The house is empty.'
 
-if sun_elevation < SUN_ELEV_HIGH:
-    if 7 < hour < 22:
-        hass.services.call('switch', 'turn_on', {'entity_id': early_LIGHTS})
-        hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
-        light_msg = '  Turning on all lights.'
-    elif 7 >= hour or hour >= 22:
-        hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
-        light_msg = '  Turning on some lights.'
-
-if away_state:
+if house_is_vacant:
     for automation in away_on_list:
         hass.services.call('automation', 'turn_on', {'entity_id': automation})
     for automation in away_off_list:
         hass.services.call('automation', 'turn_off', {'entity_id': automation})
+
+    hass.services.call('switch', 'turn_off', {'entity_id': all_LIGHTS})
+
 else:
+    # Somebody is home
+    if sun_elevation < SUN_ELEV_HIGH:
+        if 7 < hour < 22:
+            hass.services.call('switch', 'turn_on', {'entity_id': early_LIGHTS})
+            hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
+            light_msg = '  Turning on all lights.'
+        elif 7 >= hour or hour >= 22:
+            hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
+            light_msg = '  Turning on some lights.'
+
     for automation in home_on_list:
         hass.services.call('automation', 'turn_on', {'entity_id': automation})
     for automation in home_off_list:
