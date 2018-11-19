@@ -41,7 +41,7 @@ if house_is_vacant:
 
     hass.services.call('switch', 'turn_off', {'entity_id': all_LIGHTS})
 
-else:
+elif person_state == 'home':
     # Somebody is home
     if sun_elevation < SUN_ELEV_HIGH:
         if 7 < hour < 22:
