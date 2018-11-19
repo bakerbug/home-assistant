@@ -32,14 +32,20 @@ switch.0120099868c63aa67ad8_4:
 switch.0120099868c63aa67ad8_5:
     friendly_name: Home Assistant Power
     icon: mdi:home-assistant
+switch.04200320b4e62d1291c4_1:
+    friendly_name: Bills Lamp
+    icon: mdi:lamp
+switch.04200320b4e62d1291c4_4:
+    friendly_name: Crickets Lamp
+    icon: mdi:lamp
 
 # Wemo outlets
 switch.bedroom_lamp:
     icon: mdi:lamp
-switch.bills_lamp:
-    icon: mdi:lamp
-switch.crickets_lamp:
-    icon: mdi:lamp
+switch.accessory_alpha:
+    icon: mdi:water
+switch.accessory_bravo:
+    icon: mdi:pine-tree
 switch.entry_lamp:
     icon: mdi:lamp
 switch.sofa_lamp:
@@ -55,3 +61,8 @@ group.evening_early_lights:
 group.away_lights:
     hidden: true
 
+# Automations
+switch.fan_control:
+    icon: mdi:memory
+switch.humidifier:
+    icon: mdi:memory
