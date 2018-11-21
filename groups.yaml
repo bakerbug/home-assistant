@@ -71,3 +71,8 @@ ceiling_lights:
         - switch.03200121dc4f221ad1cf_4
         - switch.03200121dc4f22239eeb_2
         - switch.03200121dc4f22239eeb_3
+smart_switches:
+    name: Smart Switches
+    entities:
+        - switch.fan_control
+        - switch.humidifier

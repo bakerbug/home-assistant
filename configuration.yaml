@@ -86,6 +86,7 @@ history:
             - sensor.downstairs_thermostat_hvac_state
             - fan.ceiling_fan
             - sensor.fan_speed
+            - switch.humidifier
             - cover.left_bay
             - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber
@@ -156,6 +157,20 @@ switch:
           service: automation.turn_off
           data:
             entity_id: automation.hvac_balancing
+      humidifier:
+        friendly_name: "Humidifier"
+        value_template: "{{ is_state('switch.accessory_alpha', 'on') }}"
+        turn_on:
+          - service: switch.turn_on
+            data:
+              entity_id: switch.accessory_alpha
+        turn_off:
+          - service: automation.turn_on
+            data:
+              entity_id: automation.restart_humidifier
+          - service: switch.turn_off
+            data:
+              entity_id: switch.accessory_alpha
 
 # Text to speech
 tts:
