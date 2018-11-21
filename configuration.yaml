@@ -129,8 +129,6 @@ sensor:
   - platform: time_date
     display_options:
       - 'time'
-  - platform: yr
-    name: Weather
   - platform: moon
   - platform: template
     sensors:
