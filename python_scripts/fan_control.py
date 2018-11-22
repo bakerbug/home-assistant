@@ -18,7 +18,7 @@ FAN_ON = 'on'
 SUN_ELEV_HIGH = 60.00
 SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
-WEATHER_SUNNY = ['sunny', 'partlycloudy']
+WEATHER_SUNNY = ('sunny', 'partlycloudy')
 HIGH_OUTDOOR_TEMP = 80
 LOW_INDOOR_TEMP = 70
 

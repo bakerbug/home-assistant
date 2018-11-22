@@ -9,10 +9,10 @@ entity_SUN = 'sun.sun'
 all_LIGHTS = 'group.all_indoor_lights'
 early_LIGHTS = 'group.evening_early_lights'
 late_LIGHTS = 'group.evening_lights'
-away_on_list = {'automation.hvac_balancing', 'automation.lights_out_when_away', 'automation.lights_on_when_away', }
-away_off_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
-home_on_list = {'automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset', }
-home_off_list = {'automation.lights_out_when_away', 'automation.lights_on_when_away', }
+away_on_tuple = ('automation.hvac_balancing', 'automation.lights_out_when_away', 'automation.lights_on_when_away')
+away_off_tuple = ('automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset')
+home_on_tuple = ('automation.lights_on_at_early_sunset', 'automation.lights_on_at_sunset')
+home_off_tuple = ('automation.lights_out_when_away', 'automation.lights_on_when_away')
 nest_away = hass.states.get('binary_sensor.bayberry_away').state
 bill_phone = hass.states.get('device_tracker.bill_cell').state
 cricket_phone = hass.states.get('device_tracker.cricket_cell').state
@@ -34,9 +34,9 @@ else:
     house_msg = '  The house is empty.'
 
 if house_is_vacant:
-    for automation in away_on_list:
+    for automation in away_on_tuple:
         hass.services.call('automation', 'turn_on', {'entity_id': automation})
-    for automation in away_off_list:
+    for automation in away_off_tuple:
         hass.services.call('automation', 'turn_off', {'entity_id': automation})
 
     hass.services.call('switch', 'turn_off', {'entity_id': all_LIGHTS})
@@ -52,9 +52,9 @@ elif person_state == 'home':
             hass.services.call('switch', 'turn_on', {'entity_id': late_LIGHTS})
             light_msg = '  Turning on some lights.'
 
-    for automation in home_on_list:
+    for automation in home_on_tuple:
         hass.services.call('automation', 'turn_on', {'entity_id': automation})
-    for automation in home_off_list:
+    for automation in home_off_tuple:
         hass.services.call('automation', 'turn_off', {'entity_id': automation})
 
 if SEND_MSG:
