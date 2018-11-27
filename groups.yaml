@@ -52,6 +52,12 @@ living_area_lights:
     entities:
         - group.kitchen_lights
         - group.livingroom_lights
+morning_lights:
+    name: Morning Lights
+    entities:
+        - group.livingroom_lights
+        - group.kitchen_lights
+        - switch.bedroom_lamp
 bed:
     name: Master Bed
     entities:

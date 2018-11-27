@@ -157,3 +157,16 @@
   - data:
       entity_id: switch.accessory_alpha
     service: switch.turn_on
+- id: '1543243906037'
+  alias: Lights On For Weekday Mornings
+  trigger:
+  - at: 05:15
+    platform: time
+  condition:
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+  - data:
+      entity_id: group.morning_lights
+    service: switch.turn_on

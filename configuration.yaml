@@ -44,7 +44,7 @@ http:
   base_url: https://bakerbug.duckdns.org:8123
   ssl_certificate: /home/homeassistant/.homeassistant/fullchain.pem
   ssl_key: /home/homeassistant/.homeassistant/privkey.pem
-  api_password: !secret api_key
+  #api_password: !secret api_key
   cors_allowed_origins:
     - http://10.99.10.7:7080
 
@@ -75,6 +75,7 @@ history:
             - weather.dark_sky
             - sun.sun
             - sensor.moon
+            - binary_sensor.workday
             - binary_sensor.bayberry_away
             - device_tracker.bill_cell
             - device_tracker.cricket_cell
@@ -250,3 +251,10 @@ device_tracker:
       devices:
           - BILLS-GALAXY-S8
           - Cricket-Moto-Z
+
+# Workday Sensor
+binary_sensor:
+    - platform: workday
+      name: Workday
+      country: US
+

@@ -71,6 +71,8 @@ group.evening_early_lights:
     hidden: true
 group.away_lights:
     hidden: true
+group.morning_lights:
+    hidden: true
 binary_sensor.downstairs_thermostat_online:
     hidden: true
 binary_sensor.upstairs_thermostat_online:
@@ -93,3 +95,8 @@ switch.fan_control:
     icon: mdi:memory
 switch.humidifier:
     icon: mdi:memory
+automation.away_monitor:
+    icon: mdi:language-python
+automation.hvac_balancing:
+    icon: mdi:language-python
+
