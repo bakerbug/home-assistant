@@ -8,6 +8,8 @@ entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
 entity_FAN = 'fan.ceiling_fan'
 entity_SUN = 'sun.sun'
 entity_WEATHER = 'weather.dark_sky'
+entity_B_BED = 'binary_sensor.sleepnumber_bill_bill_is_in_bed'
+entity_C_BED = 'binary_sensor.sleepnumber_bill_cricket_is_in_bed'
 FAN_LOW = 'low'
 FAN_MEDIUM = 'medium'
 FAN_HIGH = 'high'
@@ -16,9 +18,9 @@ FAN_ON = 'on'
 SUN_ELEV_HIGH = 60.00
 SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
-WEATHER_SUNNY = ['sunny', 'partlycloudy']
+WEATHER_SUNNY = ('sunny', 'partlycloudy')
 HIGH_OUTDOOR_TEMP = 80
-LOW_INDOOR_TEMP = 71
+LOW_INDOOR_TEMP = 70
 
 state_change = False
 away_state = hass.states.get(entity_AWAY).state
@@ -29,17 +31,15 @@ downstairs_temp = int(hass.states.get(entity_DOWNSTAIRS_THERMOSTAT).state)
 sun_elevation = float(hass.states.get(entity_SUN).attributes["elevation"])
 sun_azimuth = float(hass.states.get(entity_SUN).attributes["azimuth"])
 outdoor_temp = int(hass.states.get(entity_WEATHER).attributes["temperature"])
+bill_asleep = hass.states.get(entity_B_BED).state
+cricket_asleep = hass.states.get(entity_C_BED).state
 weather = hass.states.get(entity_WEATHER).state
 delta = abs(upstairs_temp - downstairs_temp)
 new_state = FAN_ON
 new_speed = 'init'
 fan_msg = 'init'
 
-if downstairs_temp <= LOW_INDOOR_TEMP and away_state == 'off':
-    # Don't automatically adjust fan if too cool
-    exit()
-
-# Temperature differential
+# Normal adjustments
 if delta <= 1:
     new_state = FAN_OFF
 elif delta == 2:
@@ -52,12 +52,16 @@ elif delta >= 4:
     new_state = FAN_ON
     new_speed = FAN_HIGH
 
-if DEBUG:
-    debug_msg = 'Weather: {} Sun Elevation: {} Sun Azimuth: {}.'.format(weather, sun_elevation, sun_azimuth)
-    hass.services.call('notify', 'slack_assistant', {"message": debug_msg})
-
-# Sun angle
-if weather in WEATHER_SUNNY:
+# Special cases
+if bill_asleep == 'on' and cricket_asleep == 'on':
+    # Always use the fan at night
+    pass
+elif downstairs_temp <= LOW_INDOOR_TEMP and away_state == 'off':
+    # Turn the fan off if too cool.
+    new_state = FAN_OFF
+    fan_msg = 'It is too cool to use the fan.'
+elif weather in WEATHER_SUNNY:
+    # Set fan to high if direct sunlight
     if outdoor_temp > HIGH_OUTDOOR_TEMP:
         if SUN_ELEV_LOW < sun_elevation < SUN_ELEV_HIGH:
             if sun_azimuth > SUN_AZ_HIGH:

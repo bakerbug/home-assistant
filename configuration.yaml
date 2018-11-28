@@ -44,7 +44,7 @@ http:
   base_url: https://bakerbug.duckdns.org:8123
   ssl_certificate: /home/homeassistant/.homeassistant/fullchain.pem
   ssl_key: /home/homeassistant/.homeassistant/privkey.pem
-  api_password: !secret api_key
+  #api_password: !secret api_key
   cors_allowed_origins:
     - http://10.99.10.7:7080
 
@@ -75,6 +75,10 @@ history:
             - weather.dark_sky
             - sun.sun
             - sensor.moon
+            - binary_sensor.workday
+            - binary_sensor.bayberry_away
+            - device_tracker.bill_cell
+            - device_tracker.cricket_cell
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity
@@ -83,7 +87,7 @@ history:
             - sensor.downstairs_thermostat_hvac_state
             - fan.ceiling_fan
             - sensor.fan_speed
-            - binary_sensor.bayberry_away
+            - switch.humidifier
             - cover.left_bay
             - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber
@@ -93,8 +97,8 @@ history:
             - media_player.living_room
             - media_player.bedroom_tv
             - switch.bedroom_lamp
-            - switch.bills_lamp
-            - switch.crickets_lamp
+            - switch.04200320b4e62d1291c4_1
+            - switch.04200320b4e62d1291c4_4
             - switch.entry_lamp
             - switch.sofa_lamp
             - switch.0120099868c63aa67ad8_3
@@ -126,8 +130,6 @@ sensor:
   - platform: time_date
     display_options:
       - 'time'
-  - platform: yr
-    name: Weather
   - platform: moon
   - platform: template
     sensors:
@@ -146,13 +148,31 @@ switch:
         friendly_name: "Fan Control"
         value_template: "{{ is_state('automation.hvac_balancing', 'on') }}"
         turn_on:
-          service: automation.turn_on
-          data:
-            entity_id: automation.hvac_balancing
+          - service: automation.turn_on
+            data:
+              entity_id: automation.hvac_balancing
+          - service: python_script.fan_control
         turn_off:
           service: automation.turn_off
           data:
             entity_id: automation.hvac_balancing
+      humidifier:
+        friendly_name: "Humidifier"
+        value_template: "{{ is_state('switch.accessory_alpha', 'on') }}"
+        turn_on:
+          - service: switch.turn_on
+            data:
+              entity_id: switch.accessory_alpha
+          - service: automation.turn_off
+            data:
+              entity_id: automation.restart_humidifier
+        turn_off:
+          - service: automation.turn_on
+            data:
+              entity_id: automation.restart_humidifier
+          - service: switch.turn_off
+            data:
+              entity_id: switch.accessory_alpha
 
 # Text to speech
 tts:
@@ -223,3 +243,21 @@ fan:
     payload_medium_speed: 66
     payload_high_speed: 100
     retain: true
+
+# Phone Detection
+device_tracker:
+    - platform: netgear
+      host: 10.99.10.1
+      port: 80
+      username: !secret netgear_user
+      password: !secret netgear_pass
+      devices:
+          - BILLS-GALAXY-S8
+          - Cricket-Moto-Z
+
+# Workday Sensor
+binary_sensor:
+    - platform: workday
+      name: Workday
+      country: US
+

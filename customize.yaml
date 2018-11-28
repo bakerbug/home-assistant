@@ -1,3 +1,10 @@
+# Groups
+group.ceiling_lights:
+    icon: mdi:track-light
+group.counter_lights:
+    icon: mdi:track-light
+
+
 # Nest Thermostats
 sensor.downstairs_thermostat_humidity:
     friendly_name: Downstairs Humidity
@@ -27,23 +34,33 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
 # Tuya outlets
 switch.0120099868c63aa67ad8_3:
     friendly_name: Sky Lights
+    icon: mdi:track-light
 switch.0120099868c63aa67ad8_4:
     friendly_name: Shelf Lights
+    icon: mdi:spotlight
 switch.0120099868c63aa67ad8_5:
     friendly_name: Home Assistant Power
     icon: mdi:home-assistant
+switch.04200320b4e62d1291c4_1:
+    friendly_name: Bills Lamp
+    icon: mdi:lamp
+switch.04200320b4e62d1291c4_4:
+    friendly_name: Crickets Lamp
+    icon: mdi:lamp
 
 # Wemo outlets
 switch.bedroom_lamp:
     icon: mdi:lamp
-switch.bills_lamp:
-    icon: mdi:lamp
-switch.crickets_lamp:
-    icon: mdi:lamp
+switch.accessory_alpha:
+    icon: mdi:water
+switch.accessory_bravo:
+    icon: mdi:pine-tree
 switch.entry_lamp:
     icon: mdi:lamp
 switch.sofa_lamp:
     icon: mdi:lamp
+switch.sink_light:
+    icon: mdi:ceiling-light
 
 # Hide items from home page.
 sensor.bayberry_eta:
@@ -52,3 +69,34 @@ group.evening_lights:
     hidden: true
 group.evening_early_lights:
     hidden: true
+group.away_lights:
+    hidden: true
+group.morning_lights:
+    hidden: true
+binary_sensor.downstairs_thermostat_online:
+    hidden: true
+binary_sensor.upstairs_thermostat_online:
+    hidden: true
+binary_sensor.downstairs_thermostat_is_using_emergency_heat:
+    hidden: true
+binary_sensor.upstairs_thermostat_is_using_emergency_heat:
+    hidden: true
+binary_sensor.downstairs_thermostat_fan:
+    hidden: true
+binary_sensor.upstairs_thermostat_fan:
+    hidden: true
+binary_sensor.downstairs_thermostat_is_locked:
+    hidden: true
+binary_sensor.upstairs_thermostat_is_locked:
+    hidden: true
+
+# Automations
+switch.fan_control:
+    icon: mdi:memory
+switch.humidifier:
+    icon: mdi:memory
+automation.away_monitor:
+    icon: mdi:language-python
+automation.hvac_balancing:
+    icon: mdi:language-python
+

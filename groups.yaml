@@ -7,6 +7,11 @@ accent_lights:
     name: Accent Lights
     entities:
     - switch.0120099868c63aa67ad8_4
+away_lights:
+    name: Away Lights
+    entities:
+    - group.ceiling_lights
+    - switch.0120099868c63aa67ad8_3
 evening_early_lights:
     name: Early Evening Lights
     entities:
@@ -22,8 +27,8 @@ bedroom_lights:
     name: Bedroom Lights
     entities:
     - switch.bedroom_lamp
-    - switch.bills_lamp
-    - switch.crickets_lamp
+    - switch.04200320b4e62d1291c4_1
+    - switch.04200320b4e62d1291c4_4
 garage_doors:
     name: Garage Doors
     entities:
@@ -47,6 +52,12 @@ living_area_lights:
     entities:
         - group.kitchen_lights
         - group.livingroom_lights
+morning_lights:
+    name: Morning Lights
+    entities:
+        - group.livingroom_lights
+        - group.kitchen_lights
+        - switch.bedroom_lamp
 bed:
     name: Master Bed
     entities:
@@ -66,3 +77,8 @@ ceiling_lights:
         - switch.03200121dc4f221ad1cf_4
         - switch.03200121dc4f22239eeb_2
         - switch.03200121dc4f22239eeb_3
+smart_switches:
+    name: Smart Switches
+    entities:
+        - switch.fan_control
+        - switch.humidifier
