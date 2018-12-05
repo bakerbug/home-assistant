@@ -180,6 +180,22 @@ tts:
 
 # Cloud
 cloud:
+  alexa:
+    filter:
+      include_entities:
+        - cover.left_bay
+        - cover.right_bay
+        - switch.fan_control
+        - switch.humidifier
+      exclude_domains:
+        - automation
+        - switch
+        - fan
+        - group
+        - media_player
+      exclude_entities:
+        - climate.downstairs
+        - climate.upstairs
 
 group: !include groups.yaml
 automation: !include automations.yaml
