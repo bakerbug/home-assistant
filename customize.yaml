@@ -89,6 +89,8 @@ binary_sensor.downstairs_thermostat_is_locked:
     hidden: true
 binary_sensor.upstairs_thermostat_is_locked:
     hidden: true
+binary_sensor.workday:
+    hidden: true
 
 # Automations
 switch.fan_control:
