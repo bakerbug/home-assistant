@@ -188,11 +188,18 @@ cloud:
         - switch.fan_control
         - switch.humidifier
       exclude_domains:
+        - alert
         - automation
-        - switch
         - fan
         - group
+        - input_boolean
+        - light
+        - lock
         - media_player
+        - scene
+        - script
+        - sensor
+        - switch
       exclude_entities:
         - climate.downstairs
         - climate.upstairs
