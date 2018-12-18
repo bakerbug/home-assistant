@@ -160,6 +160,9 @@
   - data:
       entity_id: switch.accessory_alpha
     service: switch.turn_on
+  - data:
+      entity_id: automation.restart_humidifier
+    service: automation.turn_off
 - id: '1543243906037'
   alias: Lights On For Weekday Mornings
   trigger:
