@@ -80,7 +80,7 @@
     condition: time
   action:
   - data:
-      entity_id: switch.sofa_lamp
+      entity_id: switch.0120099868c63aa67ad8_4
     service: switch.turn_on
   - data:
       entity_id: group.counter_lights
