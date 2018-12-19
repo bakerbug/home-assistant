@@ -83,3 +83,4 @@ smart_switches:
     entities:
         - switch.fan_control
         - switch.humidifier
+        - switch.kyles_light

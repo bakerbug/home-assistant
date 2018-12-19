@@ -97,6 +97,8 @@ switch.fan_control:
     icon: mdi:memory
 switch.humidifier:
     icon: mdi:memory
+switch.kyles_light:
+    icon: mdi:memory
 automation.away_monitor:
     icon: mdi:language-python
 automation.hvac_balancing:

@@ -176,3 +176,20 @@
   - data:
       entity_id: group.morning_lights
     service: switch.turn_on
+- id: '1531365279143'
+  alias: Off in 20
+  initial_state: 'off'
+  trigger:
+  - entity_id: switch.kyles_light
+    for:
+      minutes: 2
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.kyles_light
+    service: switch.turn_off
+  - data:
+      entity_id: automation.off_in_20
+    service: automation.turn_off

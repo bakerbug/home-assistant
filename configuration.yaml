@@ -106,6 +106,7 @@ history:
             - switch.sink_light
             - group.counter_lights
             - group.ceiling_lights
+            - switch.kyles_light
     exclude:
         domains:
             - automation
@@ -173,6 +174,21 @@ switch:
           - service: switch.turn_off
             data:
               entity_id: switch.accessory_alpha
+      kyles_light:
+        friendly_name: "Kyles Light"
+        value_template: "{{ is_state('switch.accessory_bravo', 'on') }}"
+        turn_on:
+          - service: switch.turn_on
+            data:
+              entity_id: switch.accessory_bravo
+          - service: automation.turn_on
+            data:
+              entity_id: automation.off_in_20
+        turn_off:
+          - service: switch.turn_off
+            data:
+              entity_id: switch.accessory.bravo
+
 
 # Text to speech
 tts:
@@ -187,6 +203,7 @@ cloud:
         - cover.right_bay
         - switch.fan_control
         - switch.humidifier
+        - switch.kyles_light
       exclude_domains:
         - alert
         - automation
