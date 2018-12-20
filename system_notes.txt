@@ -9,3 +9,20 @@ sudo docker run -d --name="mqtt-bridge" -v /opt/mqtt-bridge:/config -p 8080:8080
 
 # Restart Docker after boot
 sudo docker restart mqtt-bridge
+
+# Starting MQTT Bridge with systemd
+Create file /etc/systemd/system/mqtt-bridge.service
+-----contents-----
+[Unit]
+Description=Home Assistant MQTT Bridge
+After=docker.service mosquitto.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker restart mqtt-bridge
+
+[Install]
+WantedBy=multi-user.target
+------------------
+Then run `sudo systemctl enable mqtt-bridge.service`.

@@ -80,10 +80,13 @@
     condition: time
   action:
   - data:
-      entity_id: switch.sofa_lamp
+      entity_id: switch.0120099868c63aa67ad8_4
     service: switch.turn_on
   - data:
       entity_id: group.counter_lights
+    service: switch.turn_on
+  - data:
+      entity_id: switch.accessory_bravo
     service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
@@ -157,6 +160,9 @@
   - data:
       entity_id: switch.accessory_alpha
     service: switch.turn_on
+  - data:
+      entity_id: automation.restart_humidifier
+    service: automation.turn_off
 - id: '1543243906037'
   alias: Lights On For Weekday Mornings
   trigger:

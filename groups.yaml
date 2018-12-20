@@ -52,6 +52,7 @@ living_area_lights:
     entities:
         - group.kitchen_lights
         - group.livingroom_lights
+        - switch.accessory_bravo
 morning_lights:
     name: Morning Lights
     entities:
