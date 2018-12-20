@@ -1,85 +1,85 @@
 all_indoor_lights:
-    name: All Indoor Lights
-    entities:
+  name: All Indoor Lights
+  entities:
     - group.living_area_lights
     - group.bedroom_lights
 accent_lights:
-    name: Accent Lights
-    entities:
+  name: Accent Lights
+  entities:
     - switch.0120099868c63aa67ad8_4
 away_lights:
-    name: Away Lights
-    entities:
+  name: Away Lights
+  entities:
     - group.ceiling_lights
     - switch.0120099868c63aa67ad8_3
 evening_early_lights:
-    name: Early Evening Lights
-    entities:
-        - switch.entry_lamp
-        - switch.sofa_lamp
-        - group.counter_lights
+  name: Early Evening Lights
+  entities:
+    - switch.entry_lamp
+    - switch.sofa_lamp
+    - group.counter_lights
 evening_lights:
-    name: Evening Lights
-    entities:
-        - group.ceiling_lights
-        - switch.0120099868c63aa67ad8_3
+  name: Evening Lights
+  entities:
+    - group.ceiling_lights
+    - switch.0120099868c63aa67ad8_3
 bedroom_lights:
-    name: Bedroom Lights
-    entities:
+  name: Bedroom Lights
+  entities:
     - switch.bedroom_lamp
     - switch.04200320b4e62d1291c4_1
     - switch.04200320b4e62d1291c4_4
 garage_doors:
-    name: Garage Doors
-    entities:
-        - cover.left_bay
-        - cover.right_bay
+  name: Garage Doors
+  entities:
+    - cover.left_bay
+    - cover.right_bay
 kitchen_lights:
-    name: Kitchen Lights
-    entities:
-        - switch.sink_light
-        - group.counter_lights
-        - group.ceiling_lights
+  name: Kitchen Lights
+  entities:
+    - switch.sink_light
+    - group.counter_lights
+    - group.ceiling_lights
 livingroom_lights:
-    name: Living Room Lights
-    entities:
-        - switch.entry_lamp
-        - switch.sofa_lamp
-        - switch.0120099868c63aa67ad8_3
-        - switch.0120099868c63aa67ad8_4
+  name: Living Room Lights
+  entities:
+    - switch.entry_lamp
+    - switch.sofa_lamp
+    - switch.0120099868c63aa67ad8_3
+    - switch.0120099868c63aa67ad8_4
 living_area_lights:
-    name: Living Area Lights
-    entities:
-        - group.kitchen_lights
-        - group.livingroom_lights
-        - switch.accessory_bravo
+  name: Living Area Lights
+  entities:
+    - group.kitchen_lights
+    - group.livingroom_lights
+    - switch.accessory_bravo
 morning_lights:
-    name: Morning Lights
-    entities:
-        - group.livingroom_lights
-        - group.kitchen_lights
-        - switch.bedroom_lamp
+  name: Morning Lights
+  entities:
+    - group.livingroom_lights
+    - group.kitchen_lights
+    - switch.bedroom_lamp
 bed:
-    name: Master Bed
-    entities:
-        - sensor.sleepnumber_bill_bill_sleepnumber
-        - sensor.sleepnumber_bill_cricket_sleepnumber
-        - binary_sensor.sleepnumber_bill_bill_is_in_bed
-        - binary_sensor.sleepnumber_bill_cricket_is_in_bed
+  name: Master Bed
+  entities:
+    - sensor.sleepnumber_bill_bill_sleepnumber
+    - sensor.sleepnumber_bill_cricket_sleepnumber
+    - binary_sensor.sleepnumber_bill_bill_is_in_bed
+    - binary_sensor.sleepnumber_bill_cricket_is_in_bed
 counter_lights:
-    name: Kitchen Counter Lights
-    entities:
-        - switch.03200121dc4f221ad1cf_1
-        - switch.03200121dc4f22239eeb_4
+  name: Kitchen Counter Lights
+  entities:
+    - switch.03200121dc4f221ad1cf_1
+    - switch.03200121dc4f22239eeb_4
 ceiling_lights:
-    name: Kitchen Ceiling Lights
-    entities:
-        - switch.03200121dc4f221ad1cf_3
-        - switch.03200121dc4f221ad1cf_4
-        - switch.03200121dc4f22239eeb_2
-        - switch.03200121dc4f22239eeb_3
+  name: Kitchen Ceiling Lights
+  entities:
+    - switch.03200121dc4f221ad1cf_3
+    - switch.03200121dc4f221ad1cf_4
+    - switch.03200121dc4f22239eeb_2
+    - switch.03200121dc4f22239eeb_3
 smart_switches:
-    name: Smart Switches
-    entities:
-        - switch.fan_control
-        - switch.humidifier
+  name: Smart Switches
+  entities:
+    - switch.fan_control
+    - switch.humidifier
