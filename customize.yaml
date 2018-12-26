@@ -51,10 +51,10 @@ switch.04200320b4e62d1291c4_4:
 # Wemo outlets
 switch.bedroom_lamp:
   icon: mdi:lamp
-switch.accessory_alpha:
+switch.wemo_alpha:
   icon: mdi:water
-switch.accessory_bravo:
-  icon: mdi:pine-tree
+switch.wemo_bravo:
+  icon: mdi:desk-lamp
 switch.entry_lamp:
   icon: mdi:lamp
 switch.sofa_lamp:
@@ -96,6 +96,8 @@ binary_sensor.workday:
 switch.fan_control:
   icon: mdi:memory
 switch.humidifier:
+  icon: mdi:memory
+switch.kyles_light:
   icon: mdi:memory
 automation.away_monitor:
   icon: mdi:language-python

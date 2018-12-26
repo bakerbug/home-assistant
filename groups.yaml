@@ -40,6 +40,10 @@ kitchen_lights:
     - switch.sink_light
     - group.counter_lights
     - group.ceiling_lights
+kyle_room:
+  name: Kyle's Room
+  entities:
+    - switch.kyles_light
 livingroom_lights:
   name: Living Room Lights
   entities:
@@ -52,7 +56,6 @@ living_area_lights:
   entities:
     - group.kitchen_lights
     - group.livingroom_lights
-    - switch.accessory_bravo
 morning_lights:
   name: Morning Lights
   entities:

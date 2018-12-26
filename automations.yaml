@@ -85,9 +85,6 @@
   - data:
       entity_id: group.counter_lights
     service: switch.turn_on
-  - data:
-      entity_id: switch.accessory_bravo
-    service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
   trigger:
@@ -147,7 +144,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.accessory_alpha
+      entity_id: switch.wemo_alpha
     service: switch.turn_off
 - id: '1542776135207'
   alias: Watch TV - Stop
@@ -158,7 +155,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.accessory_alpha
+      entity_id: switch.wemo_alpha
     service: switch.turn_on
   - data:
       entity_id: automation.restart_humidifier
@@ -176,3 +173,20 @@
   - data:
       entity_id: group.morning_lights
     service: switch.turn_on
+- id: '1531365279143'
+  alias: Kyles Reading Light Timer
+  initial_state: 'off'
+  trigger:
+  - entity_id: switch.kyles_light
+    for:
+      minutes: 20
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.kyles_light
+    service: switch.turn_off
+  - data:
+      entity_id: automation.off_in_20
+    service: automation.turn_off
