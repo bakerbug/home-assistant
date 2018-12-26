@@ -159,11 +159,11 @@ switch:
             entity_id: automation.hvac_balancing
       humidifier:
         friendly_name: "Humidifier"
-        value_template: "{{ is_state('switch.accessory_alpha', 'on') }}"
+        value_template: "{{ is_state('switch.wemo_alpha', 'on') }}"
         turn_on:
           - service: switch.turn_on
             data:
-              entity_id: switch.accessory_alpha
+              entity_id: switch.wemo_alpha
           - service: automation.turn_off
             data:
               entity_id: automation.restart_humidifier
@@ -173,7 +173,7 @@ switch:
               entity_id: automation.restart_humidifier
           - service: switch.turn_off
             data:
-              entity_id: switch.accessory_alpha
+              entity_id: switch.wemo_alpha
       kyles_light:
         friendly_name: "Kyle's Light"
         value_template: "{{ is_state('switch.wemo_bravo', 'on') }}"
