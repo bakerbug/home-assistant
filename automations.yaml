@@ -85,9 +85,6 @@
   - data:
       entity_id: group.counter_lights
     service: switch.turn_on
-  - data:
-      entity_id: switch.accessory_bravo
-    service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
   trigger:
@@ -177,12 +174,12 @@
       entity_id: group.morning_lights
     service: switch.turn_on
 - id: '1531365279143'
-  alias: Off in 20
+  alias: Kyles Reading Light Timer
   initial_state: 'off'
   trigger:
   - entity_id: switch.kyles_light
     for:
-      minutes: 2
+      minutes: 20
     platform: state
     to: 'on'
   condition: []

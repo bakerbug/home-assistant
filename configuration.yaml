@@ -175,19 +175,19 @@ switch:
             data:
               entity_id: switch.accessory_alpha
       kyles_light:
-        friendly_name: "Kyles Light"
-        value_template: "{{ is_state('switch.accessory_bravo', 'on') }}"
+        friendly_name: "Kyle's Light"
+        value_template: "{{ is_state('switch.wemo_bravo', 'on') }}"
         turn_on:
           - service: switch.turn_on
             data:
-              entity_id: switch.accessory_bravo
+              entity_id: switch.wemo_bravo
           - service: automation.turn_on
             data:
-              entity_id: automation.off_in_20
+              entity_id: automation.kyles_reading_light_timer
         turn_off:
           - service: switch.turn_off
             data:
-              entity_id: switch.accessory.bravo
+              entity_id: switch.wemo_bravo
 
 
 # Text to speech
