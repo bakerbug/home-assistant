@@ -5,12 +5,22 @@ living_room_view:
   entities:
     - group.livingroom_lights
     - fan.ceiling_fan
+    - remote.harmony_hub
+    - media_player.living_room
 master_bedroom_view:
   name: Master Bedroom
   view: true
   entities:
     - group.bedroom_lights
     - group.bed
+    - media_player.bedroom_tv
+kitchen_view:
+  name: Kitchen
+  view: true
+  entities:
+    - group.kitchen_lights
+    - group.counter_lights
+    - group.ceiling_lights
 
 all_indoor_lights:
   name: All Indoor Lights
