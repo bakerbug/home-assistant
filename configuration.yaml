@@ -29,7 +29,7 @@ homeassistant:
    # - type: legacy_api_password
 
 # Show links to resources in log and frontend
-introduction:
+introduction: false
 
 # Enables the frontend
 frontend: !include frontend.yaml
