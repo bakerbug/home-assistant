@@ -1,3 +1,26 @@
+ # Views
+living_room_view:
+  name: Living Room
+  view: true
+  entities:
+    - group.livingroom_lights
+    - fan.ceiling_fan
+    - remote.harmony_hub
+    - media_player.living_room
+master_bedroom_view:
+  name: Master Bedroom
+  view: true
+  entities:
+    - group.bedroom_lights
+    - group.bed
+    - media_player.bedroom_tv
+kitchen_view:
+  name: Kitchen
+  view: true
+  entities:
+    - group.kitchen_lights
+    - group.appliances
+
 all_indoor_lights:
   name: All Indoor Lights
   entities:
@@ -7,6 +30,11 @@ accent_lights:
   name: Accent Lights
   entities:
     - switch.0120099868c63aa67ad8_4
+appliances:
+  control: hidden
+  name: Appliances
+  entities:
+    - switch.03200121dc4f221ad1cf_2
 away_lights:
   name: Away Lights
   entities:
@@ -83,6 +111,7 @@ ceiling_lights:
     - switch.03200121dc4f22239eeb_3
 smart_switches:
   name: Smart Switches
+  control: hidden
   entities:
     - switch.fan_control
     - switch.humidifier
