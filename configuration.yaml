@@ -29,7 +29,7 @@ homeassistant:
    # - type: legacy_api_password
 
 # Show links to resources in log and frontend
-introduction: false
+#introduction:
 
 # Enables the frontend
 frontend: !include frontend.yaml
@@ -88,6 +88,7 @@ history:
             - fan.ceiling_fan
             - sensor.fan_speed
             - switch.humidifier
+            - switch.03200121dc4f221ad1cf_2
             - cover.left_bay
             - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber

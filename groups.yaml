@@ -19,8 +19,7 @@ kitchen_view:
   view: true
   entities:
     - group.kitchen_lights
-    - group.counter_lights
-    - group.ceiling_lights
+    - group.appliances
 
 all_indoor_lights:
   name: All Indoor Lights
@@ -31,6 +30,11 @@ accent_lights:
   name: Accent Lights
   entities:
     - switch.0120099868c63aa67ad8_4
+appliances:
+  control: hidden
+  name: Appliances
+  entities:
+    - switch.03200121dc4f221ad1cf_2
 away_lights:
   name: Away Lights
   entities:

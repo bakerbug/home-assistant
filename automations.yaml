@@ -1,3 +1,16 @@
+- id: '1531343546892'
+  alias: Coffee Timer
+  trigger:
+  - entity_id: switch.03200121dc4f221ad1cf_2
+    for:
+      minutes: 30
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.03200121dc4f221ad1cf_2
+    service: switch.turn_off
 - id: '1531347206490'
   alias: Restart Humidifier
   initial_state: 'off'

@@ -32,6 +32,9 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
   icon: mdi:sleep
 
 # Tuya outlets
+switch.03200121dc4f221ad1cf_2:
+  friendly_name: Coffee Maker
+  icon: mdi:coffee
 switch.0120099868c63aa67ad8_3:
   friendly_name: Sky Lights
   icon: mdi:track-light
@@ -93,6 +96,8 @@ binary_sensor.workday:
   hidden: true
 
 # Automations
+switch.coffee_maker:
+  icon: mdi:coffee
 switch.fan_control:
   icon: mdi:memory
 switch.humidifier:
