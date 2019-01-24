@@ -7,6 +7,7 @@ living_room_view:
     - fan.ceiling_fan
     - remote.harmony_hub
     - media_player.living_room
+    - switch.wemo_alpha
 master_bedroom_view:
   name: Master Bedroom
   view: true
@@ -20,6 +21,11 @@ kitchen_view:
   entities:
     - group.kitchen_lights
     - group.appliances
+kyle_view:
+  name: Kyle's Room
+  view: true
+  entities:
+    - switch.wemo_bravo
 
 all_indoor_lights:
   name: All Indoor Lights
@@ -35,6 +41,7 @@ appliances:
   name: Appliances
   entities:
     - switch.03200121dc4f221ad1cf_2
+    - switch.wemo_alpha
 away_lights:
   name: Away Lights
   entities:
@@ -71,7 +78,7 @@ kitchen_lights:
 kyle_room:
   name: Kyle's Room
   entities:
-    - switch.kyles_light
+    - switch.wemo_bravo
 livingroom_lights:
   name: Living Room Lights
   entities:

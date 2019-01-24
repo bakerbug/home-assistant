@@ -188,9 +188,8 @@
     service: switch.turn_on
 - id: '1531365279143'
   alias: Kyles Reading Light Timer
-  initial_state: 'off'
   trigger:
-  - entity_id: switch.kyles_light
+  - entity_id: switch.wemo_bravo
     for:
       minutes: 20
     platform: state
@@ -198,8 +197,5 @@
   condition: []
   action:
   - data:
-      entity_id: switch.kyles_light
+      entity_id: switch.wemo_bravo
     service: switch.turn_off
-  - data:
-      entity_id: automation.off_in_20
-    service: automation.turn_off
