@@ -113,7 +113,7 @@
   action:
   - service: python_script.fan_control
 - id: '1534730679270'
-  alias: Lights Out when Away
+  alias: Lights Off When Away
   trigger:
   - at: '23:15:00'
     platform: time
@@ -141,7 +141,7 @@
   alias: Lights On When Away
   trigger:
   - event: sunset
-    offset: -00:45:00
+    offset: -00:30:00
     platform: sun
   condition: []
   action:
