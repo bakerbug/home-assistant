@@ -69,6 +69,9 @@
   - condition: state
     entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
     state: 'on'
+  - condition: state
+    entity_id: remote.harmony_hub
+    state: 'off'
   action:
   - data:
       entity_id: group.living_area_lights
