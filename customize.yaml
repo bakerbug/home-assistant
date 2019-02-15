@@ -58,6 +58,7 @@ switch.wemo_alpha:
   icon: mdi:water
 switch.wemo_bravo:
   icon: mdi:desk-lamp
+  friendly_name: Kyle's Light
 switch.entry_lamp:
   icon: mdi:lamp
 switch.sofa_lamp:

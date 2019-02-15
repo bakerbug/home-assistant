@@ -107,7 +107,7 @@ history:
             - switch.sink_light
             - group.counter_lights
             - group.ceiling_lights
-            - switch.kyles_light
+            - switch.wemo_bravo
     exclude:
         domains:
             - automation
@@ -175,20 +175,6 @@ switch:
           - service: switch.turn_off
             data:
               entity_id: switch.wemo_alpha
-      kyles_light:
-        friendly_name: "Kyle's Light"
-        value_template: "{{ is_state('switch.wemo_bravo', 'on') }}"
-        turn_on:
-          - service: switch.turn_on
-            data:
-              entity_id: switch.wemo_bravo
-          - service: automation.turn_on
-            data:
-              entity_id: automation.kyles_reading_light_timer
-        turn_off:
-          - service: switch.turn_off
-            data:
-              entity_id: switch.wemo_bravo
 
 
 # Text to speech
@@ -204,7 +190,6 @@ cloud:
         - cover.right_bay
         - switch.fan_control
         - switch.humidifier
-        - switch.kyles_light
       exclude_domains:
         - alert
         - automation
