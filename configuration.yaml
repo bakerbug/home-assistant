@@ -1,13 +1,13 @@
 # MQTT
-mqtt:
-  broker: localhost
-  port: 1883
-  client_id: home-assistant-7718
-  keepalive: 60
-  #username: !secret mqtt_username
-  #password: !secret mqtt_password
-  discovery: true
-  discovery_prefix: ha-7718
+#mqtt:
+#  broker: localhost
+#  port: 1883
+#  client_id: home-assistant-7718
+#  keepalive: 60
+#  #username: !secret mqtt_username
+#  #password: !secret mqtt_password
+#  discovery: true
+#  discovery_prefix: ha-7718
 
 homeassistant:
   # Name of the location where Home Assistant is running
@@ -85,7 +85,7 @@ history:
             - sensor.downstairs_thermostat_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
-            - fan.ceiling_fan
+            - fan.living_room_ceiling_fan
             - sensor.fan_speed
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
@@ -137,7 +137,7 @@ sensor:
     sensors:
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
-        value_template: "{{ states.fan.ceiling_fan.attributes.speed }}"
+        value_template: "{{ states.fan.living_room_ceiling_fan.attributes.speed }}"
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
@@ -256,19 +256,19 @@ tuya:
   platform: 'smart_life'
 
 # Living Room Fan
-fan:
-  - platform: mqtt
-    name: Ceiling Fan
-    state_topic: "ha-7718/Ceiling Fan/switch"
-    command_topic: "ha-7718/Ceiling Fan/switch"
-    payload_on: "on"
-    payload_off: "off"
-    speed_state_topic: "ha-7718/Ceiling Fan/level"
-    speed_command_topic: "ha-7718/Ceiling Fan/level"
-    payload_low_speed: 33
-    payload_medium_speed: 66
-    payload_high_speed: 100
-    retain: true
+#fan:
+#  - platform: mqtt
+#    name: Ceiling Fan
+#    state_topic: "ha-7718/Ceiling Fan/switch"
+#    command_topic: "ha-7718/Ceiling Fan/switch"
+#    payload_on: "on"
+#    payload_off: "off"
+#    speed_state_topic: "ha-7718/Ceiling Fan/level"
+#    speed_command_topic: "ha-7718/Ceiling Fan/level"
+#    payload_low_speed: 33
+#    payload_medium_speed: 66
+#    payload_high_speed: 100
+#    retain: true
 
 # Phone Detection
 device_tracker:
