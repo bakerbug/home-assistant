@@ -28,6 +28,8 @@ homeassistant:
    # uncomment this to enable backwards compatible API password support
    # - type: legacy_api_password
 
+system_health:
+
 # Show links to resources in log and frontend
 #introduction:
 
