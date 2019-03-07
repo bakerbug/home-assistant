@@ -1,13 +1,13 @@
 # MQTT
-mqtt:
-  broker: localhost
-  port: 1883
-  client_id: home-assistant-7718
-  keepalive: 60
-  #username: !secret mqtt_username
-  #password: !secret mqtt_password
-  discovery: true
-  discovery_prefix: ha-7718
+#mqtt:
+#  broker: localhost
+#  port: 1883
+#  client_id: home-assistant-7718
+#  keepalive: 60
+#  #username: !secret mqtt_username
+#  #password: !secret mqtt_password
+#  discovery: true
+#  discovery_prefix: ha-7718
 
 homeassistant:
   # Name of the location where Home Assistant is running
@@ -28,6 +28,8 @@ homeassistant:
    # uncomment this to enable backwards compatible API password support
    # - type: legacy_api_password
 
+system_health:
+
 # Show links to resources in log and frontend
 #introduction:
 
@@ -42,8 +44,8 @@ http:
   # api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   base_url: https://bakerbug.duckdns.org:8123
-  ssl_certificate: /home/homeassistant/.homeassistant/fullchain.pem
-  ssl_key: /home/homeassistant/.homeassistant/privkey.pem
+  ssl_certificate: /home/homeassistant/dehydrated/certs/bakerbug.duckdns.org/fullchain.pem
+  ssl_key: /home/homeassistant/dehydrated/certs/bakerbug.duckdns.org/privkey.pem
   #api_password: !secret api_key
   cors_allowed_origins:
     - http://10.99.10.7:7080
@@ -85,7 +87,6 @@ history:
             - sensor.downstairs_thermostat_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
-            - fan.ceiling_fan
             - sensor.fan_speed
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
@@ -97,6 +98,8 @@ history:
             - binary_sensor.sleepnumber_bill_cricket_is_in_bed
             - media_player.living_room
             - media_player.bedroom_tv
+            - switch.driveway_light
+            - switch.frontdoor_light
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
@@ -137,7 +140,7 @@ sensor:
     sensors:
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
-        value_template: "{{ states.fan.ceiling_fan.attributes.speed }}"
+        value_template: "{{ states.fan.living_room_ceiling_fan.attributes.speed }}"
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
@@ -217,7 +220,6 @@ python_script:
 # Garage Doors
 cover:
   - platform: myq
-    hidden: true
     username: !secret chamberlain_username
     password: !secret chamberlain_password
     type: chamberlain
@@ -256,19 +258,19 @@ tuya:
   platform: 'smart_life'
 
 # Living Room Fan
-fan:
-  - platform: mqtt
-    name: Ceiling Fan
-    state_topic: "ha-7718/Ceiling Fan/switch"
-    command_topic: "ha-7718/Ceiling Fan/switch"
-    payload_on: "on"
-    payload_off: "off"
-    speed_state_topic: "ha-7718/Ceiling Fan/level"
-    speed_command_topic: "ha-7718/Ceiling Fan/level"
-    payload_low_speed: 33
-    payload_medium_speed: 66
-    payload_high_speed: 100
-    retain: true
+#fan:
+#  - platform: mqtt
+#    name: Ceiling Fan
+#    state_topic: "ha-7718/Ceiling Fan/switch"
+#    command_topic: "ha-7718/Ceiling Fan/switch"
+#    payload_on: "on"
+#    payload_off: "off"
+#    speed_state_topic: "ha-7718/Ceiling Fan/level"
+#    speed_command_topic: "ha-7718/Ceiling Fan/level"
+#    payload_low_speed: 33
+#    payload_medium_speed: 66
+#    payload_high_speed: 100
+#    retain: true
 
 # Phone Detection
 device_tracker:

@@ -32,6 +32,12 @@ all_indoor_lights:
   entities:
     - group.living_area_lights
     - group.bedroom_lights
+    - switch.wemo_bravo
+all_outdoor_lights:
+  name: All Outdoor Lights
+  entities:
+    - switch.driveway_light
+    - switch.frontdoor_light
 accent_lights:
   name: Accent Lights
   entities:

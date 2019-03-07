@@ -202,3 +202,29 @@
   - data:
       entity_id: switch.wemo_bravo
     service: switch.turn_off
+- id: '1551361947987'
+  alias: Exterior Lights on at Sunset
+  trigger:
+  - event: sunset
+    platform: sun
+  condition: []
+  action:
+  - data:
+      entity_id: switch.driveway_light
+    service: switch.turn_on
+  - data:
+      entity_id: switch.frontdoor_light
+    service: switch.turn_on
+- id: '1551362916030'
+  alias: Exterior Lights Off
+  trigger:
+  - at: '23:00'
+    platform: time
+  condition: []
+  action:
+  - data:
+      entity_id: switch.driveway_light
+    service: switch.turn_off
+  - data:
+      entity_id: switch.frontdoor_light
+    service: switch.turn_off
