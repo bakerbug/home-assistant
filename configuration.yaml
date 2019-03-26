@@ -88,6 +88,7 @@ history:
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
             - sensor.fan_speed
+            - sensor.bedroom_fan_speed
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
             - cover.left_bay
@@ -100,11 +101,13 @@ history:
             - media_player.bedroom_tv
             - switch.driveway_light
             - switch.frontdoor_light
+            - switch.patio_light
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
             - switch.entry_lamp
             - switch.sofa_lamp
+            - switch.0120099868c63aa67ad8_2
             - switch.0120099868c63aa67ad8_3
             - switch.0120099868c63aa67ad8_4
             - switch.sink_light
@@ -141,6 +144,9 @@ sensor:
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
         value_template: "{{ states.fan.living_room_ceiling_fan.attributes.speed }}"
+      bedroom_fan_speed:
+        friendly_name: "Bedroom Fan Speed"
+        value_template: "{{ states.fan.bedroom_fan.attributes.speed }}"
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"

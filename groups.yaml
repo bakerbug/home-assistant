@@ -38,6 +38,7 @@ all_outdoor_lights:
   entities:
     - switch.driveway_light
     - switch.frontdoor_light
+    - switch.patio_light
 accent_lights:
   name: Accent Lights
   entities:

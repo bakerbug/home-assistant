@@ -50,6 +50,9 @@ switch.04200320b4e62d1291c4_1:
 switch.04200320b4e62d1291c4_4:
   friendly_name: Crickets Lamp
   icon: mdi:lamp
+switch.0120099868c63aa67ad8_2:
+  friendly_name: Corner Lamp
+  icon: mdi:lamp
 
 # Wemo outlets
 switch.bedroom_lamp:

@@ -228,3 +228,16 @@
   - data:
       entity_id: switch.frontdoor_light
     service: switch.turn_off
+- id: '1531353746820'
+  alias: Patio Light Timer
+  trigger:
+  - entity_id: switch.patio_light
+    for:
+      minutes: 30
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: switch.patio_light
+    service: switch.turn_off
