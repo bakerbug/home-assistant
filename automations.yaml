@@ -96,7 +96,7 @@
     condition: time
   action:
   - data:
-      entity_id: switch.0120099868c63aa67ad8_4
+      entity_id: switch.0120099868c63aa67ad8_2
     service: switch.turn_on
   - data:
       entity_id: group.counter_lights
