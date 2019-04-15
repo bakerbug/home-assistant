@@ -93,7 +93,7 @@ livingroom_lights:
   entities:
     - switch.entry_lamp
     - switch.sofa_lamp
-    - switch.0120099868c63aa97ad8_2
+    - switch.0120099868c63aa67ad8_2
     - switch.0120099868c63aa67ad8_3
     - switch.0120099868c63aa67ad8_4
 living_area_lights:
