@@ -38,9 +38,11 @@ all_outdoor_lights:
   entities:
     - switch.driveway_light
     - switch.frontdoor_light
+    - switch.patio_light
 accent_lights:
   name: Accent Lights
   entities:
+    - switch.0120099868c63aa67ad8_2
     - switch.0120099868c63aa67ad8_4
 appliances:
   control: hidden
@@ -64,6 +66,7 @@ evening_lights:
   entities:
     - group.ceiling_lights
     - switch.0120099868c63aa67ad8_3
+    - switch.0120099868c63aa67ad8_2
 bedroom_lights:
   name: Bedroom Lights
   entities:
@@ -90,6 +93,7 @@ livingroom_lights:
   entities:
     - switch.entry_lamp
     - switch.sofa_lamp
+    - switch.0120099868c63aa67ad8_2
     - switch.0120099868c63aa67ad8_3
     - switch.0120099868c63aa67ad8_4
 living_area_lights:
