@@ -296,3 +296,13 @@ binary_sensor:
 timer:
   motion_debounce:
     duration: '00:01:00'
+
+input_boolean:
+  debug_away_monitor:
+    icon: mdi:message-text
+  notify_away_monitor:
+    icon: mdi:message-text
+  debug_fan_control:
+    icon: mdi:message-text
+  notify_fan_control:
+    icon: mdi:message-text
