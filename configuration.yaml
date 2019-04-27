@@ -81,6 +81,8 @@ history:
             - binary_sensor.bayberry_away
             - device_tracker.bill_cell
             - device_tracker.cricket_cell
+            - binary_sensor.ring_front_door_motion
+            - binary_sensor.ring_driveway_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity
@@ -263,20 +265,13 @@ tuya:
   country_code: 1
   platform: 'smart_life'
 
-# Living Room Fan
-#fan:
-#  - platform: mqtt
-#    name: Ceiling Fan
-#    state_topic: "ha-7718/Ceiling Fan/switch"
-#    command_topic: "ha-7718/Ceiling Fan/switch"
-#    payload_on: "on"
-#    payload_off: "off"
-#    speed_state_topic: "ha-7718/Ceiling Fan/level"
-#    speed_command_topic: "ha-7718/Ceiling Fan/level"
-#    payload_low_speed: 33
-#    payload_medium_speed: 66
-#    payload_high_speed: 100
-#    retain: true
+# Security Cameras
+ring:
+  username: !secret ring_username
+  password: !secret ring_password
+camera:
+    - platform: ring
+ffmpeg:
 
 # Phone Detection
 device_tracker:
@@ -289,9 +284,15 @@ device_tracker:
           - BILLS-GALAXY-S8
           - Cricket-Moto-Z
 
-# Workday Sensor
+# Custom Sensors
 binary_sensor:
     - platform: workday
       name: Workday
       country: US
+    - platform: ring
+      monitored_conditions: motion
 
+# Timers
+timer:
+  motion_debounce:
+    duration: '00:01:00'

@@ -218,10 +218,13 @@
 - id: '1551362916030'
   alias: Exterior Lights Off
   trigger:
-  - at: '23:00'
+  - at: '21:00'
     platform: time
   condition: []
   action:
+  - data:
+      entity_id: timer.motion_debounce
+    service: timer.start
   - data:
       entity_id: switch.driveway_light
     service: switch.turn_off
@@ -240,4 +243,54 @@
   action:
   - data:
       entity_id: switch.patio_light
+    service: switch.turn_off
+- id: '1555681619395'
+  alias: Front Door Motion
+  trigger:
+  - entity_id: binary_sensor.ring_front_door_motion
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.frontdoor_light
+    state: 'off'
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: switch.frontdoor_light
+    service: switch.turn_on
+  - delay: 00:05:00
+  - data:
+      entity_id: switch.frontdoor_light
+    service: switch.turn_off
+- id: '1555681619396'
+  alias: Driveway Motion
+  trigger:
+  - entity_id: binary_sensor.ring_driveway_cam_motion
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: timer.motion_debounce
+    state: 'idle'
+  - condition: state
+    entity_id: switch.driveway_light
+    state: 'off'
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id: switch.driveway_light
+    service: switch.turn_on
+  - delay: 00:05:00
+  - data:
+      entity_id: timer.motion_debounce
+    service: timer.start
+  - data:
+      entity_id: switch.driveway_light
     service: switch.turn_off
