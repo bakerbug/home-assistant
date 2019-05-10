@@ -1,8 +1,8 @@
 """
 Adjust the ceiling fan speed based on the temperature difference between the upstairs and downstairs thermostats.
 """
-DEBUG = False
-MESSAGE = True
+DEBUG = hass.states.get('input_boolean.debug_fan_control').state
+MESSAGE = hass.states.get('input_boolean.notify_fan_control').state
 entity_AWAY = 'binary_sensor.bayberry_away'
 entity_UPSTAIRS_THERMOSTAT = 'sensor.upstairs_thermostat_temperature'
 entity_DOWNSTAIRS_THERMOSTAT = 'sensor.downstairs_thermostat_temperature'
@@ -37,7 +37,7 @@ delta = abs(upstairs_temp - downstairs_temp)
 new_speed = 'init'
 fan_msg = 'init'
 
-if DEBUG:
+if DEBUG == 'on':
     debug_msg = 'Previous fan state: {}.'.format(fan_speed)
     hass.services.call('notify', 'slack_assistant', {"message": debug_msg})
 
@@ -73,7 +73,7 @@ if fan_speed != new_speed and new_speed != 'init':
     hass.services.call('fan', 'set_speed', {'entity_id': entity_FAN, 'speed': new_speed})
     state_change = True
 
-    if DEBUG:
+    if DEBUG == 'on':
         debug_msg = 'Called speed: {}'.format(new_speed)
         hass.services.call('notify', 'slack_assistant', {"message": debug_msg})
 
@@ -81,7 +81,7 @@ if new_speed == 'init':
     new_speed = fan_speed
 
 # Messaging
-if state_change and MESSAGE:
+if state_change and MESSAGE == 'on':
     if fan_msg == 'init':
         fan_msg = 'Upstairs: {} Downstairs: {} Delta: {}.  Adjusting fan from {} to {}.'.format(upstairs_temp, downstairs_temp, delta, fan_speed, new_speed)
 

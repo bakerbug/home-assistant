@@ -2,7 +2,6 @@
 Enables or disables automations based on away status.
 """
 
-SEND_MSG = True
 SUN_ELEV_HIGH = 15.00
 
 entity_SUN = 'sun.sun'
@@ -16,6 +15,7 @@ home_off_tuple = ('automation.lights_off_when_away', 'automation.lights_on_when_
 nest_away = hass.states.get('binary_sensor.bayberry_away').state
 bill_phone = hass.states.get('device_tracker.bill_cell').state
 cricket_phone = hass.states.get('device_tracker.cricket_cell').state
+notify = hass.states.get('input_boolean.notify_away_monitor').state
 person_id = data.get('entity')
 person_label = hass.states.get(person_id).attributes["friendly_name"]
 person_state = hass.states.get(person_id).state
@@ -57,7 +57,7 @@ elif person_state == 'home':
     for automation in home_off_tuple:
         hass.services.call('automation', 'turn_off', {'entity_id': automation})
 
-if SEND_MSG:
+if notify == 'on':
     if person_state == 'home':
         event_msg = '{0} has arrived home.'.format(person_label)
     else:
