@@ -58,7 +58,7 @@ switch.0120099868c63aa67ad8_2:
 switch.bedroom_lamp:
   icon: mdi:lamp
 switch.wemo_alpha:
-  icon: mdi:water
+  icon: mdi:fan
 switch.wemo_bravo:
   icon: mdi:desk-lamp
   friendly_name: Kyle's Light

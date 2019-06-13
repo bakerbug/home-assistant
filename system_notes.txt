@@ -1,6 +1,12 @@
 # Debug MQTT traffic
 mosquitto_sub -t ha-7718/# -v
 
+# Watch the Home Assistant service
+sudo journalctl -u home-assistant@homeassistant.service -f
+
+# Check AppDaemon status (start/stop/restart)
+sudo systemctl status appdaemon@homeassistant.service
+
 # Install Docker for SmartThings MQTT Bridge
 sudo docker build -t smartthings-mqtt-bridge -f Dockerfile-rpi https://github.com/stjohnjohnson/smartthings-mqtt-bridge.git
 

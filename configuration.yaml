@@ -20,7 +20,8 @@ homeassistant:
   # metric for Metric, imperial for Imperial
   unit_system: imperial
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: US/Central
+  #time_zone: US/Central
+  time_zone: America/Chicago
   # Customization file
   customize: !include customize.yaml
   auth_providers:
@@ -29,6 +30,13 @@ homeassistant:
    # - type: legacy_api_password
 
 system_health:
+
+recorder:
+  purge_keep_days: 2
+  db_url: 'sqlite:///:memory:'
+  exclude:
+    entities:
+      - sun.sun
 
 # Show links to resources in log and frontend
 #introduction:
@@ -66,6 +74,9 @@ updater:
 # Discover some devices automatically
 discovery:
 
+wemo:
+  discovery: true
+
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
 
@@ -76,7 +87,6 @@ history:
         entities:
             - weather.dark_sky
             - sun.sun
-            - sensor.moon
             - binary_sensor.workday
             - binary_sensor.bayberry_away
             - device_tracker.bill_cell
@@ -140,7 +150,6 @@ sensor:
   - platform: time_date
     display_options:
       - 'time'
-  - platform: moon
   - platform: template
     sensors:
       fan_speed:
@@ -152,6 +161,14 @@ sensor:
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
+
+  - platform: version
+    name: Installed HA Version
+    source: local
+
+  - platform: version
+    name: Available HA Version
+    source: pypi
 
 # Custom Switches
 switch:
@@ -189,9 +206,9 @@ switch:
 
 
 # Text to speech
-tts:
-  - platform: google_translate
-    service_name: google_say
+#tts:
+#  - platform: google_translate
+#    service_name: google_say
 
 # Cloud
 cloud:
@@ -307,3 +324,17 @@ input_boolean:
     icon: mdi:message-text
   notify_fan_control:
     icon: mdi:message-text
+  active_pollen_monitor:
+    name: Pollen Alert
+    icon: mdi:amazon-alexa
+  debug_pollen_monitor:
+    icon: mdi:message-text
+  notify_pollen_monitor:
+    icon: mdi:message-text
+
+# Pollen Sensor
+iqvia:
+  zip_code: "35758"
+  monitored_conditions:
+    - allergy_index_today
+    - allergy_index_tomorrow
