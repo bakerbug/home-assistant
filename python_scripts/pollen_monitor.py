@@ -4,12 +4,13 @@ import json
 import requests
 import yaml
 
+
 class PollenMonitor(hass.Hass):
 
     def initialize(self):
         self.pollen_warning_level = 8.00
-        #self.alert_time = datetime.time(20, 0, 0)
-        self.alert_time = datetime.time(1, 0, 0) # Hack to fix issue getting timezone correct
+        #self.alert_time = datetime.time(19, 30, 0)
+        self.alert_time = datetime.time(0, 30, 0)  # Hack to fix issue getting timezone correct
         self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor')
         self.MESSAGE = self.get_state('input_boolean.notify_pollen_monitor')
         self.pollen_alert_active = self.get_state('input_boolean.active_pollen_monitor')
@@ -31,20 +32,18 @@ class PollenMonitor(hass.Hass):
             self.call_service('notify/slack_assistant', message='Initialized at {}'.format(current_time))
 
     def report_pollen(self, kwargs):
+        self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor')
+        self.MESSAGE = self.get_state('input_boolean.notify_pollen_monitor')
+        self.pollen_alert_active = self.get_state('input_boolean.active_pollen_monitor')
+
         if self.pollen_alert_active == 'off':
             return
 
-        alert_msg = self.generate_alert_message()
-        body = json.dumps({'notification': alert_msg, 'accessCode': self.alexa_notify_secret})
-        debug_msg = 'Alert time: {}, alert_level: {}, index: {}'.format(self.alert_time, self.pollen_warning_level, self.pollen_index)
-
-        if self.DEBUG == 'on':
-            self.call_service('notify/slack_assistant', message=debug_msg)
-            self.call_service('notify/slack_assistant', message=alert_msg)
-
+        # Test the pollen level
         if float(self.pollen_index) >= self.pollen_warning_level or self.MESSAGE == 'on':
+            alert_msg = self.generate_alert_message()
+            body = json.dumps({'notification': alert_msg, 'accessCode': self.alexa_notify_secret})
             requests.post(url="https://api.notifymyecho.com/v1/NotifyMe", data=body)
-            self.call_service('notify/slack_assistant', message=alert_msg)
 
         if self.DEBUG == 'on':
             self.debug_next_alert()
