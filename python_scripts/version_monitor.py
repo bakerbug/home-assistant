@@ -8,27 +8,52 @@ import yaml
 class VersionMonitor(hass.Hass):
 
     def initialize(self):
-        self.ver_installed = self.get_state('sensor.installed_ha_version')
-        self.ver_available = self.get_state('sensor.available_ha_version')
-        self.update_time = datetime.time(18, 0, 0)
-        self.has_been_announced = False
+        self.DEBUG = self.get_state('input_boolean.debug_version_monitor')
+        self.update_time = datetime.time(0, 0, 0)
         with open('/home/homeassistant/.homeassistant/secrets.yaml', 'r') as secrets_file:
             config_data = yaml.load(secrets_file)
         self.alexa_notify_secret  = config_data['notify_me_key']
+        self.notified_list = []
 
-        self.ver_monitor = self.run_daily(self.report_new_version, self.update_time)
+        self.ver_monitor = self.run_hourly(self.check_version, self.update_time)
 
-    def report_new_version(self, kwargs):
-        if self.ver_installed == self.ver_available:
-            self.has_been_announced = False
-            return
+        if self.DEBUG == 'on':
+            debug_msg = 'Initializing Version Monitor.'
+            self.call_service('notify/slack_assistant', message=debug_msg)
 
-        if self.has_been_announced:
-            return
+            # Initialization test
+            self.report_new_version('0.0.0')
 
-        alert_msg = 'A new version of Home Assistant is available. {} has been released.'.format(self.ver_available)
+    def check_version(self, kwargs):
+        self.DEBUG = self.get_state('input_boolean.debug_version_monitor')
+        ver_available = self.get_state('sensor.available_ha_version')
+        ver_installed = self.get_state('sensor.installed_ha_version')
+
+        if self.DEBUG == 'on':
+            debug_msg = 'Version monitor checking.  Installed: {} Available: {}'.format(ver_installed, ver_available)
+            self.call_service('notify/slack_assistant', message=debug_msg)
+            debug_msg = 'Notified List: {}'.format(self.notified_list)
+            self.call_service('notify/slack_assistant', message=debug_msg)
+
+        if ver_installed == ver_available:
+            if self.notified_list:
+                self.notified_list.clear()
+
+                if self.DEBUG == 'on':
+                    debug_msg = 'Installed version up to date. Purging notified list: {}'.format(self.notified_list)
+                    self.call_service('notify/slack_assistant', message=debug_msg)
+
+        elif ver_available not in self.notified_list:
+            report_new_version(ver_available)
+
+    def report_new_version(self, new_version):
+        self.notified_list.append(new_version)
+        alert_msg = 'A new version of Home Assistant is available. {} has been released.'.format(new_version)
         body = json.dumps({'notification': alert_msg, 'accessCode': self.alexa_notify_secret})
 
-        requests.post(url="https://api.notifymyecho.com/v1/NotifyMe", data=body)
-        #self.call_service('notify/slack_assistant', message=alert_msg)
-        self.has_been_announced = True
+        if self.DEBUG == 'on':
+            self.call_service('notify/slack_assistant', message=alert_msg)
+            debug_msg = 'Notify List is now: {}'.format(self.notified_list)
+            self.call_service('notify/slack_assistant', message=debug_msg)
+        else:
+            requests.post(url="https://api.notifymyecho.com/v1/NotifyMe", data=body)

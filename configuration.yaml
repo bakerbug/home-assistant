@@ -331,6 +331,8 @@ input_boolean:
     icon: mdi:message-text
   notify_pollen_monitor:
     icon: mdi:message-text
+  debug_version_monitor:
+    icon: mdi:message-text
 
 # Pollen Sensor
 iqvia:
