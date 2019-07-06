@@ -298,6 +298,8 @@ device_tracker:
       port: 80
       username: !secret netgear_user
       password: !secret netgear_pass
+      accesspoints:
+          - A0:40:A0:5A:03:D6
       devices:
           - BILLS-GALAXY-S8
           - Cricket-Moto-Z
