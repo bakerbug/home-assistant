@@ -44,7 +44,7 @@ class VersionMonitor(hass.Hass):
                     self.call_service('notify/slack_assistant', message=debug_msg)
 
         elif ver_available not in self.notified_list:
-            report_new_version(ver_available)
+            self.report_new_version(ver_available)
 
     def report_new_version(self, new_version):
         self.notified_list.append(new_version)
