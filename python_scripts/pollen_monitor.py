@@ -11,7 +11,7 @@ class PollenMonitor(hass.Hass):
         self.pollen_warning_level = 8.00
         #self.alert_time = datetime.time(19, 30, 0)
         self.alert_time = datetime.time(0, 30, 0)  # Hack to fix issue getting timezone correct
-        self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor')
+        self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor') == 'on'
         self.MESSAGE = self.get_state('input_boolean.notify_pollen_monitor')
         self.pollen_alert_active = self.get_state('input_boolean.active_pollen_monitor')
         self.pollen_index = self.get_state('sensor.allergy_index_tomorrow')
@@ -31,8 +31,11 @@ class PollenMonitor(hass.Hass):
             current_time = datetime.datetime.now()
             self.call_service('notify/slack_assistant', message='Initialized at {}'.format(current_time))
 
+        init_msg = 'Initialized Pollen Monitor.'
+        self.call_service('notify/slack_assistant', message=init_msg)
+
     def report_pollen(self, kwargs):
-        self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor')
+        self.DEBUG = self.get_state('input_boolean.debug_pollen_monitor') == 'on'
         self.MESSAGE = self.get_state('input_boolean.notify_pollen_monitor')
         self.pollen_alert_active = self.get_state('input_boolean.active_pollen_monitor')
 
@@ -45,7 +48,7 @@ class PollenMonitor(hass.Hass):
             body = json.dumps({'notification': alert_msg, 'accessCode': self.alexa_notify_secret})
             requests.post(url="https://api.notifymyecho.com/v1/NotifyMe", data=body)
 
-        if self.DEBUG == 'on':
+        if self.DEBUG:
             self.debug_next_alert()
 
     def debug_next_alert(self):
