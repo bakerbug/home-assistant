@@ -1,3 +1,8 @@
+# Upgrade a package in the homeassistant virtualenv
+sudo -u homeassistant -H -s
+source /srv/homeassistant/bin/activate
+pip3 install --upgrade homeassistant
+
 # Debug MQTT traffic
 mosquitto_sub -t ha-7718/# -v
 

@@ -89,10 +89,13 @@ history:
             - sun.sun
             - binary_sensor.workday
             - binary_sensor.bayberry_away
+            - sensor.bill_location
+            - sensor.cricket_location
             - device_tracker.bill_cell
             - device_tracker.cricket_cell
             - binary_sensor.ring_front_door_motion
             - binary_sensor.ring_driveway_cam_motion
+            - binary_sensor.ring_backyard_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.upstairs_thermostat_humidity
@@ -161,6 +164,12 @@ sensor:
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
+      bill_location:
+        friendly_name: "Bill's Location"
+        value_template: "{{ states.device_tracker.life360_bill_baker.attributes.place }}"
+      cricket_location:
+        friendly_name: "Cricket's Location"
+        value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
 
   - platform: version
     name: Installed HA Version
@@ -304,6 +313,12 @@ device_tracker:
       devices:
           - BILLS-GALAXY-S8
           - Cricket-Moto-Z
+
+# Life 360
+life360:
+  accounts:
+    - username: !secret life360_user
+      password: !secret life360_pass
 
 # Custom Sensors
 binary_sensor:
