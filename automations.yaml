@@ -322,3 +322,24 @@
   condition: []
   action:
   - service: python_script.pollen_monitor
+- id: '1569264293957'
+  alias: Arrive Home from Work
+  trigger:
+  - entity_id: sensor.bill_location
+    platform: state
+    to: Home
+  - entity_id: sensor.cricket_location
+    platform: state
+    to: Home
+  condition:
+  - after: '16:00:00'
+    before: '18:00:00'
+    condition: time
+  action:
+  - alias: ''
+    data:
+      entity_id: cover.right_bay
+    service: cover.open_cover
+  - data:
+      entity_id: cover.left_bay
+    service: cover.open_cover
