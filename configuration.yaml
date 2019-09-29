@@ -246,6 +246,19 @@ cloud:
         - climate.downstairs
         - climate.upstairs
 
+# Alexa media
+alexa_media:
+  accounts:
+    - email: !secret amazon_user
+      password: !secret amazon_password
+      url: amazon.com
+      include_devices:
+        - "Kitchen"
+        - "Computer Room"
+        - "Upstairs"
+        - "Master Bedroom"
+        - "Kyle's Room"
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -346,6 +359,10 @@ input_boolean:
   debug_fan_control:
     icon: mdi:message-text
   notify_fan_control:
+    icon: mdi:message-text
+  debug_location_monitor:
+    icon: mdi:message-text
+  notify_location_monitor:
     icon: mdi:message-text
   active_pollen_monitor:
     name: Pollen Alert
