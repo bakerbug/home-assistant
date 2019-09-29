@@ -219,6 +219,7 @@ cloud:
         - cover.right_bay
         - switch.fan_control
         - switch.humidifier
+        - input_boolean.bus_notify
       exclude_domains:
         - alert
         - automation
@@ -318,6 +319,11 @@ timer:
     duration: '00:01:00'
 
 input_boolean:
+  bus_notify:
+    name: Bus Notify
+    icon: mdi:bus-school
+  debug_bus_notify:
+    icon: mdi:message-text
   debug_away_monitor:
     icon: mdi:message-text
   notify_away_monitor:
