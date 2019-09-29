@@ -4,9 +4,13 @@ known_devices.yaml
 *.db
 *.log
 *.pem
+*.pickle
 .*
 
 .cloud/
 .idea/
 .storage/
 tts/
+custom_components/
+alexa_media_player/
+
