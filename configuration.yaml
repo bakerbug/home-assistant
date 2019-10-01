@@ -259,6 +259,10 @@ alexa_media:
         - "Master Bedroom"
         - "Kyle's Room"
 
+# HACS Home Assistant Community Store
+hacs:
+  token: !secret github_token
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
