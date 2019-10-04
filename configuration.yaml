@@ -172,6 +172,41 @@ sensor:
         friendly_name: "Cricket's Location"
         value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
 
+    # Add 1 year for birthdays.
+  - platform: anniversaries
+    name: Bill's Birthday
+    date: !secret bday_bill
+  - platform: anniversaries
+    name: Cricket's Birthday
+    date: !secret bday_cricket
+  - platform: anniversaries
+    name: Kyle's Birthday
+    date: !secret bday_kyle
+  # Baker
+  - platform: anniversaries
+    name: Brian Baker's Birthday
+    date: !secret bday_brian
+  - platform: anniversaries
+    name: Bill Baker's Birthday
+    date: !secret bday_dad
+  - platform: anniversaries
+    name: Sharon Baker's Birthday
+    date: !secret bday_sharon
+  - platform: anniversaries
+    name: Barbara Baker's Birthday
+    date: !secret bday_mom
+  # Davis
+  - platform: anniversaries
+    name: Kelly Davis' Birthday
+    date: !secret bday_kelly
+  - platform: anniversaries
+    name: Gavin Davis' Birthday
+    date: !secret bday_gavin
+
+
+
+
+
   - platform: version
     name: Installed HA Version
     source: local

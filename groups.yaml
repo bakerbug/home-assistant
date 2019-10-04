@@ -27,6 +27,7 @@ kyle_view:
   entities:
     - switch.wemo_bravo
 
+# Groups
 all_indoor_lights:
   name: All Indoor Lights
   entities:
@@ -55,6 +56,18 @@ away_lights:
   entities:
     - group.ceiling_lights
     - switch.0120099868c63aa67ad8_3
+birthday_list:
+  name: Birthday List
+  entities:
+    - sensor.barbara_baker_s_birthday
+    - sensor.bill_baker_s_birthday
+    - sensor.bill_s_birthday
+    - sensor.brian_baker_s_birthday
+    - sensor.cricket_s_birthday
+    - sensor.gavin_davis_birthday
+    - sensor.kelly_davis_birthday
+    - sensor.kyle_s_birthday
+    - sensor.sharon_baker_s_birthday
 evening_early_lights:
   name: Early Evening Lights
   entities:
