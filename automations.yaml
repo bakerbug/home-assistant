@@ -128,18 +128,6 @@
   - data:
       entity_id: group.all_indoor_lights
     service: switch.turn_off
-- id: '1535862789511'
-  alias: Away Monitor
-  trigger:
-  - entity_id: device_tracker.bill_cell
-    platform: state
-  - entity_id: device_tracker.cricket_cell
-    platform: state
-  condition: []
-  action:
-  - data_template:
-      entity: '{{ trigger.entity_id }}'
-    service: python_script.away_monitor
 - id: '1537990954788'
   alias: Lights On When Away
   trigger:

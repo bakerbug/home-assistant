@@ -91,8 +91,6 @@ history:
             - binary_sensor.bayberry_away
             - sensor.bill_location
             - sensor.cricket_location
-            - device_tracker.bill_cell
-            - device_tracker.cricket_cell
             - binary_sensor.ring_front_door_motion
             - binary_sensor.ring_driveway_cam_motion
             - binary_sensor.ring_backyard_cam_motion
@@ -150,6 +148,9 @@ sun:
 
 # Custom Sensors
 sensor:
+  - platform: cert_expiry
+    host: bakerbug.duckdns.org
+    port: 8123
   - platform: time_date
     display_options:
       - 'time'
@@ -318,18 +319,18 @@ camera:
     - platform: ring
 ffmpeg:
 
-# Phone Detection
-device_tracker:
-    - platform: netgear
-      host: 10.99.10.1
-      port: 80
-      username: !secret netgear_user
-      password: !secret netgear_pass
-      accesspoints:
-          - A0:40:A0:5A:03:D6
-      devices:
-          - BILLS-GALAXY-S8
-          - Cricket-Moto-Z
+## Phone Detection
+#device_tracker:
+#    - platform: netgear
+#      host: 10.99.10.1
+#      port: 80
+#      username: !secret netgear_user
+#      password: !secret netgear_pass
+#      accesspoints:
+#          - A0:40:A0:5A:03:D6
+#      devices:
+#          - BILLS-GALAXY-S8
+#          - Cricket-Moto-Z
 
 # Life 360
 life360:
@@ -356,8 +357,6 @@ input_boolean:
     icon: mdi:bus-school
   debug_bus_notify:
     icon: mdi:message-text
-  debug_away_monitor:
-    icon: mdi:message-text
   notify_away_monitor:
     icon: mdi:message-text
   debug_fan_control:
@@ -380,9 +379,9 @@ input_boolean:
   debug_version_monitor:
     icon: mdi:message-text
 
-# Pollen Sensor
-iqvia:
-  zip_code: "35758"
-  monitored_conditions:
-    - allergy_index_today
-    - allergy_index_tomorrow
+## Pollen Sensor
+#iqvia:
+#  zip_code: "35758"
+#  monitored_conditions:
+#    - allergy_index_today
+#    - allergy_index_tomorrow
