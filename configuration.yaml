@@ -75,7 +75,16 @@ updater:
 discovery:
 
 wemo:
-  discovery: true
+  discovery: false
+  static:
+    - 10.99.10.20
+    - 10.99.10.21
+    - 10.99.10.22
+    - 10.99.10.23
+    - 10.99.10.24
+    - 10.99.10.25
+    - 10.99.10.26
+
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -171,6 +180,10 @@ sensor:
       cricket_location:
         friendly_name: "Cricket's Location"
         value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
+      washing_machine_power:
+        friendly_name: "Washing Machine Power"
+        value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
+        unit_of_measurement: "Watts"
 
     # Add 1 year for birthdays.
   - platform: anniversaries
