@@ -105,8 +105,10 @@ history:
             - binary_sensor.ring_backyard_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
+            - sensor.weather_temperature
             - sensor.upstairs_thermostat_humidity
             - sensor.downstairs_thermostat_humidity
+            - sensor.weather_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
             - sensor.fan_speed
@@ -184,6 +186,14 @@ sensor:
         friendly_name: "Washing Machine Power"
         value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
         unit_of_measurement: "Watts"
+      weather_humidity:
+        friendly_name: "Outdoor Humidity"
+        unit_of_measurement: "%"
+        value_template: "{{ states.weather.dark_sky.attributes.humidity }}"
+      weather_temperature:
+        friendly_name: "Outdoor Temperature"
+        unit_of_measurement: "\u00B0F"
+        value_template: "{{ states.weather.dark_sky.attributes.temperature }}"
 
     # Add 1 year for birthdays.
   - platform: anniversaries
