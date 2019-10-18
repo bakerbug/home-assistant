@@ -35,7 +35,7 @@ class LocationMonitor(hass.Hass):
                               target='media_player.computer_room')
 
         # For debugging
-        #self.location_change('sensor.bill_location', 'bogus', 'None', 'Home', 'bogus')
+        #self.location_change('sensor.bill_location', 'bogus', 'Home', 'None', 'bogus')
 
     def location_change(self, entity, attribute, old, new, kwargs):
         self.DEBUG = self.get_state('input_boolean.debug_location_monitor') == 'on'
@@ -61,6 +61,11 @@ class LocationMonitor(hass.Hass):
         light_msg = None
 
         if bill_home or cricket_home:
+            house_occupied = True
+        else:
+            house_occupied = False
+
+        if self.last_new == 'Home':
             if sun_elevation < self.SUN_ELEV_HIGH:
                 if 7 < hour < 22:
                     self.turn_on('group.evening_early_lights')
@@ -75,13 +80,13 @@ class LocationMonitor(hass.Hass):
             for automation in self.home_off_tuple:
                 self.turn_off(automation)
 
-        else:
+        elif self.last_old == 'Home' and not house_occupied:
             for automation in self.away_on_tuple:
-                self.call_service('automation/turn_on', entity=automation)
+                self.turn_on(automation)
             for automation in self.away_off_tuple:
-                self.call_service('automation/turn_off', entity=automation)
+                self.turn_off(automation)
 
-            self.call_serivce('switch/turn_off', entity='group.all_indoor_lights')
+            self.turn_off('group.all_indoor_lights')
             light_msg = "Turning off all lights."
 
         if light_msg is not None:
