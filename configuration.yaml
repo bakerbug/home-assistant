@@ -159,9 +159,6 @@ sun:
 
 # Custom Sensors
 sensor:
-  - platform: cert_expiry
-    host: bakerbug.duckdns.org
-    port: 8123
   - platform: time_date
     display_options:
       - 'time'
