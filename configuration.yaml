@@ -100,6 +100,7 @@ history:
             - binary_sensor.bayberry_away
             - sensor.bill_location
             - sensor.cricket_location
+            - lock.front_door
             - binary_sensor.ring_front_door_motion
             - binary_sensor.ring_driveway_cam_motion
             - binary_sensor.ring_backyard_cam_motion

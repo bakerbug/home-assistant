@@ -7,6 +7,7 @@ class LocationMonitor(hass.Hass):
         self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
         self.alexa_list = ['media_player.kitchen', 'media_player.computer_room', 'media_player.master_bedroom']
+        self.lock_list = ['lock.front_door',]
         self.SUN_ELEV_HIGH = 15.00
         self.away_on_tuple = (
             'automation.hvac_balancing',
@@ -59,6 +60,7 @@ class LocationMonitor(hass.Hass):
         hour, minute = time.split(':')
         hour = int(hour)
         light_msg = None
+        lock_msg = None
 
         if bill_home or cricket_home:
             house_occupied = True
@@ -88,6 +90,13 @@ class LocationMonitor(hass.Hass):
 
             self.turn_off('group.all_indoor_lights')
             light_msg = "Turning off all lights."
+
+            for lock in self.lock_list:
+                if self.get_state(lock) == 'unlocked':
+                    name = self.friendly_name(lock)
+                    self.call_service("lock/lock", entity_id = lock)
+                    lock_msg = f'Locking {name}.'
+                    self.call_service('notify/slack_assistant', message=lock_msg)
 
         if light_msg is not None:
             self.call_service('notify/slack_assistant', message=light_msg)
