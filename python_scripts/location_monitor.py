@@ -29,7 +29,7 @@ class LocationMonitor(hass.Hass):
             'automation.lights_on_when_away')
 
         init_msg = 'Initialized Location Monitor.'
-        self.call_service('notify/slack_assistant', message=init_msg)
+        self.slack(init_msg)
 
         if self.DEBUG:
             self.call_service('notify/alexa_media', message=init_msg, data={"type": "tts"},
@@ -96,10 +96,10 @@ class LocationMonitor(hass.Hass):
                     name = self.friendly_name(lock)
                     self.call_service("lock/lock", entity_id = lock)
                     lock_msg = f'Locking {name}.'
-                    self.call_service('notify/slack_assistant', message=lock_msg)
+                    self.slack(lock_msg)
 
         if light_msg is not None:
-            self.call_service('notify/slack_assistant', message=light_msg)
+            self.slack(light_msg)
 
     def notify(self):
         if self.DEBUG:
@@ -124,5 +124,9 @@ class LocationMonitor(hass.Hass):
         alexa_msg = f'{name} has {direction} {location}.'
         self.call_service('notify/alexa_media', message=alexa_msg, data={"type": "tts"},
                           target=target_list)
-        self.call_service('notify/slack_assistant', message=alexa_msg)
+        self.slack(alexa_msg)
 
+    def slack(self, message):
+        notify = self.get_state('input_boolean.notify_location_monitor') == 'on'
+        if notify:
+            self.call_service("notify/slack_assistant", message=message)
