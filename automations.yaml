@@ -350,3 +350,17 @@
       - media_player.computer_room
       - media_player.master_bedroom
     service: notify.alexa_media
+- id: '1572571564942'
+  alias: Washing Machine Power On
+  description: ''
+  trigger:
+  - entity_id: switch.washing_machine
+    for: 0:01:00
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - alias: ''
+    data:
+      entity_id: switch.washing_machine
+    service: switch.turn_on
