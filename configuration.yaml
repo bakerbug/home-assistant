@@ -101,6 +101,8 @@ history:
             - sensor.bill_location
             - sensor.cricket_location
             - lock.front_door
+            - cover.left_bay
+            - cover.right_bay
             - binary_sensor.ring_front_door_motion
             - binary_sensor.ring_driveway_cam_motion
             - binary_sensor.ring_backyard_cam_motion
@@ -116,8 +118,6 @@ history:
             - sensor.bedroom_fan_speed
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
-            - cover.left_bay
-            - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber
             - sensor.sleepnumber_bill_cricket_sleepnumber
             - binary_sensor.sleepnumber_bill_bill_is_in_bed
@@ -286,6 +286,7 @@ cloud:
         - switch.fan_control
         - switch.humidifier
         - input_boolean.bus_notify
+        - input_boolean.status_report
       exclude_domains:
         - alert
         - automation
@@ -434,6 +435,8 @@ input_boolean:
     icon: mdi:message-text
   debug_version_monitor:
     icon: mdi:message-text
+  status_report:
+    icon: mdi:amazon-alexa
 
 ## Pollen Sensor
 #iqvia:
