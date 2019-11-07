@@ -3,10 +3,8 @@ import appdaemon.plugins.hass.hassapi as hass
 class StatusReport(hass.Hass):
 
     def initialize(self):
-        self.entity_list = ("cover.left_bay", "cover.right_bay", "sensor.upstairs_thermostat_hvac_state", "sensor.downstairs_thermostat_hvac_state",
-                         "sensor.upstairs_thermostat_temperature", "sensor.downstairs_thermostat_temperature",
-                         "lock.front_door", "sensor.bill_location", "sensor.cricket_location")
-        self.alexa_list = ['media_player.kitchen', 'media_player.computer_room', 'media_player.master_bedroom']
+        self.entity_list = ("cover.left_bay", "cover.right_bay", "lock.front_door")
+        self.alexa_list = ['media_player.master_bedroom']
         status_switch = self.listen_state(self.run_report, "input_boolean.status_report", new="on")
         self.slack("Initialized Status Report.")
 
