@@ -31,14 +31,14 @@ class BirthdayMonitor(hass.Hass):
             print(f"CHECKING: {bday}")
             days_until = self.get_state(bday)
             who = self.get_state(bday, attribute="friendly_name")
-            years = str(int(self.get_state(bday, attribute='years')) - 1)
+            years = str(self.get_state(bday, attribute='current_years'))
 
             if days_until == '7':
                 message = f"It is one week until {who}."
             elif days_until == '0':
-                #inf = inflect.engine()
-                #message = f"Today is {who}'s {inf.ordinal(years)} birthday!"
-                message = f"Today is {who}."
+                inf = inflect.engine()
+                message = f"Today is {who}'s {inf.ordinal(years)} birthday!"
+                #message = f"Today is {who}."
             else:
                 message = None
 
