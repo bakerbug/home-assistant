@@ -116,6 +116,7 @@ history:
             - sensor.downstairs_thermostat_hvac_state
             - sensor.fan_speed
             - sensor.bedroom_fan_speed
+            - switch.wemo_alpha
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
             - sensor.sleepnumber_bill_bill_sleepnumber
@@ -180,6 +181,16 @@ sensor:
       cricket_location:
         friendly_name: "Cricket's Location"
         value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
+      last_alexa:
+        friendly_name: "Active Alexa"
+        entity_id:
+          - media_player.computer_room
+          - media_player.kitchen
+          - media_player.kyle_s_room
+          - media_player.master_bedroom
+          - media_player.upstairs
+        value_template: >
+          {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
         friendly_name: "Washing Machine Power"
         value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
@@ -254,11 +265,11 @@ switch:
             entity_id: automation.hvac_balancing
       humidifier:
         friendly_name: "Humidifier"
-        value_template: "{{ is_state('switch.wemo_alpha', 'on') }}"
+        value_template: "{{ is_state('switch.0120099868c63aa67ad8_1', 'on') }}"
         turn_on:
           - service: switch.turn_on
             data:
-              entity_id: switch.wemo_alpha
+              entity_id: switch.0120099868c63aa67ad8_1
           - service: automation.turn_off
             data:
               entity_id: automation.restart_humidifier
@@ -268,7 +279,7 @@ switch:
               entity_id: automation.restart_humidifier
           - service: switch.turn_off
             data:
-              entity_id: switch.wemo_alpha
+              entity_id: switch.0120099868c63aa67ad8_1
 
 
 # Text to speech
@@ -334,17 +345,17 @@ cover:
     username: !secret chamberlain_username
     password: !secret chamberlain_password
     type: chamberlain
-    
+
 # Nest
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
-  
+
 # Weather
 weather:
   - platform: darksky
     api_key: !secret darksky_api_key
-    
+
 # Plex
 #media_player:
 #  - platform: plex
@@ -419,6 +430,8 @@ input_boolean:
   debug_fan_control:
     icon: mdi:message-text
   notify_fan_control:
+    icon: mdi:message-text
+  debug_laundry:
     icon: mdi:message-text
   debug_location_monitor:
     icon: mdi:message-text

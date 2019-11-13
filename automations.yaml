@@ -148,7 +148,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.wemo_alpha
+      entity_id: switch.0120099868c63aa67ad8_1
     service: switch.turn_off
 - id: '1542776135207'
   alias: Watch TV - Stop
@@ -159,7 +159,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.wemo_alpha
+      entity_id: switch.0120099868c63aa67ad8_1
     service: switch.turn_on
   - data:
       entity_id: automation.restart_humidifier
