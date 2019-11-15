@@ -331,25 +331,6 @@
   - data:
       entity_id: cover.left_bay
     service: cover.open_cover
-- id: '1570905326894'
-  alias: Laundry Announcement
-  description: ''
-  trigger:
-  - below: '10'
-    entity_id: sensor.washing_machine_power
-    for: 00:10:00
-    platform: numeric_state
-  condition: []
-  action:
-  - data:
-      data:
-        type: tts
-      message: The laundry has completed.
-      target:
-      - media_player.kitchen
-      - media_player.computer_room
-      - media_player.master_bedroom
-    service: notify.alexa_media
 - id: '1572571564942'
   alias: Washing Machine Power On
   description: ''
