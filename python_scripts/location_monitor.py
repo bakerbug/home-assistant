@@ -84,7 +84,6 @@ class LocationMonitor(hass.Hass):
         hour, minute = time.split(':')
         hour = int(hour)
         light_msg = None
-        lock_msg = None
 
         if bill_home or cricket_home:
             house_occupied = True
@@ -118,7 +117,7 @@ class LocationMonitor(hass.Hass):
             for lock in self.lock_list:
                 if self.get_state(lock) == 'unlocked':
                     name = self.friendly_name(lock)
-                    self.call_service("lock/lock", entity_id = lock)
+                    self.call_service("lock/lock", entity_id=lock)
                     lock_msg = f'Locking {name}.'
                     self.slack(lock_msg)
 
@@ -141,8 +140,13 @@ class LocationMonitor(hass.Hass):
             location = self.last_old
 
         self.alexa_notify(f'{name} has {direction} {location}.')
+        self.slack(f'{name} has {direction} {location}.')
 
     def alexa_notify(self, message):
+        notify = self.get_state('input_boolean.notify_location_monitor') == 'on'
+        if not notify:
+            return
+
         if self.DEBUG:
             target_list = 'media_player.computer_room'
         else:
