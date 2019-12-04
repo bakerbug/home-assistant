@@ -35,7 +35,7 @@ class BusNotify(hass.Hass):
     def send_notification(self, one, two, three, four, kwargs):
         current_date = date
         if self.last_date == current_date:
-            self.slack_debug("Bus notification already sent for today.")
+            self.alexa_response("The bus notification has already been sent for today.")
             return
 
         self.DEBUG = self.get_state('input_boolean.debug_bus_notify') == 'on'
@@ -47,7 +47,6 @@ class BusNotify(hass.Hass):
             msg_text = 'Good morning!\n\nKyle Baker will be riding his bicycle home today.\n\nThanks!\n-Bill'
 
         self.last_date = current_date
-        self.slack_debug("Sending bus notification")
 
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'Kyle Baker - No Bus Today'
@@ -63,7 +62,12 @@ class BusNotify(hass.Hass):
 
         self.turn_off('input_boolean.bus_notify')
 
-        self.slack_debug("Bus notification sent.")
+        self.alexa_response("I have notified the bus.")
+
+    def alexa_response(self, report_msg):
+        source_alexa = self.get_state("sensor.last_alexa")
+        self.call_service("notify/alexa_media", message=report_msg, data={"type": "tts"},
+            target=source_alexa)
 
     def slack_debug(self, message):
         self.DEBUG = self.get_state('input_boolean.debug_bus_notify') == 'on'
