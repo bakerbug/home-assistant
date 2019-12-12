@@ -134,6 +134,7 @@ history:
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
+            - switch.wemo_echo
             - switch.entry_lamp
             - switch.sofa_lamp
             - switch.0120099868c63aa67ad8_2
@@ -426,6 +427,8 @@ input_boolean:
   bus_notify:
     name: Bus Notify
     icon: mdi:bus-school
+  debug_alexa_speak:
+    icon: mdi:bug-check-outline
   debug_bus_notify:
     icon: mdi:bug-check-outline
   notify_away_monitor:

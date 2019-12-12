@@ -45,6 +45,7 @@ accent_lights:
   entities:
     - switch.0120099868c63aa67ad8_2
     - switch.0120099868c63aa67ad8_4
+    - switch.wemo_echo
 appliances:
   control: hidden
   name: Appliances
@@ -80,6 +81,11 @@ evening_lights:
     - group.ceiling_lights
     - switch.0120099868c63aa67ad8_3
     - switch.0120099868c63aa67ad8_2
+late_night_lights:
+  name: Late Night Lights
+  entities:
+    - switch.wemo_echo
+    - switch.0120099868c63aa67ad8_2
 bedroom_lights:
   name: Bedroom Lights
   entities:
@@ -109,6 +115,7 @@ livingroom_lights:
     - switch.0120099868c63aa67ad8_2
     - switch.0120099868c63aa67ad8_3
     - switch.0120099868c63aa67ad8_4
+    - switch.wemo_echo
 living_area_lights:
   name: Living Area Lights
   entities:

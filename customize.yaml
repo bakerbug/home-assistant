@@ -68,6 +68,8 @@ switch.sofa_lamp:
   icon: mdi:lamp
 switch.sink_light:
   icon: mdi:ceiling-light
+switch.wemo_echo:
+  icon: mdi:lamp
 
 # Hide items from home page.
 sensor.bayberry_eta:
