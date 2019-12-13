@@ -75,7 +75,19 @@ updater:
 discovery:
 
 wemo:
-  discovery: true
+  discovery: false
+  static:
+    - 10.99.10.20
+    - 10.99.10.21
+    - 10.99.10.22
+    - 10.99.10.23
+    - 10.99.10.24
+    - 10.99.10.25
+    - 10.99.10.26
+    - 10.99.10.27
+    - 10.99.10.28
+    - 10.99.10.29
+
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -91,23 +103,25 @@ history:
             - binary_sensor.bayberry_away
             - sensor.bill_location
             - sensor.cricket_location
-            - device_tracker.bill_cell
-            - device_tracker.cricket_cell
+            - lock.front_door
+            - cover.left_bay
+            - cover.right_bay
             - binary_sensor.ring_front_door_motion
             - binary_sensor.ring_driveway_cam_motion
             - binary_sensor.ring_backyard_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
+            - sensor.weather_temperature
             - sensor.upstairs_thermostat_humidity
             - sensor.downstairs_thermostat_humidity
+            - sensor.weather_humidity
             - sensor.upstairs_thermostat_hvac_state
             - sensor.downstairs_thermostat_hvac_state
             - sensor.fan_speed
             - sensor.bedroom_fan_speed
+            - switch.wemo_alpha
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
-            - cover.left_bay
-            - cover.right_bay
             - sensor.sleepnumber_bill_bill_sleepnumber
             - sensor.sleepnumber_bill_cricket_sleepnumber
             - binary_sensor.sleepnumber_bill_bill_is_in_bed
@@ -120,6 +134,7 @@ history:
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
+            - switch.wemo_echo
             - switch.entry_lamp
             - switch.sofa_lamp
             - switch.0120099868c63aa67ad8_2
@@ -129,6 +144,8 @@ history:
             - group.counter_lights
             - group.ceiling_lights
             - switch.wemo_bravo
+            - switch.wemo_charlie
+            - switch.wemo_delta
     exclude:
         domains:
             - automation
@@ -170,6 +187,63 @@ sensor:
       cricket_location:
         friendly_name: "Cricket's Location"
         value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
+      last_alexa:
+        friendly_name: "Active Alexa"
+        entity_id:
+          - media_player.computer_room
+          - media_player.kitchen
+          - media_player.kyle_s_room
+          - media_player.master_bedroom
+          - media_player.upstairs
+        value_template: >
+          {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
+      washing_machine_power:
+        friendly_name: "Washing Machine Power"
+        value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
+        unit_of_measurement: "Watts"
+      weather_humidity:
+        friendly_name: "Outdoor Humidity"
+        unit_of_measurement: "%"
+        value_template: "{{ states.weather.dark_sky.attributes.humidity }}"
+      weather_temperature:
+        friendly_name: "Outdoor Temperature"
+        unit_of_measurement: "\u00B0F"
+        value_template: "{{ states.weather.dark_sky.attributes.temperature }}"
+
+    # Add 1 year for birthdays.
+  - platform: anniversaries
+    name: Bill's Birthday
+    date: !secret bday_bill
+  - platform: anniversaries
+    name: Cricket's Birthday
+    date: !secret bday_cricket
+  - platform: anniversaries
+    name: Kyle's Birthday
+    date: !secret bday_kyle
+  # Baker
+  - platform: anniversaries
+    name: Brian Baker's Birthday
+    date: !secret bday_brian
+  - platform: anniversaries
+    name: Bill Baker's Birthday
+    date: !secret bday_dad
+  - platform: anniversaries
+    name: Sharon Baker's Birthday
+    date: !secret bday_sharon
+  - platform: anniversaries
+    name: Barbara Baker's Birthday
+    date: !secret bday_mom
+  # Davis
+  - platform: anniversaries
+    name: Kelly Davis' Birthday
+    date: !secret bday_kelly
+  - platform: anniversaries
+    name: Gavin Davis' Birthday
+    date: !secret bday_gavin
+
+
+
+
 
   - platform: version
     name: Installed HA Version
@@ -197,11 +271,11 @@ switch:
             entity_id: automation.hvac_balancing
       humidifier:
         friendly_name: "Humidifier"
-        value_template: "{{ is_state('switch.wemo_alpha', 'on') }}"
+        value_template: "{{ is_state('switch.0120099868c63aa67ad8_1', 'on') }}"
         turn_on:
           - service: switch.turn_on
             data:
-              entity_id: switch.wemo_alpha
+              entity_id: switch.0120099868c63aa67ad8_1
           - service: automation.turn_off
             data:
               entity_id: automation.restart_humidifier
@@ -211,7 +285,7 @@ switch:
               entity_id: automation.restart_humidifier
           - service: switch.turn_off
             data:
-              entity_id: switch.wemo_alpha
+              entity_id: switch.0120099868c63aa67ad8_1
 
 
 # Text to speech
@@ -229,6 +303,7 @@ cloud:
         - switch.fan_control
         - switch.humidifier
         - input_boolean.bus_notify
+        - input_boolean.status_report
       exclude_domains:
         - alert
         - automation
@@ -259,6 +334,10 @@ alexa_media:
         - "Master Bedroom"
         - "Kyle's Room"
 
+# HACS Home Assistant Community Store
+hacs:
+  token: !secret github_token
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -272,17 +351,17 @@ cover:
     username: !secret chamberlain_username
     password: !secret chamberlain_password
     type: chamberlain
-    
+
 # Nest
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
-  
+
 # Weather
 weather:
   - platform: darksky
     api_key: !secret darksky_api_key
-    
+
 # Plex
 #media_player:
 #  - platform: plex
@@ -314,18 +393,18 @@ camera:
     - platform: ring
 ffmpeg:
 
-# Phone Detection
-device_tracker:
-    - platform: netgear
-      host: 10.99.10.1
-      port: 80
-      username: !secret netgear_user
-      password: !secret netgear_pass
-      accesspoints:
-          - A0:40:A0:5A:03:D6
-      devices:
-          - BILLS-GALAXY-S8
-          - Cricket-Moto-Z
+## Phone Detection
+#device_tracker:
+#    - platform: netgear
+#      host: 10.99.10.1
+#      port: 80
+#      username: !secret netgear_user
+#      password: !secret netgear_pass
+#      accesspoints:
+#          - A0:40:A0:5A:03:D6
+#      devices:
+#          - BILLS-GALAXY-S8
+#          - Cricket-Moto-Z
 
 # Life 360
 life360:
@@ -350,35 +429,48 @@ input_boolean:
   bus_notify:
     name: Bus Notify
     icon: mdi:bus-school
+  debug_alexa_speak:
+    icon: mdi:bug-check-outline
   debug_bus_notify:
-    icon: mdi:message-text
-  debug_away_monitor:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
   notify_away_monitor:
     icon: mdi:message-text
   debug_fan_control:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
   notify_fan_control:
     icon: mdi:message-text
+  debug_laundry:
+    icon: mdi:bug-check-outline
+  announce_all:
+    name: Alexa Anouncements
+    icon: mdi:amazon-alexa
+  announce_location_monitor:
+    name: Announce Locations
+    icon: mdi:amazon-alexa
+  announce_oven_monitor:
+    name: Announce Oven Temperature
+    icon: mdi:amazon-alexa
   debug_location_monitor:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
   notify_location_monitor:
     icon: mdi:message-text
   active_pollen_monitor:
     name: Pollen Alert
     icon: mdi:amazon-alexa
   debug_pollen_monitor:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
   notify_pollen_monitor:
     icon: mdi:message-text
   debug_reminders:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
   debug_version_monitor:
-    icon: mdi:message-text
+    icon: mdi:bug-check-outline
+  status_report:
+    icon: mdi:amazon-alexa
 
-# Pollen Sensor
-iqvia:
-  zip_code: "35758"
-  monitored_conditions:
-    - allergy_index_today
-    - allergy_index_tomorrow
+## Pollen Sensor
+#iqvia:
+#  zip_code: "35758"
+#  monitored_conditions:
+#    - allergy_index_today
+#    - allergy_index_tomorrow

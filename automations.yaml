@@ -96,10 +96,7 @@
     condition: time
   action:
   - data:
-      entity_id: switch.0120099868c63aa67ad8_2
-    service: switch.turn_on
-  - data:
-      entity_id: group.counter_lights
+      entity_id: group.late_night_lights
     service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
@@ -128,18 +125,6 @@
   - data:
       entity_id: group.all_indoor_lights
     service: switch.turn_off
-- id: '1535862789511'
-  alias: Away Monitor
-  trigger:
-  - entity_id: device_tracker.bill_cell
-    platform: state
-  - entity_id: device_tracker.cricket_cell
-    platform: state
-  condition: []
-  action:
-  - data_template:
-      entity: '{{ trigger.entity_id }}'
-    service: python_script.away_monitor
 - id: '1537990954788'
   alias: Lights On When Away
   trigger:
@@ -160,7 +145,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.wemo_alpha
+      entity_id: switch.0120099868c63aa67ad8_1
     service: switch.turn_off
 - id: '1542776135207'
   alias: Watch TV - Stop
@@ -171,7 +156,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.wemo_alpha
+      entity_id: switch.0120099868c63aa67ad8_1
     service: switch.turn_on
   - data:
       entity_id: automation.restart_humidifier
@@ -343,3 +328,17 @@
   - data:
       entity_id: cover.left_bay
     service: cover.open_cover
+- id: '1572571564942'
+  alias: Washing Machine Power On
+  description: ''
+  trigger:
+  - entity_id: switch.washing_machine
+    for: 0:01:00
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - alias: ''
+    data:
+      entity_id: switch.washing_machine
+    service: switch.turn_on
