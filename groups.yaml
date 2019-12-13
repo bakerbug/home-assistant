@@ -31,6 +31,7 @@ kyle_view:
 all_indoor_lights:
   name: All Indoor Lights
   entities:
+    - group.christmas
     - group.living_area_lights
     - group.bedroom_lights
     - switch.wemo_bravo
@@ -69,6 +70,11 @@ birthday_list:
     - sensor.kelly_davis_birthday
     - sensor.kyle_s_birthday
     - sensor.sharon_baker_s_birthday
+christmas:
+  name: Christmas
+  entities:
+    - switch.wemo_charlie
+    - switch.wemo_delta
 evening_early_lights:
   name: Early Evening Lights
   entities:
