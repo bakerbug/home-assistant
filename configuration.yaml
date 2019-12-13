@@ -144,6 +144,8 @@ history:
             - group.counter_lights
             - group.ceiling_lights
             - switch.wemo_bravo
+            - switch.wemo_charlie
+            - switch.wemo_delta
     exclude:
         domains:
             - automation
@@ -439,8 +441,14 @@ input_boolean:
     icon: mdi:message-text
   debug_laundry:
     icon: mdi:bug-check-outline
+  announce_all:
+    name: Alexa Anouncements
+    icon: mdi:amazon-alexa
   announce_location_monitor:
     name: Announce Locations
+    icon: mdi:amazon-alexa
+  announce_oven_monitor:
+    name: Announce Oven Temperature
     icon: mdi:amazon-alexa
   debug_location_monitor:
     icon: mdi:bug-check-outline
