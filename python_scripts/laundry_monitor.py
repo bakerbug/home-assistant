@@ -4,9 +4,10 @@ import datetime
 class LaundryMonitor(hass.Hass):
 
     def initialize(self):
+        self.debug_switch = "input_boolean.debug_laundry"
         clock = datetime.time(0, 0, 0)
         every_minute = self.run_minutely(self.check_power, clock)
-        self.alexa_list = ['media_player.kitchen', 'media_player.computer_room', 'media_player.master_bedroom']
+        self.alexa = self.get_app("alexa_speak")
         self.washer_on = False
         self.power_limit = 10
         self.wait_minutes = 5
@@ -16,13 +17,16 @@ class LaundryMonitor(hass.Hass):
         self.call_service("notify/slack_assistant", message=init_msg)
 
     def check_power(self, args):
-        self.DEBUG = self.get_state("input_boolean.debug_laundry") == "on"
+        self.DEBUG = self.get_state(self.debug_switch) == "on"
         self.power_level = float(self.get_state("sensor.washing_machine_power"))
+
+        if self.DEBUG:
+            self.alexa.announce(f"The laundry power is {self.power_level}", self.debug_switch)
 
         if self.washer_on:
             if self.power_level < self.power_limit:
                 if self.ticks >= self.wait_minutes:
-                    self.alexa_notify("The laundry has completed.")
+                    self.alexa.announce("The laundry has completed.", self.debug_switch)
                     self.washer_on = False
                     self.ticks = 0
                 else:
@@ -31,15 +35,6 @@ class LaundryMonitor(hass.Hass):
             self.washer_on = True
 
         self.slack_debug(f'Laundry ticks: {self.ticks}')
-
-    def alexa_notify(self, message):
-        if self.DEBUG:
-            target_list = 'media_player.computer_room'
-        else:
-            target_list = self.alexa_list
-
-        self.call_service('notify/alexa_media', message=message, data={"type": "tts"},
-                          target=target_list)
 
     def slack_debug(self, message):
         debug = self.get_state("input_boolean.debug_laundry") == "on"

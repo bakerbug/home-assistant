@@ -9,8 +9,9 @@ from email.mime.text import MIMEText
 class BusNotify(hass.Hass):
 
     def initialize(self):
-        self.DEBUG = self.get_state('input_boolean.debug_bus_notify') == 'on'
+        self.debug_switch = 'input_boolean.debug_bus_notify'
         self.NOTIFY = self.listen_state(self.send_notification, 'input_boolean.bus_notify', new='on')
+        self.alexa = self.get_app("alexa_speak")
 
         with open('/home/homeassistant/.homeassistant/secrets.yaml', 'r') as secrets_file:
             config_data = yaml.load(secrets_file)
@@ -27,7 +28,7 @@ class BusNotify(hass.Hass):
         init_msg = 'Initialized Bus Notify.'
         self.call_service('notify/slack_assistant', message=init_msg)
 
-        if self.DEBUG:
+        if self.get_state(self.debug_switch) == 'on':
             for name in self.email_recipients:
                 debug_msg = 'Recipient: {}'.format(name)
                 self.call_service('notify/slack_assistant', message=debug_msg)
@@ -35,11 +36,11 @@ class BusNotify(hass.Hass):
     def send_notification(self, one, two, three, four, kwargs):
         current_date = date
         if self.last_date == current_date:
-            self.alexa_response("The bus notification has already been sent for today.")
+            self.alexa.respond("The bus notification has already been sent for today.")
             return
 
-        self.DEBUG = self.get_state('input_boolean.debug_bus_notify') == 'on'
-        if self.DEBUG:
+        debug = self.get_state(self.debug_switch) == 'on'
+        if debug:
             dst_email = self.debug_email
             msg_text = "This is a debug email.\nThere are many like it, but this one is mine."
         else:
@@ -62,14 +63,9 @@ class BusNotify(hass.Hass):
 
         self.turn_off('input_boolean.bus_notify')
 
-        self.alexa_response("I have notified the bus.")
-
-    def alexa_response(self, report_msg):
-        source_alexa = self.get_state("sensor.last_alexa")
-        self.call_service("notify/alexa_media", message=report_msg, data={"type": "tts"},
-            target=source_alexa)
+        self.alexa.respond("I have notified the bus.")
 
     def slack_debug(self, message):
-        self.DEBUG = self.get_state('input_boolean.debug_bus_notify') == 'on'
-        if self.DEBUG:
+        debug = self.get_state(self.debug_switch) == 'on'
+        if debug:
             self.call_service("notify/slack_assistant", message=message)

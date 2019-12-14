@@ -1,10 +1,7 @@
 import appdaemon.plugins.hass.hassapi as hass
 import calendar
 import datetime
-import json
-import requests
 import time
-import yaml
 
 class Reminders(hass.Hass):
 
@@ -13,20 +10,16 @@ class Reminders(hass.Hass):
         self.reminders = (
             (2, 3, 6, 'Today is recycling day.'),  # Third thursday of the month at 6 AM
         )
-
-        self.DEBUG = self.get_state('input_boolean.debug_reminders') == 'on'
+        self.alexa = self.get_app("alexa_speak")
+        self.debug_switch = 'input_boolean.debug_reminders'
         self.update_time = datetime.time(0, 0, 0)
-        with open('/home/homeassistant/.homeassistant/secrets.yaml', 'r') as secrets_file:
-            config_data = yaml.load(secrets_file)
-        self.alexa_notify_secret = config_data['notify_me_key']
-
         self.reminder_clock = self.run_hourly(self.check_reminders, self.update_time)
 
-        debug_msg = 'Initialized Reminders.'
-        self.call_service('notify/slack_assistant', message=debug_msg)
+        init_msg = 'Initialized Reminders.'
+        self.call_service('notify/slack_assistant', message=init_msg)
 
     def check_reminders(self, kwargs):
-        self.DEBUG = self.get_state('input_boolean.debug_reminders') == 'on'
+        self.DEBUG = self.get_state(self.debug_switch) == 'on'
 
         for reminder in self.reminders:
             self.week = reminder[0]
@@ -49,6 +42,7 @@ class Reminders(hass.Hass):
         this_hour = time.localtime().tm_hour - 5  # Subtract 5 to hack appdaemon's weird clock
         cal = calendar.monthcalendar(this_year, this_month)
 
+
         if cal[0][self.day] == 0:
             event_day = cal[self.week + 1][self.day]
             debug_msg = 'Event day +1 to {}'.format(event_day)
@@ -70,5 +64,4 @@ class Reminders(hass.Hass):
     def notify(self):
         self.call_service('notify/slack_assistant', message=self.message)
 
-        body = json.dumps({'notification': self.message, 'accessCode': self.alexa_notify_secret})
-        requests.post(url="https://api.notifymyecho.com/v1/NotifyMe", data=body)
+        self.alexa.notify(self.message, self.debug_switch)

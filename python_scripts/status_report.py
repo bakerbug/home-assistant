@@ -4,14 +4,14 @@ class StatusReport(hass.Hass):
 
     def initialize(self):
         self.entity_list = ("cover.left_bay", "cover.right_bay", "lock.front_door")
-        #self.alexa_list = ['media_player.master_bedroom']
+        self.alexa = self.get_app("alexa_speak")
         status_switch = self.listen_state(self.run_report, "input_boolean.status_report", new="on")
         self.insecure_states = ("open", "unlocked")
         self.slack("Initialized Status Report.")
 
     def run_report(self, entity, attribute, old, new, kwargs):
         message = self.generate_report()
-        self.send_report(message)
+        self.alexa.respond(message)
 
         self.turn_off("input_boolean.status_report")
 
