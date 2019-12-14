@@ -210,41 +210,6 @@ sensor:
         unit_of_measurement: "\u00B0F"
         value_template: "{{ states.weather.dark_sky.attributes.temperature }}"
 
-    # Add 1 year for birthdays.
-  - platform: anniversaries
-    name: Bill's Birthday
-    date: !secret bday_bill
-  - platform: anniversaries
-    name: Cricket's Birthday
-    date: !secret bday_cricket
-  - platform: anniversaries
-    name: Kyle's Birthday
-    date: !secret bday_kyle
-  # Baker
-  - platform: anniversaries
-    name: Brian Baker's Birthday
-    date: !secret bday_brian
-  - platform: anniversaries
-    name: Bill Baker's Birthday
-    date: !secret bday_dad
-  - platform: anniversaries
-    name: Sharon Baker's Birthday
-    date: !secret bday_sharon
-  - platform: anniversaries
-    name: Barbara Baker's Birthday
-    date: !secret bday_mom
-  # Davis
-  - platform: anniversaries
-    name: Kelly Davis' Birthday
-    date: !secret bday_kelly
-  - platform: anniversaries
-    name: Gavin Davis' Birthday
-    date: !secret bday_gavin
-
-
-
-
-
   - platform: version
     name: Installed HA Version
     source: local
@@ -252,6 +217,30 @@ sensor:
   - platform: version
     name: Available HA Version
     source: pypi
+
+    # Add 1 year for birthdays.
+#anniversaries:
+#  sensors:
+#  - name: Bill's Birthday
+#    date: !secret bday_bill
+#  - name: Cricket's Birthday
+#    date: !secret bday_cricket
+#  - name: Kyle's Birthday
+#    date: !secret bday_kyle
+#  # Baker
+#  - name: Brian Baker's Birthday
+#    date: !secret bday_brian
+#  - name: Bill Baker's Birthday
+#    date: !secret bday_dad
+#  - name: Sharon Baker's Birthday
+#    date: !secret bday_sharon
+#  - name: Barbara Franke's Birthday
+#    date: !secret bday_mom
+#  # Davis
+#  - name: Kelly Davis' Birthday
+#    date: !secret bday_kelly
+#  - name: Gavin Davis' Birthday
+#    date: !secret bday_gavin
 
 # Custom Switches
 switch:
