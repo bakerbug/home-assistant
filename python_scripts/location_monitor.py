@@ -4,11 +4,11 @@ import yaml
 class LocationMonitor(hass.Hass):
 
     def initialize(self):
-        self.DEBUG = self.get_state('input_boolean.debug_location_monitor') == 'on'
+        self.debug_switch = 'input_boolean.debug_location_monitor'
         self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
         self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
-        self.alexa_list = ['media_player.kitchen', 'media_player.computer_room', 'media_player.master_bedroom']
+        self.alexa = self.get_app("alexa_speak")
         self.lock_list = ['lock.front_door',]
         self.SUN_ELEV_HIGH = 15.00
 
@@ -39,15 +39,12 @@ class LocationMonitor(hass.Hass):
         init_msg = 'Initialized Location Monitor.'
         self.slack(init_msg)
 
-        if self.DEBUG:
-            self.call_service('notify/alexa_media', message=init_msg, data={"type": "tts"},
-                              target='media_player.computer_room')
+        self.alexa.announce(init_msg, self.debug_switch)
 
         # For debugging
         #self.location_change('sensor.bill_location', 'bogus', 'Home', 'None', 'bogus')
 
     def location_change(self, entity, attribute, old, new, kwargs):
-        self.DEBUG = self.get_state('input_boolean.debug_location_monitor') == 'on'
         self.NOTIFY = self.get_state('input_boolean.notify_location_monitor') == 'on'
         self.last_entity = entity
         self.last_old = old
@@ -73,7 +70,7 @@ class LocationMonitor(hass.Hass):
         else:
             lock_msg = f"The {lock_name} has been {new}."
 
-        self.alexa_notify(lock_msg)
+        self.alexa.announce(lock_msg, self.debug_switch)
         self.slack(lock_msg)
 
     def presence_behavior(self):
@@ -139,21 +136,10 @@ class LocationMonitor(hass.Hass):
             direction = 'departed from'
             location = self.last_old
 
-        self.alexa_notify(f'{name} has {direction} {location}.')
-        self.slack(f'{name} has {direction} {location}.')
+        message = f'{name} has {direction} {location}.'
 
-    def alexa_notify(self, message):
-        notify = self.get_state('input_boolean.notify_location_monitor') == 'on'
-        if not notify:
-            return
-
-        if self.DEBUG:
-            target_list = 'media_player.computer_room'
-        else:
-            target_list = self.alexa_list
-
-        self.call_service('notify/alexa_media', message=message, data={"type": "tts"},
-                          target=target_list)
+        self.alexa.announce(message, self.debug_switch)
+        self.slack(message)
 
     def slack(self, message):
         notify = self.get_state('input_boolean.notify_location_monitor') == 'on'
