@@ -39,8 +39,6 @@ class LocationMonitor(hass.Hass):
         init_msg = 'Initialized Location Monitor.'
         self.slack(init_msg)
 
-        self.alexa.announce(init_msg, self.debug_switch)
-
         # For debugging
         #self.location_change('sensor.bill_location', 'bogus', 'Home', 'None', 'bogus')
 

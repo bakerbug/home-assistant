@@ -17,7 +17,6 @@ class Reminders(hass.Hass):
 
         init_msg = 'Initialized Reminders.'
         self.call_service('notify/slack_assistant', message=init_msg)
-        self.alexa.notify(init_msg)
 
     def check_reminders(self, kwargs):
         self.DEBUG = self.get_state(self.debug_switch) == 'on'
