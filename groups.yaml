@@ -81,6 +81,7 @@ evening_early_lights:
     - switch.entry_lamp
     - switch.sofa_lamp
     - group.counter_lights
+    - switch.wemo_echo
 evening_lights:
   name: Evening Lights
   entities:
