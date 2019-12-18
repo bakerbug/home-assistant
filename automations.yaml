@@ -342,3 +342,20 @@
     data:
       entity_id: switch.washing_machine
     service: switch.turn_on
+- id: '1573571864967'
+  alias: Watch TV in Bedroom
+  description: ''
+  trigger:
+  - entity_id: media_player.bedroom_tv
+    platform: state
+    from: 'standby'
+    to: 'home'
+  condition: []
+  action:
+    - alias: ''
+      data:
+        entity_id: switch.bedroom_lamp
+      service: switch.turn_off
+    - data:
+        entity_id: switch.04200320b4e62d1291c4_1
+      service: switch.turn_off
