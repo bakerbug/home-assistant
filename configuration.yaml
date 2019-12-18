@@ -457,9 +457,9 @@ input_boolean:
   status_report:
     icon: mdi:amazon-alexa
 
-## Pollen Sensor
-#iqvia:
-#  zip_code: "35758"
-#  monitored_conditions:
-#    - allergy_index_today
-#    - allergy_index_tomorrow
+# Pollen Sensor
+iqvia:
+  zip_code: "35758"
+  monitored_conditions:
+    - allergy_index_today
+    - allergy_index_tomorrow
