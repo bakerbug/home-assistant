@@ -279,26 +279,6 @@
   - data:
       entity_id: switch.driveway_light
     service: switch.turn_off
-- alias: Floor Fan Monitor On
-  trigger:
-    platform: state
-    entity_id: fan.bedroom_fan
-  action:
-  - condition: template
-    value_template: '{{ state_attr(''fan.bedroom_fan'', ''speed'') == ''high'' }}'
-  - service: switch.turn_on
-    entity_id: switch.wemo_alpha
-  id: 9354c53b84654dbeb7f785f4824c13fe
-- alias: Floor Fan Monitor Off
-  trigger:
-    platform: state
-    entity_id: fan.bedroom_fan
-  action:
-  - condition: template
-    value_template: '{{ state_attr(''fan.bedroom_fan'', ''speed'') != ''high'' }}'
-  - service: switch.turn_off
-    entity_id: switch.wemo_alpha
-  id: 9486188e8a534ef8a0794bd0ccdd1768
 - id: '1559082914918'
   alias: Pollen Monitor
   trigger:
@@ -342,20 +322,3 @@
     data:
       entity_id: switch.washing_machine
     service: switch.turn_on
-- id: '1573571864967'
-  alias: Watch TV in Bedroom
-  description: ''
-  trigger:
-  - entity_id: media_player.bedroom_tv
-    platform: state
-    from: 'standby'
-    to: 'home'
-  condition: []
-  action:
-    - alias: ''
-      data:
-        entity_id: switch.bedroom_lamp
-      service: switch.turn_off
-    - data:
-        entity_id: switch.04200320b4e62d1291c4_1
-      service: switch.turn_off

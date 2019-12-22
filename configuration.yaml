@@ -293,6 +293,7 @@ cloud:
         - switch.humidifier
         - input_boolean.bus_notify
         - input_boolean.status_report
+        - input_boolean.respond_pollen_monitor
       exclude_domains:
         - alert
         - automation
@@ -415,45 +416,61 @@ timer:
     duration: '00:01:00'
 
 input_boolean:
+  announce_all:
+    name: Alexa Anouncements
+    icon: mdi:amazon-alexa
+  active_sleep_monitor:
+    name: Sleep Monitor
+    icon: mdi:language-python
   bus_notify:
     name: Bus Notify
+    initial: off
     icon: mdi:bus-school
+
+  # DEBUG
   debug_alexa_speak:
     icon: mdi:bug-check-outline
   debug_bus_notify:
     icon: mdi:bug-check-outline
-  notify_away_monitor:
-    icon: mdi:message-text
   debug_fan_control:
     icon: mdi:bug-check-outline
-  notify_fan_control:
-    icon: mdi:message-text
   debug_laundry:
     icon: mdi:bug-check-outline
-  announce_all:
-    name: Alexa Anouncements
-    icon: mdi:amazon-alexa
+  debug_location_monitor:
+    icon: mdi:bug-check-outline
+  debug_pollen_monitor:
+    icon: mdi:bug-check-outline
+  debug_reminders:
+    icon: mdi:bug-check-outline
+  debug_sleep_monitor:
+    icon: mdi:bug-check-outline
+  debug_version_monitor:
+    icon: mdi:bug-check-outline
+
+  # NOTIFY
+  notify_away_monitor:
+    icon: mdi:message-text
+
+  notify_fan_control:
+    icon: mdi:message-text
+
+
   announce_location_monitor:
     name: Announce Locations
     icon: mdi:amazon-alexa
   announce_oven_monitor:
     name: Announce Oven Temperature
     icon: mdi:amazon-alexa
-  debug_location_monitor:
-    icon: mdi:bug-check-outline
+
   notify_location_monitor:
     icon: mdi:message-text
-  active_pollen_monitor:
-    name: Pollen Alert
+  respond_pollen_monitor:
+    name: Pollen Monitor Response
     icon: mdi:amazon-alexa
-  debug_pollen_monitor:
-    icon: mdi:bug-check-outline
+
   notify_pollen_monitor:
     icon: mdi:message-text
-  debug_reminders:
-    icon: mdi:bug-check-outline
-  debug_version_monitor:
-    icon: mdi:bug-check-outline
+
   status_report:
     icon: mdi:amazon-alexa
 
