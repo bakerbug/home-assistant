@@ -1,5 +1,6 @@
 import appdaemon.plugins.hass.hassapi as hass
 
+
 class SleepMonitor(hass.Hass):
 
     def initialize(self):
@@ -14,6 +15,10 @@ class SleepMonitor(hass.Hass):
         self.crickets_lamp = "switch.04200320b4e62d1291c4_4"
         self.downstairs_temp = "sensor.downstairs_thermostat_temperature"
         self.floor_fan = "switch.wemo_alpha"
+        self.hvac_balance = "automation.hvac_balancing"
+        self.living_area_lights = "group.living_area_lights"
+        self.living_room_tv = "media_player.living_room"
+        self.night_lights = "group.late_night_lights"
         self.sleep_monitor_active = "input_boolean.active_sleep_monitor"
 
         self.active_handle = self.listen_state(self.on_active_state, self.sleep_monitor_active)
@@ -26,15 +31,39 @@ class SleepMonitor(hass.Hass):
 
     def on_active_state(self, entity, attribute, old, new, kwargs):
         if new == "on":
+            self.bed_bill = self.listen_state(self.on_bed_change, self.bill_in_bed)
+            self.bed_cricket = self.listen_state(self.on_bed_change, self.cricket_in_bed)
             self.downstairs_temp_handle = self.listen_state(self.on_temp_change, self.downstairs_temp)
             self.fan_handle = self.listen_state(self.on_fan_change, self.bedroom_fan)
             self.tv_handle = self.listen_state(self.on_tv_change, self.bedroom_tv)
             self.slack_debug("Enabled sleep monitor handlers.")
         else:
+            self.cancel_listen_state(self.bed_bill)
+            self.cancel_listen_state(self.bed_cricket)
             self.cancel_listen_state(self.downstairs_temp_handle)
             self.cancel_listen_state(self.fan_handle)
             self.cancel_listen_state(self.tv_handle)
             self.slack_debug("Disabled sleep monitor handlers.")
+
+    def on_bed_change(self, entity, attribute, old, new, kwargs):
+        sun = self.get_state("sun.sun")
+        self.slack_debug(f"Sleep monitor: on_bed_change sun is {sun}.")
+
+        if sun == "above_horizon":
+            return
+
+        bill_in_bed = self.get_state(self.bill_in_bed) == "on"
+        cricket_in_bed = self.get_state(self.cricket_in_bed) == "on"
+        livingroom_tv_is_off = self.get_state(self.living_room_tv) == "idle"
+
+        if livingroom_tv_is_off and bill_in_bed and cricket_in_bed:
+            self.turn_off(self.living_area_lights)
+            self.turn_on(self.hvac_balance)
+            self.slack_debug("Turning off living area lights.")
+
+        if old == "on" and new == "off":
+            self.turn_on(self.night_lights)
+            self.slack_debug("Turning on night lights.")
 
     def on_fan_change(self, entity, attribute, old, new, kwargs):
         tv_state = self.get_state(self.bedroom_tv)
