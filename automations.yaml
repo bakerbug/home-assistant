@@ -119,7 +119,7 @@
 - id: '1543243906037'
   alias: Lights On For Weekday Mornings
   trigger:
-  - at: 05:15
+  - at: 05:05
     platform: time
   condition:
   - condition: state

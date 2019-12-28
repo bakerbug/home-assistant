@@ -71,6 +71,18 @@ switch.sink_light:
 switch.wemo_echo:
   icon: mdi:lamp
 
+# Z-Wave
+light.bedroom_dimmer:
+  icon: mdi:ceiling-light
+switch.dining_room_light:
+  icon: mdi:ceiling-light
+switch.driveway_light:
+  icon: mdi:track-light
+switch.frontdoor_light:
+  icon: mdi:coach-lamp
+switch.patio_light:
+  icon: mdi:track-light
+
 # Hide items from home page.
 sensor.bayberry_eta:
   hidden: true

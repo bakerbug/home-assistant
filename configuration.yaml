@@ -134,6 +134,7 @@ history:
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
+            - light.bedroom_dimmer
             - switch.wemo_echo
             - switch.entry_lamp
             - switch.sofa_lamp
@@ -143,6 +144,7 @@ history:
             - switch.sink_light
             - group.counter_lights
             - group.ceiling_lights
+            - switch.dining_room_light
             - switch.wemo_bravo
             - switch.wemo_charlie
             - switch.wemo_delta
@@ -294,6 +296,7 @@ cloud:
         - input_boolean.bus_notify
         - input_boolean.status_report
         - input_boolean.respond_pollen_monitor
+        - input_boolean.wakeup_light
       exclude_domains:
         - alert
         - automation
@@ -414,6 +417,8 @@ binary_sensor:
 timer:
   motion_debounce:
     duration: '00:01:00'
+  wakup_light:
+    duration: '00:01:00'
 
 input_boolean:
   announce_all:
@@ -426,6 +431,9 @@ input_boolean:
     name: Bus Notify
     initial: off
     icon: mdi:bus-school
+  wakeup_light:
+    name: Wakeup Light
+    icon: mdi:alarm
 
   # DEBUG
   debug_alexa_speak:
@@ -445,6 +453,8 @@ input_boolean:
   debug_sleep_monitor:
     icon: mdi:bug-check-outline
   debug_version_monitor:
+    icon: mdi:bug-check-outline
+  debug_wakeup_light:
     icon: mdi:bug-check-outline
 
   # NOTIFY
