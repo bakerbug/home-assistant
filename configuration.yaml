@@ -294,6 +294,7 @@ cloud:
         - switch.fan_control
         - switch.humidifier
         - input_boolean.bus_notify
+        - input_boolean.fireplace_temperature
         - input_boolean.status_report
         - input_boolean.respond_pollen_monitor
         - input_boolean.wakeup_light
@@ -431,6 +432,9 @@ input_boolean:
     name: Bus Notify
     initial: off
     icon: mdi:bus-school
+  fireplace_temperature:
+    name: Fireplace Temperature
+    icon: mdi:fireplace
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
