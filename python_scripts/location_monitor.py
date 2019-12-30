@@ -91,7 +91,8 @@ class LocationMonitor(hass.Hass):
                     self.turn_on('group.evening_early_lights')
                     self.turn_on('group.evening_lights')
                     light_msg = '  Turning on all lights.'
-                elif 7 >= hour or hour >= 22:
+                elif 7 >= hour or hour >= 21:
+                    self.turn_on("group.all_outdoor_lights")
                     self.turn_on('group.evening_lights')
                     light_msg = 'Turning on some lights.'
 
