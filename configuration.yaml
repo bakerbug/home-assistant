@@ -434,6 +434,7 @@ input_boolean:
     icon: mdi:bus-school
   fireplace_temperature:
     name: Fireplace Temperature
+    initial: off
     icon: mdi:fireplace
   wakeup_light:
     name: Wakeup Light
@@ -445,6 +446,8 @@ input_boolean:
   debug_bus_notify:
     icon: mdi:bug-check-outline
   debug_fan_control:
+    icon: mdi:bug-check-outline
+  debug_fireplace_temp:
     icon: mdi:bug-check-outline
   debug_laundry:
     icon: mdi:bug-check-outline
@@ -487,6 +490,19 @@ input_boolean:
 
   status_report:
     icon: mdi:amazon-alexa
+
+input_number:
+  fireplace_max_indoor_temp:
+    name: Max Indoor Temperature
+    min: 65
+    max: 70
+    icon: mdi:fireplace
+  fireplace_max_outdoor_temp:
+    name: Max Outdoor Temperature
+    min: 45
+    max: 60
+    icon: mdi:fireplace
+
 
 # Pollen Sensor
 iqvia:
