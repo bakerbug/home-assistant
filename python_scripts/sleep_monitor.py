@@ -17,7 +17,7 @@ class SleepMonitor(hass.Hass):
         self.floor_fan = "switch.wemo_alpha"
         self.hvac_balance = "automation.hvac_balancing"
         self.living_area_lights = "group.living_area_lights"
-        self.living_room_tv = "media_player.living_room"
+        self.living_room_tv = "remote.harmony_hub"
         self.night_lights = "group.late_night_lights"
         self.sleep_monitor_active = "input_boolean.active_sleep_monitor"
 
@@ -54,7 +54,7 @@ class SleepMonitor(hass.Hass):
 
         bill_in_bed = self.get_state(self.bill_in_bed) == "on"
         cricket_in_bed = self.get_state(self.cricket_in_bed) == "on"
-        livingroom_tv_is_off = self.get_state(self.living_room_tv) == "idle"
+        livingroom_tv_is_off = self.get_state(self.living_room_tv) == "off"
 
         if livingroom_tv_is_off and bill_in_bed and cricket_in_bed:
             self.turn_off(self.living_area_lights)
