@@ -37,6 +37,7 @@ class BusNotify(hass.Hass):
         current_date = date
         if self.last_date == current_date:
             self.alexa.respond("The bus notification has already been sent for today.")
+            self.turn_off('input_boolean.bus_notify')
             return
 
         debug = self.get_state(self.debug_switch) == 'on'

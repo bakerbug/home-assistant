@@ -53,51 +53,6 @@
   - data:
       entity_id: group.accent_lights
     service: switch.turn_on
-- id: '1532102191810'
-  alias: Lights out at Bedtime
-  trigger:
-  - entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
-    platform: state
-    to: 'on'
-  - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
-    state: 'on'
-  - condition: state
-    entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
-    state: 'on'
-  - condition: state
-    entity_id: remote.harmony_hub
-    state: 'off'
-  action:
-  - data:
-      entity_id: group.living_area_lights
-    service: switch.turn_off
-  - data:
-      entity_id: switch.fan_control
-    service: switch.turn_on
-- id: '1532212236193'
-  alias: Late Night Light
-  trigger:
-  - entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
-    from: 'on'
-    platform: state
-    to: 'off'
-  - entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
-    from: 'on'
-    platform: state
-    to: 'off'
-  condition:
-  - after: '22:00:00'
-    before: 06:00:00
-    condition: time
-  action:
-  - data:
-      entity_id: group.late_night_lights
-    service: switch.turn_on
 - id: '1532093963927'
   alias: HVAC Balancing
   trigger:
@@ -164,7 +119,7 @@
 - id: '1543243906037'
   alias: Lights On For Weekday Mornings
   trigger:
-  - at: 05:15
+  - at: 05:05
     platform: time
   condition:
   - condition: state
@@ -279,26 +234,6 @@
   - data:
       entity_id: switch.driveway_light
     service: switch.turn_off
-- alias: Floor Fan Monitor On
-  trigger:
-    platform: state
-    entity_id: fan.bedroom_fan
-  action:
-  - condition: template
-    value_template: '{{ state_attr(''fan.bedroom_fan'', ''speed'') == ''high'' }}'
-  - service: switch.turn_on
-    entity_id: switch.wemo_alpha
-  id: 9354c53b84654dbeb7f785f4824c13fe
-- alias: Floor Fan Monitor Off
-  trigger:
-    platform: state
-    entity_id: fan.bedroom_fan
-  action:
-  - condition: template
-    value_template: '{{ state_attr(''fan.bedroom_fan'', ''speed'') != ''high'' }}'
-  - service: switch.turn_off
-    entity_id: switch.wemo_alpha
-  id: 9486188e8a534ef8a0794bd0ccdd1768
 - id: '1559082914918'
   alias: Pollen Monitor
   trigger:

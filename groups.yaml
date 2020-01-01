@@ -81,6 +81,7 @@ evening_early_lights:
     - switch.entry_lamp
     - switch.sofa_lamp
     - group.counter_lights
+    - switch.wemo_echo
 evening_lights:
   name: Evening Lights
   entities:
@@ -98,6 +99,7 @@ bedroom_lights:
     - switch.bedroom_lamp
     - switch.04200320b4e62d1291c4_1
     - switch.04200320b4e62d1291c4_4
+    - light.bedroom_dimmer
 garage_doors:
   name: Garage Doors
   entities:
@@ -109,6 +111,7 @@ kitchen_lights:
     - switch.sink_light
     - group.counter_lights
     - group.ceiling_lights
+    - switch.dining_room_light
 kyle_room:
   name: Kyle's Room
   entities:
@@ -132,7 +135,7 @@ morning_lights:
   entities:
     - group.livingroom_lights
     - group.kitchen_lights
-    - switch.bedroom_lamp
+    - input_boolean.wakeup_light
 bed:
   name: Master Bed
   entities:

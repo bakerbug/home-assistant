@@ -134,6 +134,7 @@ history:
             - switch.bedroom_lamp
             - switch.04200320b4e62d1291c4_1
             - switch.04200320b4e62d1291c4_4
+            - light.bedroom_dimmer
             - switch.wemo_echo
             - switch.entry_lamp
             - switch.sofa_lamp
@@ -143,6 +144,7 @@ history:
             - switch.sink_light
             - group.counter_lights
             - group.ceiling_lights
+            - switch.dining_room_light
             - switch.wemo_bravo
             - switch.wemo_charlie
             - switch.wemo_delta
@@ -292,7 +294,10 @@ cloud:
         - switch.fan_control
         - switch.humidifier
         - input_boolean.bus_notify
+        - input_boolean.fireplace_temperature
         - input_boolean.status_report
+        - input_boolean.respond_pollen_monitor
+        - input_boolean.wakeup_light
       exclude_domains:
         - alert
         - automation
@@ -413,53 +418,95 @@ binary_sensor:
 timer:
   motion_debounce:
     duration: '00:01:00'
+  wakup_light:
+    duration: '00:01:00'
 
 input_boolean:
+  announce_all:
+    name: Alexa Anouncements
+    icon: mdi:amazon-alexa
+  active_sleep_monitor:
+    name: Sleep Monitor
+    icon: mdi:language-python
   bus_notify:
     name: Bus Notify
+    initial: off
     icon: mdi:bus-school
+  fireplace_temperature:
+    name: Fireplace Temperature
+    initial: off
+    icon: mdi:fireplace
+  wakeup_light:
+    name: Wakeup Light
+    icon: mdi:alarm
+
+  # DEBUG
   debug_alexa_speak:
     icon: mdi:bug-check-outline
   debug_bus_notify:
     icon: mdi:bug-check-outline
-  notify_away_monitor:
-    icon: mdi:message-text
   debug_fan_control:
     icon: mdi:bug-check-outline
-  notify_fan_control:
-    icon: mdi:message-text
+  debug_fireplace_temp:
+    icon: mdi:bug-check-outline
   debug_laundry:
     icon: mdi:bug-check-outline
-  announce_all:
-    name: Alexa Anouncements
-    icon: mdi:amazon-alexa
+  debug_location_monitor:
+    icon: mdi:bug-check-outline
+  debug_pollen_monitor:
+    icon: mdi:bug-check-outline
+  debug_reminders:
+    icon: mdi:bug-check-outline
+  debug_sleep_monitor:
+    icon: mdi:bug-check-outline
+  debug_version_monitor:
+    icon: mdi:bug-check-outline
+  debug_wakeup_light:
+    icon: mdi:bug-check-outline
+
+  # NOTIFY
+  notify_away_monitor:
+    icon: mdi:message-text
+
+  notify_fan_control:
+    icon: mdi:message-text
+
+
   announce_location_monitor:
     name: Announce Locations
     icon: mdi:amazon-alexa
   announce_oven_monitor:
     name: Announce Oven Temperature
     icon: mdi:amazon-alexa
-  debug_location_monitor:
-    icon: mdi:bug-check-outline
+
   notify_location_monitor:
     icon: mdi:message-text
-  active_pollen_monitor:
-    name: Pollen Alert
+  respond_pollen_monitor:
+    name: Pollen Monitor Response
     icon: mdi:amazon-alexa
-  debug_pollen_monitor:
-    icon: mdi:bug-check-outline
+
   notify_pollen_monitor:
     icon: mdi:message-text
-  debug_reminders:
-    icon: mdi:bug-check-outline
-  debug_version_monitor:
-    icon: mdi:bug-check-outline
+
   status_report:
     icon: mdi:amazon-alexa
 
-## Pollen Sensor
-#iqvia:
-#  zip_code: "35758"
-#  monitored_conditions:
-#    - allergy_index_today
-#    - allergy_index_tomorrow
+input_number:
+  fireplace_max_indoor_temp:
+    name: Max Indoor Temperature
+    min: 65
+    max: 70
+    icon: mdi:fireplace
+  fireplace_max_outdoor_temp:
+    name: Max Outdoor Temperature
+    min: 45
+    max: 60
+    icon: mdi:fireplace
+
+
+# Pollen Sensor
+iqvia:
+  zip_code: "35758"
+  monitored_conditions:
+    - allergy_index_today
+    - allergy_index_tomorrow
