@@ -2,8 +2,7 @@
   alias: Coffee Timer
   trigger:
   - entity_id: switch.03200121dc4f221ad1cf_2
-    for:
-      minutes: 30
+    for: '1:00:00'
     platform: state
     to: 'on'
   condition: []
