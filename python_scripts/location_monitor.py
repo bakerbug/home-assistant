@@ -5,9 +5,11 @@ class LocationMonitor(hass.Hass):
 
     def initialize(self):
         self.debug_switch = 'input_boolean.debug_location_monitor'
-        self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
-        self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
-        self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
+        self.active_switch = "input_boolean.location_monitor"
+        self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
+        #self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
+        #self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
+        #self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
         self.alexa = self.get_app("alexa_speak")
         self.lock_list = ['lock.front_door',]
         self.SUN_ELEV_HIGH = 15.00
@@ -39,8 +41,22 @@ class LocationMonitor(hass.Hass):
         init_msg = 'Initialized Location Monitor.'
         self.slack(init_msg)
 
+        self.on_active_change("bogus", "bogus", "bogus", "on", "bogus")
+
         # For debugging
         #self.location_change('sensor.bill_location', 'bogus', 'Home', 'None', 'bogus')
+
+    def on_active_change(self, entity, attribute, old, new, kwargs):
+        if new == "on":
+            self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
+            self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
+            self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
+            self.slack_debug("Enabled Location Monitor.")
+        else:
+            self.cancel_listen_state(self.handle_bill)
+            self.cancel_listen_state(self.handle_cricket)
+            self.cancel_listen_state(self.handle_front_door)
+            self.slack_debug("Disabled Location Monitor.")
 
     def location_change(self, entity, attribute, old, new, kwargs):
         self.NOTIFY = self.get_state('input_boolean.notify_location_monitor') == 'on'

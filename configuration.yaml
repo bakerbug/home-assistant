@@ -436,6 +436,9 @@ input_boolean:
     name: Fireplace Temperature
     initial: off
     icon: mdi:fireplace
+  location_monitor:
+    name: Location Monitor
+    icon: mdi:map-marker
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
