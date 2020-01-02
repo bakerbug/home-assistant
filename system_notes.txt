@@ -37,3 +37,9 @@ ExecStart=/usr/bin/docker restart mqtt-bridge
 WantedBy=multi-user.target
 ------------------
 Then run `sudo systemctl enable mqtt-bridge.service`.
+
+# Re-enroll certificate
+cd /home/homeassistant/dehydrated
+sudo -i -u homeassistant ./dehydrated --cron
+- ensure all files in cert/bakerbug.duckdns.org/ belong to homeassistant
+reboot
