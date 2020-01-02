@@ -128,6 +128,9 @@
   - data:
       entity_id: group.morning_lights
     service: switch.turn_on
+  - data:
+      entity_id: input_boolean.wakeup_light
+    service: input_boolean.turn_on
 - id: '1531365279143'
   alias: Kyles Reading Light Timer
   trigger:

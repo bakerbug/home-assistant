@@ -135,7 +135,6 @@ morning_lights:
   entities:
     - group.livingroom_lights
     - group.kitchen_lights
-    - input_boolean.wakeup_light
 bed:
   name: Master Bed
   entities:
