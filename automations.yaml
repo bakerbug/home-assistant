@@ -118,8 +118,9 @@
 - id: '1543243906037'
   alias: Lights On For Weekday Mornings
   trigger:
-  - at: 05:05
-    platform: time
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.wakeup_time'',
+      ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   condition:
   - condition: state
     entity_id: binary_sensor.workday

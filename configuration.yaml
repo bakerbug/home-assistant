@@ -506,6 +506,12 @@ input_number:
     max: 60
     icon: mdi:fireplace
 
+input_datetime:
+  wakeup_time:
+    name: Wakeup Time
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
 
 # Pollen Sensor
 iqvia:
