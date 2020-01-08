@@ -21,8 +21,12 @@ class WakeupLight(hass.Hass):
             self.timer_handler = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)
             self.on_tick("bogus", "bogus", "bogus")
         elif new == "off":
-            self.slack_debug("Wakeup canceled.")
+            if self.ticks < self.MAX_LIGHT:
+                self.slack_debug("Wakeup canceled.")
+                self.turn_off(self.light)
+
             self.ticks = 0
+            
             try:
                 self.cancel_listen_event(self.timer_handler)
             except AttributeError:
