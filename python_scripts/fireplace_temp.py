@@ -19,7 +19,9 @@ class FireplaceTemp(hass.Hass):
         self.yes_responses = ("Yes, a fire would be very nice!",
                               "Yes, it is pretty chilly.",
                               "Yes, I'm feeling a bit cool as well.",
-                              "Yes, a fire sounds very cozy.")
+                              "Yes, a fire sounds very cozy.",
+                              "Oh yes!  Light it up!",
+                              "Yes, just don't burn down the house.",)
 
         self.turn_off(self.fireplace_switch)
 
