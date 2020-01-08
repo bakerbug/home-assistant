@@ -197,6 +197,7 @@ sensor:
           - media_player.kyle_s_room
           - media_player.master_bedroom
           - media_player.upstairs
+          - media_player.echo_auto_camry
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
@@ -327,6 +328,7 @@ alexa_media:
         - "Upstairs"
         - "Master Bedroom"
         - "Kyle's Room"
+        - "Bill's Echo Auto"
 
 # HACS Home Assistant Community Store
 hacs:
