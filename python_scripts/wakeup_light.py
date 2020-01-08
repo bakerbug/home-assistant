@@ -7,6 +7,7 @@ class WakeupLight(hass.Hass):
         self.MAX_LIGHT = 20
         self.OUT_OF_BED_DELAY = 5
         self.ticks = 0
+        self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
         self.bills_lamp = "switch.04200320b4e62d1291c4_1"
         self.cricket_in_bed = "binary_sensor.sleepnumber_bill_cricket_is_in_bed"
@@ -51,6 +52,11 @@ class WakeupLight(hass.Hass):
 
         self.turn_on(lamp)
 
+        bill_lamp_on = self.get_state(self.bills_lamp) == "on"
+        cricket_lamp_on = self.get_state(self.crickets_lamp) == "on"
+        if bill_lamp_on and cricket_lamp_on:
+            self.turn_on(self.bedroom_lamp)
+
     def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
         self.turn_off(self.start_switch)
 
@@ -67,6 +73,7 @@ class WakeupLight(hass.Hass):
         elif self.ticks == self.OUT_OF_BED_DELAY:
             self.cancel_listen_event(self.timer_handle)
             self.turn_off(self.start_switch)
+            self.turn_off(self.light)
 
         self.call_service("timer/start", entity_id=self.wait_timer)
 
