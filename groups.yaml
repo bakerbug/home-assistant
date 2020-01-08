@@ -35,6 +35,7 @@ all_indoor_lights:
     - group.living_area_lights
     - group.bedroom_lights
     - switch.wemo_bravo
+    - switch.dining_room_light
 all_outdoor_lights:
   name: All Outdoor Lights
   entities:
@@ -58,6 +59,7 @@ away_lights:
   entities:
     - group.ceiling_lights
     - switch.0120099868c63aa67ad8_3
+    - switch.dining_room_light
 birthday_list:
   name: Birthday List
   entities:
@@ -111,7 +113,6 @@ kitchen_lights:
     - switch.sink_light
     - group.counter_lights
     - group.ceiling_lights
-    - switch.dining_room_light
 kyle_room:
   name: Kyle's Room
   entities:
