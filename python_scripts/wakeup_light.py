@@ -51,10 +51,14 @@ class WakeupLight(hass.Hass):
             lamp = self.crickets_lamp
 
         self.turn_on(lamp)
+        self.slack_debug(f"Turned on {lamp}.")
 
         bill_lamp_on = self.get_state(self.bills_lamp) == "on"
+        self.slack_debug(f"Bill's lamp on: {bill_lamp_on}.")
         cricket_lamp_on = self.get_state(self.crickets_lamp) == "on"
+        self.slack_debug(f"Cricket's lamp on: {cricket_lamp_on}.")
         if bill_lamp_on and cricket_lamp_on:
+            self.slack_debug(f"Turning on bedroom lamp.")
             self.turn_on(self.bedroom_lamp)
 
     def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
