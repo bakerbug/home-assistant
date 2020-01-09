@@ -1,11 +1,13 @@
 import appdaemon.plugins.hass.hassapi as hass
+from time import sleep
+
 
 class WakeupLight(hass.Hass):
 
     def initialize(self):
         self.INITIAL_LIGHT = 5
         self.MAX_LIGHT = 20
-        self.OUT_OF_BED_DELAY = 5
+        self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
         self.ticks = 0
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
@@ -52,14 +54,16 @@ class WakeupLight(hass.Hass):
 
         self.turn_on(lamp)
         self.slack_debug(f"Turned on {lamp}.")
+        sleep(5)  # HA can have some considerable latency from when a command is applied and its state is updated.
 
         bill_lamp_on = self.get_state(self.bills_lamp) == "on"
-        self.slack_debug(f"Bill's lamp on: {bill_lamp_on}.")
         cricket_lamp_on = self.get_state(self.crickets_lamp) == "on"
-        self.slack_debug(f"Cricket's lamp on: {cricket_lamp_on}.")
+
         if bill_lamp_on and cricket_lamp_on:
             self.slack_debug(f"Turning on bedroom lamp.")
             self.turn_on(self.bedroom_lamp)
+        self.slack_debug(f"Bill's lamp on: {bill_lamp_on}.")
+        self.slack_debug(f"Cricket's lamp on: {cricket_lamp_on}.")
 
     def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
         self.turn_off(self.start_switch)
@@ -78,6 +82,7 @@ class WakeupLight(hass.Hass):
             self.cancel_listen_event(self.timer_handle)
             self.turn_off(self.start_switch)
             self.turn_off(self.light)
+            self.slack_debug("Wake up has ended.")
 
         self.call_service("timer/start", entity_id=self.wait_timer)
 
