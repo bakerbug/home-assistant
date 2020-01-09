@@ -421,7 +421,7 @@ timer:
   motion_debounce:
     duration: '00:01:00'
   wakup_light:
-    duration: '00:01:00'
+    duration: '00:02:00'
 
 input_boolean:
   announce_all:
