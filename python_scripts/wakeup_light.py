@@ -8,6 +8,7 @@ class WakeupLight(hass.Hass):
         self.INITIAL_LIGHT = 5
         self.MAX_LIGHT = 20
         self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
+        self.PRIOR_MINUTES = 30
         self.active = "input_boolean.wakeup_light"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
