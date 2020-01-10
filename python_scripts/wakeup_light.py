@@ -1,4 +1,5 @@
 import appdaemon.plugins.hass.hassapi as hass
+import datetime
 from time import sleep
 
 
@@ -85,6 +86,19 @@ class WakeupLight(hass.Hass):
             self.slack_debug("Wake up has ended.")
 
         self.call_service("timer/start", entity_id=self.wait_timer)
+
+    def on_wakeup_time_change(self, entity, attribute, old, new, kwargs):
+        try:
+            self.cancel_timer(self.wakeup_time_handle)
+        except AttributeError:
+            pass
+
+        hour, minute, second = new.split(':')
+        time = datetime.time(hour, minute, second)
+        day = datetime.date.today()
+        alarm_time = datetime.datetime.combine(day, time)
+        begin_time = alarm_time - datetime.timedelta(minutes=self.PRIOR_MINUTES)
+        self.wakup_time_handle = self.run_at(self.on_begin_wakeup, begin_time)
 
     def slack_debug(self, message):
         debug = self.get_state("input_boolean.debug_wakeup_light") == "on"
