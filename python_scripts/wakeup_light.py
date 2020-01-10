@@ -8,18 +8,23 @@ class WakeupLight(hass.Hass):
         self.INITIAL_LIGHT = 5
         self.MAX_LIGHT = 20
         self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
+        self.active = "input_boolean.wakeup_light"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
         self.bills_lamp = "switch.04200320b4e62d1291c4_1"
         self.cricket_in_bed = "binary_sensor.sleepnumber_bill_cricket_is_in_bed"
         self.crickets_lamp = "switch.04200320b4e62d1291c4_4"
+        self.house_lights = "group.morning_lights"
         self.light = "light.bedroom_dimmer"
         self.start_switch = "input_boolean.wakeup_light"
         self.wait_timer = "timer.wakup_light"
+        self.wakeup_time = "input_datetime.wakeup_time"
+        self.workday = "binary_sensor.workday"
 
-        self.switch_handle = self.listen_state(self.on_wakeup, self.start_switch)
+        #self.switch_handle = self.listen_state(self.on_begin_wakeup, self.start_switch)
 
         self.reset()
+        self.on_wakeup_time_change(None, None, None, None, None)
 
         init_msg = "Initialized Wakeup Light."
         self.call_service("notify/slack_assistant", message=init_msg)
@@ -29,7 +34,14 @@ class WakeupLight(hass.Hass):
         self.bills_lamp_on = False
         self.crickets_lamp_on = False
 
-    def on_wakeup(self, entity, attribute, old, new, kwargs):
+    def on_begin_wakeup(self, entity, attribute, old, new, kwargs):
+        if self.get_state(self.workday) == "off":
+            self.slack_debug("Not a work day today.")
+            return
+        if self.get_state(self.active) == "off":
+            self.slack_debug("Not waking up today.")
+            return
+
         if new == "on":
             self.slack_debug("Wakeup started.")
             self.timer_handle = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)
@@ -76,6 +88,9 @@ class WakeupLight(hass.Hass):
         else:
             self.ticks += 1
 
+        if self.ticks == self.MAX_LIGHT:
+            self.turn_on(self.house_lights)
+
         if self.ticks <= self.MAX_LIGHT:
             self.turn_on(self.light, brightness_pct=str(self.ticks))
             self.slack_debug(f"Adjusting light to {self.ticks} percent.")
@@ -92,18 +107,20 @@ class WakeupLight(hass.Hass):
         self.call_service("timer/start", entity_id=self.wait_timer)
 
     def on_wakeup_time_change(self, entity, attribute, old, new, kwargs):
-        # Not yet wired in
         try:
             self.cancel_timer(self.wakeup_time_handle)
+            self.slack_debug("Canceled time based handle.")
         except AttributeError:
-            pass
+            self.slack_debug("No time based handle to cancel.")
+
+        if new is None:
+            new = self.get_state(self.wakeup_time)
 
         hour, minute, second = new.split(":")
-        time = datetime.time(hour, minute, second)
-        day = datetime.date.today()
-        alarm_time = datetime.datetime.combine(day, time)
+        alarm_time = datetime.time(hour, minute, second)
         begin_time = alarm_time - datetime.timedelta(minutes=self.PRIOR_MINUTES)
-        self.wakup_time_handle = self.run_at(self.on_begin_wakeup, begin_time)
+        self.wakup_time_handle = self.run_daily(self.on_begin_wakeup, begin_time)
+        self.slack_debug(f"Alarm time: {alarm_time}  Begin time: {begin_time}")
 
     def slack_debug(self, message):
         debug = self.get_state("input_boolean.debug_wakeup_light") == "on"
