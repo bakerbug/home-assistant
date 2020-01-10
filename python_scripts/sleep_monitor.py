@@ -2,7 +2,6 @@ import appdaemon.plugins.hass.hassapi as hass
 
 
 class SleepMonitor(hass.Hass):
-
     def initialize(self):
         self.COLD_TEMP = 65
 
@@ -71,7 +70,7 @@ class SleepMonitor(hass.Hass):
         if tv_state != "standby":
             return
 
-        if new == 'on':
+        if new == "on":
             self.turn_on(self.floor_fan)
         else:
             self.turn_off(self.floor_fan)

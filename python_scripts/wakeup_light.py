@@ -4,7 +4,6 @@ from time import sleep
 
 
 class WakeupLight(hass.Hass):
-
     def initialize(self):
         self.INITIAL_LIGHT = 5
         self.MAX_LIGHT = 20
@@ -29,7 +28,6 @@ class WakeupLight(hass.Hass):
         self.ticks = 0
         self.bills_lamp_on = False
         self.crickets_lamp_on = False
-
 
     def on_wakeup(self, entity, attribute, old, new, kwargs):
         if new == "on":
@@ -97,7 +95,7 @@ class WakeupLight(hass.Hass):
         except AttributeError:
             pass
 
-        hour, minute, second = new.split(':')
+        hour, minute, second = new.split(":")
         time = datetime.time(hour, minute, second)
         day = datetime.date.today()
         alarm_time = datetime.datetime.combine(day, time)

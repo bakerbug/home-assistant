@@ -1,7 +1,7 @@
 import appdaemon.plugins.hass.hassapi as hass
 
-class StatusReport(hass.Hass):
 
+class StatusReport(hass.Hass):
     def initialize(self):
         self.entity_list = ("cover.left_bay", "cover.right_bay", "lock.front_door")
         self.alexa = self.get_app("alexa_speak")
@@ -28,8 +28,7 @@ class StatusReport(hass.Hass):
 
     def send_report(self, report_msg):
         source_alexa = self.get_state("sensor.last_alexa")
-        self.call_service("notify/alexa_media", message=report_msg, data={"type": "tts"},
-            target=source_alexa)
+        self.call_service("notify/alexa_media", message=report_msg, data={"type": "tts"}, target=source_alexa)
 
     def slack(self, slack_msg):
         self.call_service("notify/slack_assistant", message=slack_msg)

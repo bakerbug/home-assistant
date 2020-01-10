@@ -1,9 +1,9 @@
 import appdaemon.plugins.hass.hassapi as hass
-#from alexa_speak import AlexaSpeak
+
+# from alexa_speak import AlexaSpeak
 
 
 class OvenMonitor(hass.Hass):
-
     def initialize(self):
         self.oven_handler = self.listen_state(self.oven_check, entity="sensor.range_temperature_measurement")
         self.alexa = self.get_app("alexa_speak")
@@ -13,7 +13,7 @@ class OvenMonitor(hass.Hass):
         self.call_service("notify/slack_assistant", message=init_msg)
 
     def oven_check(self, entity, attribute, old, new, kwargs):
-        disable = self.get_state('input_boolean.notify_location_monitor') == 'off'
+        disable = self.get_state("input_boolean.notify_location_monitor") == "off"
         if disable:
             return
         oven_on = self.get_state("sensor.range_oven_machine_state") == "running"
