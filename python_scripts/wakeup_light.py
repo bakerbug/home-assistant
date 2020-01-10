@@ -83,8 +83,11 @@ class WakeupLight(hass.Hass):
         elif self.ticks == self.OUT_OF_BED_DELAY:
             self.cancel_listen_event(self.timer_handle)
             self.turn_off(self.start_switch)
-            self.turn_on(self.light, brightness_pct="80")
             self.slack_debug("Wake up has ended.")
+            if self.bills_lamp_on and self.crickets_lamp_on:
+                self.turn_on(self.light, brightness_pct="80")
+            else:
+                self.turn_off(self.light)
 
         self.call_service("timer/start", entity_id=self.wait_timer)
 
