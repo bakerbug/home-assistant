@@ -23,6 +23,7 @@ class WakeupLight(hass.Hass):
         self.workday = "binary_sensor.workday"
 
         #self.switch_handle = self.listen_state(self.on_begin_wakeup, self.start_switch)
+        self.wake_time_handle = self.listen_state(self.on_wakeup_time_change, self.wakeup_time)
 
         self.reset()
         self.on_wakeup_time_change(None, None, None, None, None)
@@ -109,7 +110,7 @@ class WakeupLight(hass.Hass):
 
     def on_wakeup_time_change(self, entity, attribute, old, new, kwargs):
         try:
-            self.cancel_timer(self.wakeup_time_handle)
+            self.cancel_timer(self.alarm_handle)
             self.slack_debug("Canceled time based handle.")
         except AttributeError:
             self.slack_debug("No time based handle to cancel.")
@@ -122,7 +123,7 @@ class WakeupLight(hass.Hass):
         today = datetime.date.today()
         today_time = datetime.datetime.combine(today, alarm_time)
         begin_time = today_time - datetime.timedelta(minutes=self.PRIOR_MINUTES)
-        self.wakup_time_handle = self.run_daily(self.on_begin_wakeup, begin_time.time())
+        self.alarm_handle = self.run_daily(self.on_begin_wakeup, begin_time.time())
         self.slack_debug(f"Alarm time: {alarm_time}  Begin time: {begin_time}")
 
     def slack_debug(self, message):
