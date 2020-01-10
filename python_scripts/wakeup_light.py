@@ -36,7 +36,7 @@ class WakeupLight(hass.Hass):
         self.bills_lamp_on = False
         self.crickets_lamp_on = False
 
-    def on_begin_wakeup(self, entity, attribute, old, new, kwargs):
+    def on_begin_wakeup(self, kwargs):
         if self.get_state(self.workday) == "off":
             self.slack_debug("Not a work day today.")
             return
@@ -44,27 +44,27 @@ class WakeupLight(hass.Hass):
             self.slack_debug("Not waking up today.")
             return
 
-        if new == "on":
-            self.slack_debug("Wakeup started.")
-            self.timer_handle = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)
-            self.light_handle = self.listen_state(self.on_switch_turned_off, self.light, new="off")
-            self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
-            self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
-            self.on_tick("bogus", "bogus", "bogus")
-        elif new == "off":
-            if self.ticks < self.MAX_LIGHT:
-                self.slack_debug("Wakeup canceled.")
-                self.turn_off(self.light)
-
-            self.reset()
-
-            try:
-                self.cancel_listen_event(self.timer_handle)
-                self.cancel_listen_state(self.light_handle)
-                self.cancel_listen_state(self.bill_bed_handle)
-                self.cancel_listen_state(self.cricket_bed_handle)
-            except AttributeError:
-                pass
+        #if new == "on":
+        self.slack_debug("Wakeup started.")
+        self.timer_handle = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)
+        # self.light_handle = self.listen_state(self.on_switch_turned_off, self.light, new="off")
+        self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
+        self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
+        self.on_tick(None, None, None)
+        # elif new == "off":
+        #     if self.ticks < self.MAX_LIGHT:
+        #         self.slack_debug("Wakeup canceled.")
+        #         self.turn_off(self.light)
+        #
+        #     self.reset()
+        #
+        #     try:
+        #         self.cancel_listen_event(self.timer_handle)
+        #         self.cancel_listen_state(self.light_handle)
+        #         self.cancel_listen_state(self.bill_bed_handle)
+        #         self.cancel_listen_state(self.cricket_bed_handle)
+        #     except AttributeError:
+        #         pass
 
     def on_out_of_bed(self, entity, attribute, old, new, kwargs):
         if entity == self.bill_in_bed:
@@ -81,8 +81,8 @@ class WakeupLight(hass.Hass):
             self.slack_debug(f"Turning on bedroom lamp.")
             self.turn_on(self.bedroom_lamp)
 
-    def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
-        self.turn_off(self.start_switch)
+    # def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
+    #     self.turn_off(self.start_switch)
 
     def on_tick(self, event, data, kwargs):
         if self.ticks == 0:
@@ -99,8 +99,9 @@ class WakeupLight(hass.Hass):
 
         elif self.ticks == self.OUT_OF_BED_DELAY:
             self.cancel_listen_event(self.timer_handle)
-            self.turn_off(self.start_switch)
+            #self.turn_off(self.start_switch)
             self.slack_debug("Wake up has ended.")
+            self.reset()
             if self.bills_lamp_on and self.crickets_lamp_on:
                 self.turn_on(self.light, brightness_pct="80")
             else:
