@@ -9,7 +9,6 @@ class WakeupLight(hass.Hass):
         self.INITIAL_LIGHT = 5
         self.MAX_LIGHT = 20
         self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
-        self.ticks = 0
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
         self.bills_lamp = "switch.04200320b4e62d1291c4_1"
@@ -21,8 +20,16 @@ class WakeupLight(hass.Hass):
 
         self.switch_handle = self.listen_state(self.on_wakeup, self.start_switch)
 
+        self.reset()
+
         init_msg = "Initialized Wakeup Light."
         self.call_service("notify/slack_assistant", message=init_msg)
+
+    def reset(self):
+        self.ticks = 0
+        self.bills_lamp_on = False
+        self.crickets_lamp_on = False
+
 
     def on_wakeup(self, entity, attribute, old, new, kwargs):
         if new == "on":
@@ -37,7 +44,7 @@ class WakeupLight(hass.Hass):
                 self.slack_debug("Wakeup canceled.")
                 self.turn_off(self.light)
 
-            self.ticks = 0
+            self.reset()
 
             try:
                 self.cancel_listen_event(self.timer_handle)
@@ -50,21 +57,17 @@ class WakeupLight(hass.Hass):
     def on_out_of_bed(self, entity, attribute, old, new, kwargs):
         if entity == self.bill_in_bed:
             lamp = self.bills_lamp
+            self.bills_lamp_on = True
         elif entity == self.cricket_in_bed:
             lamp = self.crickets_lamp
+            self.crickets_lamp_on = True
 
         self.turn_on(lamp)
         self.slack_debug(f"Turned on {lamp}.")
-        sleep(5)  # HA can have some considerable latency from when a command is applied and its state is updated.
 
-        bill_lamp_on = self.get_state(self.bills_lamp) == "on"
-        cricket_lamp_on = self.get_state(self.crickets_lamp) == "on"
-
-        if bill_lamp_on and cricket_lamp_on:
+        if self.bill_lamp_on and self.cricket_lamp_on:
             self.slack_debug(f"Turning on bedroom lamp.")
             self.turn_on(self.bedroom_lamp)
-        self.slack_debug(f"Bill's lamp on: {bill_lamp_on}.")
-        self.slack_debug(f"Cricket's lamp on: {cricket_lamp_on}.")
 
     def on_switch_turned_off(self, entity, attribute, old, new, kwargs):
         self.turn_off(self.start_switch)
@@ -82,12 +85,13 @@ class WakeupLight(hass.Hass):
         elif self.ticks == self.OUT_OF_BED_DELAY:
             self.cancel_listen_event(self.timer_handle)
             self.turn_off(self.start_switch)
-            self.turn_off(self.light)
+            self.turn_on(self.light, brightness_pct="80")
             self.slack_debug("Wake up has ended.")
 
         self.call_service("timer/start", entity_id=self.wait_timer)
 
     def on_wakeup_time_change(self, entity, attribute, old, new, kwargs):
+        # Not yet wired in
         try:
             self.cancel_timer(self.wakeup_time_handle)
         except AttributeError:
