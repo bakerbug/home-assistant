@@ -117,7 +117,7 @@ class WakeupLight(hass.Hass):
             new = self.get_state(self.wakeup_time)
 
         hour, minute, second = new.split(":")
-        alarm_time = datetime.time(hour, minute, second)
+        alarm_time = datetime.time(int(hour), int(minute), int(second))
         begin_time = alarm_time - datetime.timedelta(minutes=self.PRIOR_MINUTES)
         self.wakup_time_handle = self.run_daily(self.on_begin_wakeup, begin_time)
         self.slack_debug(f"Alarm time: {alarm_time}  Begin time: {begin_time}")
