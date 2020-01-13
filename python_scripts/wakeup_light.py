@@ -69,7 +69,7 @@ class WakeupLight(hass.Hass):
         self.turn_on(lamp)
         self.slack_debug(f"Turned on {lamp}.")
 
-        if self.bill_lamp_on and self.cricket_lamp_on:
+        if self.bills_lamp_on and self.crickets_lamp_on:
             self.slack_debug(f"Turning on bedroom lamp.")
             self.turn_on(self.bedroom_lamp)
 
