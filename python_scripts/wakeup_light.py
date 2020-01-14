@@ -5,10 +5,10 @@ from time import sleep
 
 class WakeupLight(hass.Hass):
     def initialize(self):
-        self.INITIAL_LIGHT = 5
-        self.MAX_LIGHT = 20
+        self.INITIAL_LIGHT = 2
+        self.MAX_LIGHT = 15
         self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
-        self.PRIOR_MINUTES = 30
+        self.PRIOR_MINUTES = (self.MAX_LIGHT - self.INITIAL_LIGHT) * 2
         self.active = "input_boolean.wakeup_light"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
@@ -53,8 +53,6 @@ class WakeupLight(hass.Hass):
             return
 
         self.timer_handle = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)
-        self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
-        self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
         self.light_handle = self.listen_state(self.on_switch_turned_off, self.light, new="off")
         self.on_tick(None, None, None)
 
@@ -85,6 +83,8 @@ class WakeupLight(hass.Hass):
 
         if self.ticks == self.MAX_LIGHT:
             self.turn_on(self.house_lights)
+            self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
+            self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
 
         if self.ticks <= self.MAX_LIGHT:
             self.turn_on(self.light, brightness_pct=str(self.ticks))
