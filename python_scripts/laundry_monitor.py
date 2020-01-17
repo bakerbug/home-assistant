@@ -18,7 +18,10 @@ class LaundryMonitor(hass.Hass):
 
     def check_power(self, args):
         self.DEBUG = self.get_state(self.debug_switch) == "on"
-        self.power_level = float(self.get_state("sensor.washing_machine_power"))
+        power_value = self.get_state("sensor.washing_machine_power")
+        if power_value == "unavailable":
+            return
+        self.power_level = float(power_value)
 
         if self.DEBUG:
             self.alexa.announce(f"The laundry power is {self.power_level}", self.debug_switch)
