@@ -190,7 +190,7 @@
 - id: '1555681619395'
   alias: Front Door Motion
   trigger:
-  - entity_id: binary_sensor.ring_front_door_motion
+  - entity_id: binary_sensor.front_door_cam_motion
     from: 'off'
     platform: state
     to: 'on'
@@ -212,7 +212,7 @@
 - id: '1555681619396'
   alias: Driveway Motion
   trigger:
-  - entity_id: binary_sensor.ring_driveway_cam_motion
+  - entity_id: binary_sensor.driveway_cam_motion
     from: 'off'
     platform: state
     to: 'on'

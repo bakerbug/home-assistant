@@ -106,9 +106,9 @@ history:
             - lock.front_door
             - cover.left_bay
             - cover.right_bay
-            - binary_sensor.ring_front_door_motion
-            - binary_sensor.ring_driveway_cam_motion
-            - binary_sensor.ring_backyard_cam_motion
+            - binary_sensor.front_door_cam_motion
+            - binary_sensor.driveway_cam_motion
+            - binary_sensor.backyard_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.weather_temperature
@@ -381,12 +381,6 @@ tuya:
   country_code: 1
   platform: 'smart_life'
 
-# Security Cameras
-ring:
-  username: !secret ring_username
-  password: !secret ring_password
-camera:
-    - platform: ring
 ffmpeg:
 
 ## Phone Detection
@@ -413,8 +407,6 @@ binary_sensor:
     - platform: workday
       name: Workday
       country: US
-    - platform: ring
-      monitored_conditions: motion
 
 # Timers
 timer:
