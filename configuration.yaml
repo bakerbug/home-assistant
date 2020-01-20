@@ -443,6 +443,8 @@ input_boolean:
     icon: mdi:bug-check-outline
   debug_fireplace_temp:
     icon: mdi:bug-check-outline
+  debug_garage_monitor:
+    icon: mdi:bug-check-outline
   debug_laundry:
     icon: mdi:bug-check-outline
   debug_location_monitor:
