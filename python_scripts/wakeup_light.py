@@ -22,6 +22,7 @@ class WakeupLight(hass.Hass):
         self.wait_timer = "timer.wakup_light"
         self.wakeup_time = "input_datetime.wakeup_time"
         self.workday = "binary_sensor.workday"
+        self.weekend_alarm = "input_boolean.wakeup_light_weekend"
 
         self.wake_time_handle = self.listen_state(self.on_wakeup_time_change, self.wakeup_time)
 
@@ -44,12 +45,19 @@ class WakeupLight(hass.Hass):
 
     def on_begin_wakeup(self, kwargs):
         self.slack_debug("Wakeup started.")
+        wakeup = True
 
-        if self.get_state(self.workday) == "off":
+        if self.get_state(self.weekend_alarm) == "on":
+            self.slack_debug("Weeked wakeup is on.")
+            wakeup = True
+        elif self.get_state(self.workday) == "off":
             self.slack_debug("Not a work day today.")
-            return
+            wakeup = False
         if self.get_state(self.active) == "off":
             self.slack_debug("Not waking up today.")
+            wakeup = False
+
+        if not wakeup:
             return
 
         self.timer_handle = self.listen_event(self.on_tick, "timer.finished", entity_id=self.wait_timer)

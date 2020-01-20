@@ -294,17 +294,11 @@ cloud:
         - cover.right_bay
         - switch.fan_control
         - switch.humidifier
-        - input_boolean.bus_notify
-        - input_boolean.fireplace_temperature
-        - input_boolean.status_report
-        - input_boolean.respond_pollen_monitor
-        - input_boolean.wakeup_light
       exclude_domains:
         - alert
         - automation
         - fan
         - group
-        - input_boolean
         - light
         - lock
         - media_player
@@ -435,6 +429,9 @@ input_boolean:
     icon: mdi:map-marker
   wakeup_light:
     name: Wakeup Light
+    icon: mdi:alarm
+  wakeup_light_weekend:
+    name: Weekend Wakeup Light
     icon: mdi:alarm
 
   # DEBUG
