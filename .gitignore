@@ -1,5 +1,7 @@
 secrets.yaml
 known_devices.yaml
+python_scripts/debug.py
+
 *.conf
 *.db
 *.log
@@ -13,4 +15,3 @@ known_devices.yaml
 tts/
 custom_components/
 alexa_media_player/
-
