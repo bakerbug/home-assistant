@@ -11,6 +11,9 @@ class GarageMonitor(hass.Hass):
         self.right_bay_handle = self.listen_state(self.on_door_change, self.right_bay)
         self.debug_switch = "input_boolean.debug_garage_monitor"
 
+        init_msg = "Initialized Garage Monitor."
+        self.call_service("notify/slack_assistant", message=init_msg)
+
     def on_door_change(self, entity, attribute, old, new, kwargs):
         self.slack_debug(f"Detected {entity} is {new}.")
         if new == "open":
@@ -24,6 +27,9 @@ class GarageMonitor(hass.Hass):
 
     def on_tick(self, kwargs):
         self.timer_ticks += 1
+        if self.timer_ticks not in self.message_times:
+            return
+
         left_open = self.get_state(self.left_bay) == "open"
         right_open = self.get_state(self.right_bay) == "open"
         self.slack_debug(f"Left bay is {left_open}, Right bay is {right_open}, Ticks: {self.timer_ticks}.")
@@ -40,8 +46,7 @@ class GarageMonitor(hass.Hass):
             self.cancel_timer(self.timer_handle)
             self.slack_debug(f"Canceled garage monitor timer.")
         else:
-            if self.timer_ticks in self.message_times:
-                self.alexa.announce(msg, self.debug_switch)
+            self.alexa.announce(msg, self.debug_switch)
 
     def slack_debug(self, message):
         debug = self.get_state(self.debug_switch) == "on"
