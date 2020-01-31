@@ -131,6 +131,7 @@ living_area_lights:
   entities:
     - group.kitchen_lights
     - group.livingroom_lights
+    - switch.dining_room_light
 morning_lights:
   name: Morning Lights
   entities:
