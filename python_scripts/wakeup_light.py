@@ -39,9 +39,37 @@ class WakeupLight(hass.Hass):
 
         try:
             self.cancel_listen_event(self.timer_handle)
+        except AttributeError:
+            self.log("No timer_handle to reset", level="WARNING")
+
+        try:
             self.cancel_listen_state(self.light_handle)
         except AttributeError:
-            pass
+            self.log("No light_handle to reset", level="WARNING")
+
+        try:
+            self.cancel_listen_state(self.bill_bed_handle)
+        except AttributeError:
+            self.log("No bill_bed_handle to reset", level="WARNING")
+
+        try:
+            self.cancel_listen_state(self.cricket_bed_handle)
+        except AttributeError:
+            self.log("No cricket_bed_handle to reset", level="WARNING")
+
+    def listen_for_out_of_bed(self):
+        try:
+            self.cancel_listen_state(self.bill_bed_handle)
+        except AttributeError:
+            self.log("No bill_bed_handle to clear", level="WARNING")
+
+        try:
+            self.cancel_listen_state(self.cricket_bed_handle)
+        except AttributeError:
+            self.log("No cricket_bed_handle to clear", level="WARNING")
+
+        self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
+        self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
 
     def on_begin_wakeup(self, kwargs):
         self.slack_debug("Wakeup started.")
@@ -91,8 +119,8 @@ class WakeupLight(hass.Hass):
 
         if self.ticks == self.MAX_LIGHT:
             self.turn_on(self.house_lights)
-            self.bill_bed_handle = self.listen_state(self.on_out_of_bed, self.bill_in_bed, new="off")
-            self.cricket_bed_handle = self.listen_state(self.on_out_of_bed, self.cricket_in_bed, new="off")
+            self.listen_for_out_of_bed()
+
 
         if self.ticks <= self.MAX_LIGHT:
             self.turn_on(self.light, brightness_pct=str(self.ticks))
