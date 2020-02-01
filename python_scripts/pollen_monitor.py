@@ -59,7 +59,7 @@ class PollenMonitor(hass.Hass):
             self.alexa.announce(report_msg, self.debug_switch)
         if requested:
             self.alexa.respond(report_msg)
-        elif float(self.pollen_index) >= self.pollen_warning_level:
+        elif float(self.index_tomorrow) >= self.pollen_warning_level:
             report_msg = "Pollen Alert.  " + report_msg
             self.alexa.notify(report_msg)
 
