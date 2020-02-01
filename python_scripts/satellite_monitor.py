@@ -2,6 +2,7 @@ import aiohttp
 import asyncio
 import time
 import json
+import os
 
 NO_PASSES = '{"info":{"satid":25544,"satname":"SPACE STATION","transactionscount":2,"passescount":0}}'
 SIX_PASSES = '{"info":{"satid":25544,"satname":"SPACE STATION","transactionscount":0,"passescount":6},"passes":[{"startAz":329.8,"startAzCompass":"NW","startEl":0.17,"startUTC":1580689995,"maxAz":23.14,"maxAzCompass":"NNE","maxEl":10.05,"maxUTC":1580690255,"endAz":76.24,"endAzCompass":"E","endEl":9.53,"endUTC":1580690510,"mag":0.4,"duration":215},{"startAz":320.21,"startAzCompass":"NW","startEl":0.13,"startUTC":1580779325,"maxAz":35,"maxAzCompass":"NE","maxEl":32.49,"maxUTC":1580779640,"endAz":112.7,"endAzCompass":"ESE","endEl":10.81,"endUTC":1580779950,"mag":0.4,"duration":140},{"startAz":324.2,"startAzCompass":"NW","startEl":0.26,"startUTC":1580862880,"maxAz":31.98,"maxAzCompass":"NE","maxEl":20.72,"maxUTC":1580863180,"endAz":100.31,"endAzCompass":"E","endEl":20.22,"endUTC":1580863475,"mag":-0.4,"duration":275},{"startAz":327.09,"startAzCompass":"NW","startEl":0.07,"startUTC":1580946430,"maxAz":27.84,"maxAzCompass":"NNE","maxEl":14.19,"maxUTC":1580946715,"endAz":88.49,"endAzCompass":"E","endEl":9.1,"endUTC":1580946995,"mag":0,"duration":415},{"startAz":310.54,"startAzCompass":"NW","startEl":0.27,"startUTC":1580952220,"maxAz":220.45,"maxAzCompass":"SW","maxEl":72.85,"maxUTC":1580952545,"endAz":138.07,"endAzCompass":"SE","endEl":22.54,"endUTC":1580952860,"mag":-0.5,"duration":205},{"startAz":315.77,"startAzCompass":"NW","startEl":0.18,"startUTC":1581035765,"maxAz":40.83,"maxAzCompass":"NE","maxEl":58.06,"maxUTC":1581036090,"endAz":125.22,"endAzCompass":"SE","endEl":44.18,"endUTC":1581036405,"mag":-2,"duration":370}]}'
@@ -57,7 +58,11 @@ class SatData:
 
 def get_date(ts):
     local_ts = time.localtime(ts)
-    return time.strftime("%A, %B %-d at %-I:%M %p", local_ts)
+    if os.name == "nt":
+        format_string = "%A, %B %#e at %#I:%M %p"
+    else:
+        format_string = "%A, %B %-d at %-I:%M %p"
+    return time.strftime(format_string, local_ts)
 
 
 def get_direction(abv_dir):
