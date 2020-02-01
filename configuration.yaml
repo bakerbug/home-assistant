@@ -42,7 +42,8 @@ recorder:
 #introduction:
 
 # Enables the frontend
-frontend: !include frontend.yaml
+frontend:
+  themes: !include_dir_merge_named themes
 
 # Enables configuration UI
 config:
@@ -106,9 +107,9 @@ history:
             - lock.front_door
             - cover.left_bay
             - cover.right_bay
-            - binary_sensor.ring_front_door_motion
-            - binary_sensor.ring_driveway_cam_motion
-            - binary_sensor.ring_backyard_cam_motion
+            - binary_sensor.front_door_cam_motion
+            - binary_sensor.driveway_cam_motion
+            - binary_sensor.backyard_cam_motion
             - sensor.upstairs_thermostat_temperature
             - sensor.downstairs_thermostat_temperature
             - sensor.weather_temperature
@@ -197,6 +198,7 @@ sensor:
           - media_player.kyle_s_room
           - media_player.master_bedroom
           - media_player.upstairs
+          - media_player.echo_auto_camry
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
@@ -293,17 +295,11 @@ cloud:
         - cover.right_bay
         - switch.fan_control
         - switch.humidifier
-        - input_boolean.bus_notify
-        - input_boolean.fireplace_temperature
-        - input_boolean.status_report
-        - input_boolean.respond_pollen_monitor
-        - input_boolean.wakeup_light
       exclude_domains:
         - alert
         - automation
         - fan
         - group
-        - input_boolean
         - light
         - lock
         - media_player
@@ -327,6 +323,7 @@ alexa_media:
         - "Upstairs"
         - "Master Bedroom"
         - "Kyle's Room"
+        - "Bill's Echo Auto"
 
 # HACS Home Assistant Community Store
 hacs:
@@ -379,12 +376,6 @@ tuya:
   country_code: 1
   platform: 'smart_life'
 
-# Security Cameras
-ring:
-  username: !secret ring_username
-  password: !secret ring_password
-camera:
-    - platform: ring
 ffmpeg:
 
 ## Phone Detection
@@ -411,15 +402,13 @@ binary_sensor:
     - platform: workday
       name: Workday
       country: US
-    - platform: ring
-      monitored_conditions: motion
 
 # Timers
 timer:
   motion_debounce:
     duration: '00:01:00'
   wakup_light:
-    duration: '00:01:00'
+    duration: '00:02:00'
 
 input_boolean:
   announce_all:
@@ -436,8 +425,14 @@ input_boolean:
     name: Fireplace Temperature
     initial: off
     icon: mdi:fireplace
+  location_monitor:
+    name: Location Monitor
+    icon: mdi:map-marker
   wakeup_light:
     name: Wakeup Light
+    icon: mdi:alarm
+  wakeup_light_weekend:
+    name: Weekend Wakeup Light
     icon: mdi:alarm
 
   # DEBUG
@@ -448,6 +443,8 @@ input_boolean:
   debug_fan_control:
     icon: mdi:bug-check-outline
   debug_fireplace_temp:
+    icon: mdi:bug-check-outline
+  debug_garage_monitor:
     icon: mdi:bug-check-outline
   debug_laundry:
     icon: mdi:bug-check-outline
@@ -503,6 +500,12 @@ input_number:
     max: 60
     icon: mdi:fireplace
 
+input_datetime:
+  wakeup_time:
+    name: Wakeup Time
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
 
 # Pollen Sensor
 iqvia:

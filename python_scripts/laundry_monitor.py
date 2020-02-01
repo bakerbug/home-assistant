@@ -1,8 +1,8 @@
 import appdaemon.plugins.hass.hassapi as hass
 import datetime
 
-class LaundryMonitor(hass.Hass):
 
+class LaundryMonitor(hass.Hass):
     def initialize(self):
         self.debug_switch = "input_boolean.debug_laundry"
         clock = datetime.time(0, 0, 0)
@@ -18,7 +18,10 @@ class LaundryMonitor(hass.Hass):
 
     def check_power(self, args):
         self.DEBUG = self.get_state(self.debug_switch) == "on"
-        self.power_level = float(self.get_state("sensor.washing_machine_power"))
+        power_value = self.get_state("sensor.washing_machine_power")
+        if power_value == "unavailable":
+            return
+        self.power_level = float(power_value)
 
         if self.DEBUG:
             self.alexa.announce(f"The laundry power is {self.power_level}", self.debug_switch)
@@ -34,7 +37,7 @@ class LaundryMonitor(hass.Hass):
         elif self.power_level > self.power_limit:
             self.washer_on = True
 
-        self.slack_debug(f'Laundry ticks: {self.ticks}')
+        self.slack_debug(f"Laundry ticks: {self.ticks}")
 
     def slack_debug(self, message):
         debug = self.get_state("input_boolean.debug_laundry") == "on"

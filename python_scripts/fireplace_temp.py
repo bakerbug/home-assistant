@@ -1,8 +1,8 @@
 import appdaemon.plugins.hass.hassapi as hass
 import random
 
-class FireplaceTemp(hass.Hass):
 
+class FireplaceTemp(hass.Hass):
     def initialize(self):
         self.max_indoor_temp_setting = "input_number.fireplace_max_indoor_temp"
         self.max_outdoor_temp_setting = "input_number.fireplace_max_outdoor_temp"
@@ -16,10 +16,14 @@ class FireplaceTemp(hass.Hass):
 
         self.request_handle = self.listen_state(self.on_request, self.fireplace_switch, new="on")
 
-        self.yes_responses = ("Yes, a fire would be very nice!",
-                              "Yes, it is pretty chilly.",
-                              "Yes, I'm feeling a bit cool as well.",
-                              "Yes, a fire sounds very cozy.")
+        self.yes_responses = (
+            "Yes, a fire would be very nice!",
+            "Yes, it is pretty chilly.",
+            "Yes, I'm feeling a bit cool as well.",
+            "Yes, a fire sounds very cozy.",
+            "Oh yes!  Light it up!",
+            "Yes, just don't burn down the house.",
+        )
 
         self.turn_off(self.fireplace_switch)
 
@@ -33,7 +37,9 @@ class FireplaceTemp(hass.Hass):
         downstairs_temp = int(self.get_state(self.downstairs))
         outside_temp = int(self.get_state(self.outside, attribute="temperature"))
 
-        self.slack_debug(f"Max Indoor: {max_indoor_temp}, Max Outdoor: {max_outdoor_temp}, Upstairs: {upstairs_temp}, Downstairs: {downstairs_temp}, Outside: {outside_temp}")
+        self.slack_debug(
+            f"Max Indoor: {max_indoor_temp}, Max Outdoor: {max_outdoor_temp}, Upstairs: {upstairs_temp}, Downstairs: {downstairs_temp}, Outside: {outside_temp}"
+        )
 
         msg = random.choice(self.yes_responses)
 
@@ -46,6 +52,6 @@ class FireplaceTemp(hass.Hass):
         self.turn_off(self.fireplace_switch)
 
     def slack_debug(self, message):
-        debug = self.get_state(self.debug_switch) == 'on'
+        debug = self.get_state(self.debug_switch) == "on"
         if debug:
             self.call_service("notify/slack_assistant", message=message)
