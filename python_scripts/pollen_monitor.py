@@ -57,9 +57,9 @@ class PollenMonitor(hass.Hass):
 
         if debug:
             self.alexa.announce(report_msg, self.debug_switch)
-        if requested:
+        elif requested:
             self.alexa.respond(report_msg)
-        elif float(self.index_tomorrow) >= self.pollen_warning_level:
+        elif float(self.get_value(self.index_tomorrow)) >= self.pollen_warning_level:
             report_msg = "Pollen Alert.  " + report_msg
             self.alexa.notify(report_msg)
 
@@ -88,7 +88,7 @@ class PollenMonitor(hass.Hass):
             alert_msg = "The pollen level is {}.".format(self.tomorrow_rating)
 
         if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" The pollen index has risen by {self.increase_amount}."
+            alert_msg = alert_msg + f" The pollen index will increase by {self.increase_amount}."
 
         return alert_msg
 
