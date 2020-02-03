@@ -40,6 +40,9 @@ class AlexaSpeak(hass.Hass):
         source_alexa = self.get_state("sensor.last_alexa")
         self.call_service("notify/alexa_media", message=msg, data={"type": "tts"}, target=source_alexa)
 
+    def debug(self, msg: str):
+        self.call_service("notify/alexa_media", message=msg, data={"type": "tts"}, target="media_player.computer_room")
+
     def _select_destinations(self):
         debug_mode = self.get_state(self.debug_switch) == "on"
         cricket_in_bed = self.get_state("binary_sensor.sleepnumber_bill_cricket_is_in_bed") == "on"
