@@ -17,7 +17,7 @@ class AlexaSpeak(hass.Hass):
         self.debug_switch = None
 
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
         self.alexa_notify_secret = config_data["notify_me_key"]
 
         init_msg = "Initialized Alexa Speak."

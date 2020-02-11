@@ -23,7 +23,7 @@ class SatMon(hass.Hass):
         self.turn_off(self.report_switch)
 
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
         api_key = config_data["n2yo_key"]
         lat = self.get_state('zone.home', attribute="latitude")
         lon = self.get_state('zone.home', attribute="longitude")

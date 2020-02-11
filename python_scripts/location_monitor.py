@@ -18,7 +18,7 @@ class LocationMonitor(hass.Hass):
 
         self.code_data = None
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
             self.code_data = config_data["lock_code_data"]
 
         self.away_on_tuple = (
