@@ -5,7 +5,7 @@ import datetime
 class PollenMonitor(hass.Hass):
     def initialize(self):
         self.pollen_warning_level = 8.00
-        self.max_increase = 1
+        self.max_increase = 1.00
         self.alert_time = datetime.time(19, 30, 0)
         self.index_today = "sensor.allergy_index_today"
         self.index_tomorrow = "sensor.allergy_index_tomorrow"
@@ -20,7 +20,6 @@ class PollenMonitor(hass.Hass):
 
         if self.get_state(self.debug_switch) == "on":
 
-            self.call_service("notify/slack_assistant", message="Initializing Pollen Report")
             time, interval, kwargs = self.info_timer(self.daily_report)
             debug_msg = "Daily report: {} every {} seconds.".format(time, interval)
             self.call_service("notify/slack_assistant", message=debug_msg)
@@ -39,9 +38,8 @@ class PollenMonitor(hass.Hass):
         self.pollen_state = self.get_state("sensor.allergy_index_tomorrow", attribute="all")
 
     def on_schedule(self, kwargs):
-        self.slack_debug("Pollen Monitor running scheduled alert.")
         self.update_data()
-
+        self.slack_debug(f"Pollen Report? {self.increase_amount} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
         if self.increase_amount > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
             self.report_pollen(False)
 
@@ -51,15 +49,11 @@ class PollenMonitor(hass.Hass):
         self.turn_off(self.respond_switch)
 
     def report_pollen(self, requested: bool):
-        debug = self.get_state(self.debug_switch) == "on"
-
         report_msg = self.generate_report()
 
-        if debug:
-            self.alexa.announce(report_msg, self.debug_switch)
-        elif requested:
+        if requested:
             self.alexa.respond(report_msg)
-        elif float(self.get_value(self.index_tomorrow)) >= self.pollen_warning_level:
+        else:
             report_msg = "Pollen Alert.  " + report_msg
             self.alexa.notify(report_msg)
 
