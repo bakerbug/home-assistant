@@ -7,9 +7,14 @@ import yaml
 
 import satellites
 
+# watch_list = {"International Space Station": 25544, "Atlas Centaur 2 upper stage": 694, "Shenzhou 11": 41868, "Hubble Space Telescope": 20580}
 watch_list = {"International Space Station": 25544}
-# watch_list = {"Atlas Centaur 2 R/B": 694}
-# watch_list = {"Shenzhou 11": 41868}
+track_list = (
+    {'name': "International Space Station", 'id': 25544, 'mag_limit': -1.5},
+    {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
+    {'name': "Shenzhou 11", 'id': 41868, 'mag_limit': 2.0},
+    {'name': "Hubble Space Telescope", 'id': 20580, 'mag_limit': 2.0},
+)
 
 
 class SatMon(hass.Hass):
@@ -53,12 +58,15 @@ class SatMon(hass.Hass):
         del self.alert_msg[kwargs["alert_name"]]
 
     def on_report(self, entity, attribute, old, new, kwargs):
+        msg = ''
+        self.log('Processing request for satellite report.')
+        self.turn_off(self.report_switch)
         debug = self.get_state(self.debug_switch) == "on"
 
-        for msg in self.report_msg.values():
-            self.alexa.respond(msg)
-        self.turn_off(self.report_switch)
+        for report in self.report_msg.values():
+            msg = msg + report
 
+        self.alexa.respond(msg)
         if debug:
             for k, v in self.alerts_handle.items():
                 self.slack_debug(f"Alert Key: {k} Alert Value: {v}")
@@ -67,21 +75,24 @@ class SatMon(hass.Hass):
         report = None
         self.report_msg.clear()
 
-        for sat_name, sat_id in watch_list.items():
-            pass_data = self.sat_tracker.get_visual_passes(sat_id, self.days, self.min_visible_seconds)
+        for satellite in track_list:
+            pass_data = self.sat_tracker.get_visual_passes(satellite['id'], self.days, self.min_visible_seconds)
+            self.log(f"Processing data for {satellite['name']}.")
             brightest_pass = self.find_brightest_pass(pass_data)
 
             if brightest_pass is not None:
-                report = self.get_report_msg(brightest_pass, sat_name)
-                self.schedule_alert(brightest_pass, sat_name)
+                report, alert = self.get_report_msg(brightest_pass, satellite['name'], satellite['mag_limit'])
+                if alert:
+                    self.schedule_alert(brightest_pass, satellite['name'])
             else:
-                report = f"The {sat_name} will not have any significant passes tonight."
-            self.report_msg.update({sat_name: report})
+                report = f"The {satellite['name']} will not be visible tonight.  "
+            self.report_msg.update({satellite['name']: report})
 
     def schedule_alert(self, alert_pass, name):
         start_dt = datetime.datetime.fromtimestamp(alert_pass['startUTC'])
         alert_dt = start_dt - datetime.timedelta(minutes=self.alert_minutes)
-        alert_msg = f"The {name} will be visible in {self.alert_minutes} minutes."
+        alert_msg = f"The {name} will be visible in {self.alert_minutes} minutes.  "
+        text_msg = f"The {name} will be visible at {start_dt} tonight."
         self.alert_msg.update({name: alert_msg})
 
         try:
@@ -93,11 +104,17 @@ class SatMon(hass.Hass):
         alert_handle = self.run_at(self.on_alert, alert_dt, alert_name=name)
         self.alerts_handle.update({name: alert_handle})
         self.slack_debug(f"{name} alert scheduled for {alert_dt}")
+        self.slack_msg(text_msg)
 
     def find_brightest_pass(self, pass_data):
         brightest = None
 
-        if pass_data["info"]["passescount"] == 0:
+        try:
+            if pass_data["info"]["passescount"] == 0:
+                self.log("No visible passes.")
+                return None
+        except KeyError:
+            self.log("No pass data available.")
             return None
 
         for next_pass in pass_data["passes"]:
@@ -117,30 +134,33 @@ class SatMon(hass.Hass):
                 self.log(f"Better candidate at {local_dt.hour} at mag {next_pass['mag']}")
                 brightest = next_pass
 
-        if brightest is not None:
-            if brightest["mag"] > self.min_magnitude:
-                self.log("Best candidate was too dim.")
-                self.slack_debug(f"Brightest pass was {brightest['mag']} but over the limit of {self.min_magnitude}.")
-                return None
-
-        self.log(f"Best candidate is {brightest['mag']}")
         return brightest
 
-    def get_report_msg(self, next_pass, sat_name):
+    def get_report_msg(self, next_pass, sat_name, min_magnitude):
         sat_name = sat_name.title()
         start_time = self.format_date(next_pass["startUTC"])
         start_dir = self.format_direction(next_pass["startAzCompass"])
         end_dir = self.format_direction(next_pass["endAzCompass"])
         duration = next_pass["duration"]
         mag = next_pass["mag"]
-        msg = f"The {sat_name} will be passing over on {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a magnitude of {mag}."
+        set_alert = False
 
-        return msg
+        if next_pass["mag"] > min_magnitude:
+            msg = f"The {sat_name} will pass over tonight but will not be very bright.  It's magnitude will be {next_pass['mag']}.  "
+
+        else:
+            msg = f"The {sat_name} will be passing over on {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a magnitude of {mag}.  "
+            set_alert = True
+
+        return msg, set_alert
 
     def slack_debug(self, message):
         debug = self.get_state(self.debug_switch) == "on"
         if debug:
             self.call_service("notify/slack_assistant", message=message)
+
+    def slack_msg(self, message):
+        self.call_service("notify/slack_assistant", message=message)
 
     @staticmethod
     def format_date(ts):
