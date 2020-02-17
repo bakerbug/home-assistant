@@ -59,7 +59,6 @@ class AlexaSpeak(hass.Hass):
         else:
             if cricket_in_bed:
                 target_list.remove("media_player.master_bedroom")
-                return target_list
 
             if hour >= 20 or hour <= 8:
                 # No announcements from 8PM to 8AM.
