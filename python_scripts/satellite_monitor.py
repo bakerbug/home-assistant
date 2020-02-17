@@ -26,6 +26,7 @@ class SatMon(hass.Hass):
         self.weather = "weather.dark_sky"
         self.bad_weather = ("cloudy", "rainy")
         self.turn_off(self.report_switch)
+        self.query_complete = False
 
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
             config_data = yaml.safe_load(secrets_file)
@@ -58,13 +59,22 @@ class SatMon(hass.Hass):
         del self.alert_msg[kwargs["alert_name"]]
 
     def on_report(self, entity, attribute, old, new, kwargs):
-        msg = ''
         self.log('Processing request for satellite report.')
+        msg = ''
+        found_one = False
         self.turn_off(self.report_switch)
         debug = self.get_state(self.debug_switch) == "on"
 
         for report in self.report_msg.values():
-            msg = msg + report
+            if report is not None:
+                found_one = True
+                msg = msg + report
+
+        if not found_one:
+            msg = "There are no satellites visible tonight."
+
+        if self.query_complete is False:
+            msg = "Please ask again.  I'm updating the satellite data."
 
         self.alexa.respond(msg)
         if debug:
@@ -84,9 +94,10 @@ class SatMon(hass.Hass):
                 report, alert = self.get_report_msg(brightest_pass, satellite['name'], satellite['mag_limit'])
                 if alert:
                     self.schedule_alert(brightest_pass, satellite['name'])
-            else:
-                report = f"The {satellite['name']} will not be visible tonight.  "
+
             self.report_msg.update({satellite['name']: report})
+
+        self.query_complete = True
 
     def schedule_alert(self, alert_pass, name):
         start_dt = datetime.datetime.fromtimestamp(alert_pass['startUTC'])
@@ -146,10 +157,10 @@ class SatMon(hass.Hass):
         set_alert = False
 
         if next_pass["mag"] > min_magnitude:
-            msg = f"The {sat_name} will pass over tonight but will not be very bright.  It's magnitude will be {next_pass['mag']}.  "
+            msg = f"The {sat_name} will pass over tonight at {start_time} but will not be very bright.  It's magnitude will be {next_pass['mag']}.  "
 
         else:
-            msg = f"The {sat_name} will be passing over on {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a magnitude of {mag}.  "
+            msg = f"The {sat_name} will be passing over tonight at {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a magnitude of {mag}.  "
             set_alert = True
 
         return msg, set_alert
@@ -166,9 +177,11 @@ class SatMon(hass.Hass):
     def format_date(ts):
         local_ts = time.localtime(ts)
         if os.name == "nt":
-            format_string = "%A, %B %#e at %#I:%M %p"
+            format_string = "%A, %B %#e at %#I:%M %p"  # Monday February 17th at 4:37 PM
+            format_string = "%#I:%M %p"
         else:
-            format_string = "%A, %B %-d at %-I:%M %p"
+            format_string = "%A, %B %-d at %-I:%M %p"  # Monday February 17th at 4:37 PM
+            format_string = "%-I:%M %p"
         return time.strftime(format_string, local_ts)
 
     @staticmethod
