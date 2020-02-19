@@ -16,23 +16,15 @@ class SatData:
         self.elevation = elevation
 
     def get_visual_passes(self, sat_id: int, days: int, min_visible_secs: int):
-        print(f"URL: {self.API_URL}/visualpasses/{sat_id}/{self.lat}/{self.lon}/{self.elevation}/{days}/{min_visible_secs}/&apiKey={self.api_key}")
-        query_url = f"{self.API_URL}/visualpasses/{sat_id}/{self.lat}/{self.lon}/{self.elevation}/{days}/{min_visible_secs}/&apiKey={self.api_key}"
+        print(f"URL: {self.API_URL}visualpasses/{sat_id}/{self.lat}/{self.lon}/{self.elevation}/{days}/{min_visible_secs}/&apiKey={self.api_key}")
+        query_url = f"{self.API_URL}visualpasses/{sat_id}/{self.lat}/{self.lon}/{self.elevation}/{days}/{min_visible_secs}/&apiKey={self.api_key}"
         response = requests.get(query_url, verify=False)
         data = json.loads(response.content)
         return data
-        # with requests.ClientSession() as session:
-        #     raw_data = self._fetch(session, query_url)
-        #     # if not self.DEBUG:
-        #     #     print(f"{raw_data}")
-        #     pass_data = json.loads(raw_data)
-        #     # self._print_report(pass_data)
-        #     return pass_data
 
     def _print_report(self, data):
         for k, v in data["info"].items():
             print(f"{k}: {v}")
-            # print(f"{item}")
         print("######")
         for pass_event in data["passes"]:
             print("------")
