@@ -115,23 +115,6 @@
   - data:
       entity_id: automation.restart_humidifier
     service: automation.turn_off
-- id: '1543243906037'
-  alias: Lights On For Weekday Mornings
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.wakeup_time'',
-      ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
-  condition:
-  - condition: state
-    entity_id: binary_sensor.workday
-    state: 'on'
-  action:
-  - data:
-      entity_id: group.morning_lights
-    service: switch.turn_on
-  - data:
-      entity_id: input_boolean.wakeup_light
-    service: input_boolean.turn_on
 - id: '1531365279143'
   alias: Kyles Reading Light Timer
   trigger:
