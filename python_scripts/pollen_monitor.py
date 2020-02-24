@@ -33,9 +33,11 @@ class PollenMonitor(hass.Hass):
     def update_data(self):
         self.today_index = float(self.get_state(self.index_today))
         self.tomorrow_index = float(self.get_state(self.index_tomorrow))
+        self.today_rating = self.get_state(self.index_today, attribute="rating")
         self.tomorrow_rating = self.get_state(self.index_tomorrow, attribute="rating")
         self.increase_amount = round(self.tomorrow_index - self.today_index, 1)
-        self.pollen_state = self.get_state("sensor.allergy_index_tomorrow", attribute="all")
+        self.pollen_state_tomorrow = self.get_state(self.index_tomorrow, attribute="all")
+        self.pollen_state_today = self.get_state(self.index_today, attribute="all")
 
     def on_schedule(self, kwargs):
         self.update_data()
@@ -61,28 +63,24 @@ class PollenMonitor(hass.Hass):
 
         allergens = []
 
-        for key, value in self.pollen_state["attributes"].items():
+        for key, value in self.pollen_state_today["attributes"].items():
             if key.startswith("allergen_name"):
                 allergens.append(value)
 
         allergen_count = len(allergens)
         if allergen_count == 1:
-            alert_msg = "Tomorrow there will be {} levels of {}.".format(
-                self.tomorrow_rating, allergens[0]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}."
         elif allergen_count == 2:
-            alert_msg = "Tomorrow there will be {} levels of {} and {}.".format(
-                self.tomorrow_rating, allergens[0], allergens[1]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]} and {allergens[1]}."
         elif allergen_count > 2:
-            alert_msg = "Tomorrow there will be {} levels of {}, {}, and {}.".format(
-                self.tomorrow_rating, allergens[0], allergens[1], allergens[2]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}, {allergens[1]}, and {allergens[2]}."
         else:
-            alert_msg = "The pollen level is {}.".format(self.tomorrow_rating)
+            alert_msg = f"The pollen level is {self.today_rating}."
 
         if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" The pollen index will increase by {self.increase_amount}."
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount}."
+        elif self.increase_amount < -abs(self.max_increase):
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)}."
 
         return alert_msg
 
