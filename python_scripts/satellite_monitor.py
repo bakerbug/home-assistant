@@ -38,7 +38,6 @@ class SatMon(hass.Hass):
 
         self.days = 1
         self.min_visible_seconds = 120
-        self.min_magnitude = -1.5
         self.alert_minutes = 10
         self.alert_msg = {}
         self.report_msg = {}
