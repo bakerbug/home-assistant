@@ -17,7 +17,7 @@ class AlexaSpeak(hass.Hass):
         self.debug_switch = None
 
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
         self.alexa_notify_secret = config_data["notify_me_key"]
 
         init_msg = "Initialized Alexa Speak."
@@ -40,6 +40,9 @@ class AlexaSpeak(hass.Hass):
         source_alexa = self.get_state("sensor.last_alexa")
         self.call_service("notify/alexa_media", message=msg, data={"type": "tts"}, target=source_alexa)
 
+    def debug(self, msg: str):
+        self.call_service("notify/alexa_media", message=msg, data={"type": "tts"}, target="media_player.computer_room")
+
     def _select_destinations(self):
         debug_mode = self.get_state(self.debug_switch) == "on"
         cricket_in_bed = self.get_state("binary_sensor.sleepnumber_bill_cricket_is_in_bed") == "on"
@@ -56,7 +59,6 @@ class AlexaSpeak(hass.Hass):
         else:
             if cricket_in_bed:
                 target_list.remove("media_player.master_bedroom")
-                return target_list
 
             if hour >= 20 or hour <= 8:
                 # No announcements from 8PM to 8AM.

@@ -1,154 +1,224 @@
-import aiohttp
-import asyncio
+import appdaemon.plugins.hass.hassapi as hass
+
+import datetime
 import time
-import json
 import os
+import yaml
 
-NO_PASSES = '{"info":{"satid":25544,"satname":"SPACE STATION","transactionscount":2,"passescount":0}}'
-SIX_PASSES = '{"info":{"satid":25544,"satname":"SPACE STATION","transactionscount":0,"passescount":6},"passes":[{"startAz":329.8,"startAzCompass":"NW","startEl":0.17,"startUTC":1580689995,"maxAz":23.14,"maxAzCompass":"NNE","maxEl":10.05,"maxUTC":1580690255,"endAz":76.24,"endAzCompass":"E","endEl":9.53,"endUTC":1580690510,"mag":0.4,"duration":215},{"startAz":320.21,"startAzCompass":"NW","startEl":0.13,"startUTC":1580779325,"maxAz":35,"maxAzCompass":"NE","maxEl":32.49,"maxUTC":1580779640,"endAz":112.7,"endAzCompass":"ESE","endEl":10.81,"endUTC":1580779950,"mag":0.4,"duration":140},{"startAz":324.2,"startAzCompass":"NW","startEl":0.26,"startUTC":1580862880,"maxAz":31.98,"maxAzCompass":"NE","maxEl":20.72,"maxUTC":1580863180,"endAz":100.31,"endAzCompass":"E","endEl":20.22,"endUTC":1580863475,"mag":-0.4,"duration":275},{"startAz":327.09,"startAzCompass":"NW","startEl":0.07,"startUTC":1580946430,"maxAz":27.84,"maxAzCompass":"NNE","maxEl":14.19,"maxUTC":1580946715,"endAz":88.49,"endAzCompass":"E","endEl":9.1,"endUTC":1580946995,"mag":0,"duration":415},{"startAz":310.54,"startAzCompass":"NW","startEl":0.27,"startUTC":1580952220,"maxAz":220.45,"maxAzCompass":"SW","maxEl":72.85,"maxUTC":1580952545,"endAz":138.07,"endAzCompass":"SE","endEl":22.54,"endUTC":1580952860,"mag":-0.5,"duration":205},{"startAz":315.77,"startAzCompass":"NW","startEl":0.18,"startUTC":1581035765,"maxAz":40.83,"maxAzCompass":"NE","maxEl":58.06,"maxUTC":1581036090,"endAz":125.22,"endAzCompass":"SE","endEl":44.18,"endUTC":1581036405,"mag":-2,"duration":370}]}'
-TOO_FAINT = '{"info":{"satid":33591,"satname":"NOAA 19","transactionscount":9,"passescount":1},"passes":[{"startAz":18.8,"startAzCompass":"NNE","startEl":0.07,"startUTC":1580555655,"maxAz":101.38,"maxAzCompass":"E","maxEl":54.18,"maxUTC":1580556120,"endAz":182.89,"endAzCompass":"S","endEl":0,"endUTC":1580556575,"mag":6,"duration":920}]}'
+import satellites
 
-SAT_ISS = 25544
-SAT_SL_G_4 = 70002
-SAT_YINHE_1 = 45024
-SAT_SL_4_RB = 42800
-SAT_SES_1 = 36516
-SAT_NOAA_19 = 33591
-SAT_SHENZHOU_11 = 41868
-
-watch_list = {"ISS": 25544, "Shenzhou 11": 41868, "SL-4 R/B": 42800, "Atlas Centaur 2 R/B": 694}
-
-class SatData:
-    def __init__(self, api_key, lat: float = None, lon: float = None, elevation: float = None):
-        self.API_URL = "https://www.n2yo.com/rest/v1/satellite/"
-        self.DEBUG = False
-        self.api_key = api_key
-        self.lat = lat
-        self.lon = lon
-        self.elevation = elevation
-
-    async def get_visual_passes(self, sat_id: int, days: int, min_visible_secs: int):
-        query_url = f"{self.API_URL}/visualpasses/{sat_id}/{self.lat}/{self.lon}/{self.elevation}/{days}/{min_visible_secs}/&apiKey={self.api_key}"
-        async with aiohttp.ClientSession() as session:
-            raw_data = await self._fetch(session, query_url)
-            # if not self.DEBUG:
-            #     print(f"{raw_data}")
-            pass_data = json.loads(raw_data)
-            # self._print_report(pass_data)
-            return pass_data
-
-    def _print_report(self, data):
-        for k, v in data["info"].items():
-            print(f"{k}: {v}")
-            # print(f"{item}")
-        print("######")
-        for pass_event in data["passes"]:
-            print("------")
-            for k, v in pass_event.items():
-                print(f"{k}: {v}")
-
-    async def _fetch(self, session, url):
-        if self.DEBUG:
-            print("TEST DATA")
-            test_data = SIX_PASSES
-            return test_data
-        async with session.get(url, ssl=False) as response:
-            return await response.text()
+# watch_list = {"International Space Station": 25544, "Atlas Centaur 2 upper stage": 694, "Shenzhou 11": 41868, "Hubble Space Telescope": 20580}
+watch_list = {"International Space Station": 25544}
+track_list = (
+    {'name': "International Space Station", 'id': 25544, 'mag_limit': -1.5},
+    {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
+    {'name': "Shenzhou 11", 'id': 41868, 'mag_limit': 2.0},
+    {'name': "Hubble Space Telescope", 'id': 20580, 'mag_limit': 2.0},
+)
 
 
-def get_date(ts):
-    local_ts = time.localtime(ts)
-    if os.name == "nt":
-        format_string = "%A, %B %#e at %#I:%M %p"
-    else:
-        format_string = "%A, %B %-d at %-I:%M %p"
-    return time.strftime(format_string, local_ts)
+class SatMon(hass.Hass):
+    def initialize(self):
+        update_time = datetime.time(5, 0, 0)
+        self.alexa = self.get_app("alexa_speak")
+        self.debug_switch = "input_boolean.debug_satellite_monitor"
+        self.report_switch = "input_boolean.satellite_report"
+        self.weather = "weather.dark_sky"
+        self.bad_weather = ("cloudy", "rainy")
+        self.turn_off(self.report_switch)
+        self.query_complete = False
 
+        with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
+            config_data = yaml.safe_load(secrets_file)
+        api_key = config_data["n2yo_key"]
+        lat = self.get_state('zone.home', attribute="latitude")
+        lon = self.get_state('zone.home', attribute="longitude")
+        elevation = 214.9
+        self.sat_tracker = satellites.SatData(api_key, lat, lon, elevation)
 
-def get_direction(abv_dir):
-    if abv_dir == "N":
-        direction = "north"
-    elif abv_dir == "NNE":
-        direction = "north-north-east"
-    elif abv_dir == "NE":
-        direction = "north-east"
-    elif abv_dir == "ENE":
-        direction = "east-north-east"
-    elif abv_dir == "E":
-        direction = "east"
-    elif abv_dir == "ESE":
-        direction = "east-south-east"
-    elif abv_dir == "SE":
-        direction = "south-east"
-    elif abv_dir == "SSE":
-        direction = "south-south-east"
-    elif abv_dir == "S":
-        direction = "south"
-    elif abv_dir == "SSW":
-        direction = "south-south-west"
-    elif abv_dir == "SW":
-        direction = "south-west"
-    elif abv_dir == "WSW":
-        direction = "west-south-west"
-    elif abv_dir == "W":
-        direction = "west"
-    elif abv_dir == "WNW":
-        direction = "west-north-west"
-    elif abv_dir == "NW":
-        direction = "north-west"
-    elif abv_dir == "NNW":
-        direction = "north-north-west"
-    else:
-        direction = "unknown"
+        self.days = 1
+        self.min_visible_seconds = 120
+        self.min_magnitude = -1.5
+        self.alert_minutes = 10
+        self.alert_msg = {}
+        self.report_msg = {}
 
-    return direction
+        self.daily_update_handle = self.run_daily(self.update_data, update_time)
+        self.report_handle = self.listen_state(self.on_report, self.report_switch, new="on")
+        self.alerts_handle = {}
 
+        self.update_data(None)
 
-def next_pass_msg(pass_data, mag_limit: int = None):
+    def on_alert(self, kwargs):
+        weather = self.get_state(self.weather)
+        if weather in self.bad_weather:
+            return
 
-    sat_name = pass_data["info"]["satname"].title()
+        self.alexa.announce(self.alert_msg[kwargs["alert_name"]])
+        self.slack_debug(self.alert_msg[kwargs["alert_name"]])
+        del self.alert_msg[kwargs["alert_name"]]
 
-    if pass_data["info"]["passescount"] == 0:
-        return f"{sat_name} will not be passing over soon."
+    def on_report(self, entity, attribute, old, new, kwargs):
+        self.log('Processing request for satellite report.')
+        msg = ''
+        found_one = False
+        self.turn_off(self.report_switch)
+        debug = self.get_state(self.debug_switch) == "on"
 
-    for next_pass in pass_data["passes"]:
-        if next_pass["mag"] >= mag_limit:
-            response = f"The next pass of {sat_name} will be too faint."
+        for report in self.report_msg.values():
+            if report is not None:
+                found_one = True
+                msg = msg + report
+
+        if not found_one:
+            msg = "There are no satellites visible tonight."
+
+        if self.query_complete is False:
+            msg = "Please ask again.  I'm updating the satellite data."
+
+        self.alexa.respond(msg)
+        if debug:
+            for k, v in self.alerts_handle.items():
+                self.slack_debug(f"Alert Key: {k} Alert Value: {v}")
+
+    def update_data(self, kwargs):
+        report = None
+        self.report_msg.clear()
+
+        for satellite in track_list:
+            pass_data = self.sat_tracker.get_visual_passes(satellite['id'], self.days, self.min_visible_seconds)
+            self.log(f"Processing data for {satellite['name']}.")
+            brightest_pass = self.find_brightest_pass(pass_data)
+
+            if brightest_pass is not None:
+                report, alert = self.get_report_msg(brightest_pass, satellite['name'], satellite['mag_limit'])
+                if alert:
+                    self.schedule_alert(brightest_pass, satellite['name'])
+
+            self.report_msg.update({satellite['name']: report})
+
+        self.query_complete = True
+
+    def schedule_alert(self, alert_pass, name):
+        start_dt = datetime.datetime.fromtimestamp(alert_pass['startUTC'])
+        alert_dt = start_dt - datetime.timedelta(minutes=self.alert_minutes)
+        alert_msg = f"The {name} will be visible in {self.alert_minutes} minutes.  "
+        text_msg = f"The {name} will be visible at {start_dt} tonight."
+        self.alert_msg.update({name: alert_msg})
+
+        try:
+            self.cancel_timer(self.alerts_handle[name])
+            del self.alerts_handle[name]
+        except (AttributeError, KeyError):
+            pass
+
+        alert_handle = self.run_at(self.on_alert, alert_dt, alert_name=name)
+        self.alerts_handle.update({name: alert_handle})
+        self.slack_debug(f"{name} alert scheduled for {alert_dt}")
+        self.slack_msg(text_msg)
+
+    def find_brightest_pass(self, pass_data):
+        brightest = None
+
+        try:
+            if pass_data["info"]["passescount"] == 0:
+                self.log("No visible passes.")
+                return None
+        except KeyError:
+            self.log("No pass data available.")
+            return None
+
+        for next_pass in pass_data["passes"]:
+            # Check time
+            pass_ts = next_pass["startUTC"]
+            local_dt = datetime.datetime.fromtimestamp(pass_ts)
+            self.log(f"Time Check Hour: {local_dt.hour}")
+
+            if local_dt.hour < 12:
+                self.log(f"Too early pass at {local_dt.hour} for {next_pass['mag']}")
+                continue
+
+            if brightest is None:
+                brightest = next_pass
+                self.log(f"First candidate at {local_dt.hour} at mag {next_pass['mag']}")
+            elif next_pass["mag"] < brightest["mag"]:
+                self.log(f"Better candidate at {local_dt.hour} at mag {next_pass['mag']}")
+                brightest = next_pass
+
+        return brightest
+
+    def get_report_msg(self, next_pass, sat_name, min_magnitude):
+        sat_name = sat_name.title()
+        start_time = self.format_date(next_pass["startUTC"])
+        start_dir = self.format_direction(next_pass["startAzCompass"])
+        end_dir = self.format_direction(next_pass["endAzCompass"])
+        duration = next_pass["duration"]
+        mag = next_pass["mag"]
+        set_alert = False
+
+        if next_pass["mag"] > min_magnitude:
+            msg = f"The {sat_name} will pass over tonight at {start_time} but will not be very bright.  It's magnitude will be {next_pass['mag']}.  "
 
         else:
-            start_time = get_date(next_pass["startUTC"])
-            start_dir = get_direction(next_pass["startAzCompass"])
-            end_dir = get_direction(next_pass["endAzCompass"])
-            duration = next_pass["duration"]
-            mag = next_pass["mag"]
+            msg = f"The {sat_name} will be passing over tonight at {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a magnitude of {mag}.  "
+            set_alert = True
 
-            response = f"The {sat_name} will be passing over on {start_time}.  It will be appearing in the {start_dir} and travel toward the {end_dir} being visible for {duration} seconds with a manitude of {mag}."
-            break
+        return msg, set_alert
 
-    return response
+    def slack_debug(self, message):
+        debug = self.get_state(self.debug_switch) == "on"
+        if debug:
+            self.call_service("notify/slack_assistant", message=message)
 
+    def slack_msg(self, message):
+        self.call_service("notify/slack_assistant", message=message)
 
-async def main():
-    key = None
-    lat = None
-    lon = None
-    elevation = None
+    @staticmethod
+    def format_date(ts):
+        local_ts = time.localtime(ts)
+        if os.name == "nt":
+            format_string = "%A, %B %#e at %#I:%M %p"  # Monday February 17th at 4:37 PM
+            format_string = "%#I:%M %p"
+        else:
+            format_string = "%A, %B %-d at %-I:%M %p"  # Monday February 17th at 4:37 PM
+            format_string = "%-I:%M %p"
+        return time.strftime(format_string, local_ts)
 
-    days = 1
-    min_visible_seconds = 5
-    min_magnitude = 5
+    @staticmethod
+    def format_direction(abv_dir):
+        if abv_dir == "N":
+            direction = "north"
+        elif abv_dir == "NNE":
+            direction = "north-north-east"
+        elif abv_dir == "NE":
+            direction = "north-east"
+        elif abv_dir == "ENE":
+            direction = "east-north-east"
+        elif abv_dir == "E":
+            direction = "east"
+        elif abv_dir == "ESE":
+            direction = "east-south-east"
+        elif abv_dir == "SE":
+            direction = "south-east"
+        elif abv_dir == "SSE":
+            direction = "south-south-east"
+        elif abv_dir == "S":
+            direction = "south"
+        elif abv_dir == "SSW":
+            direction = "south-south-west"
+        elif abv_dir == "SW":
+            direction = "south-west"
+        elif abv_dir == "WSW":
+            direction = "west-south-west"
+        elif abv_dir == "W":
+            direction = "west"
+        elif abv_dir == "WNW":
+            direction = "west-north-west"
+        elif abv_dir == "NW":
+            direction = "north-west"
+        elif abv_dir == "NNW":
+            direction = "north-north-west"
+        else:
+            direction = "unknown"
 
-    sat_tracker = SatData(key, lat, lon, elevation)
-    for sat_name, sat_id in watch_list.items():
-        pass_data = await sat_tracker.get_visual_passes(sat_id, days, min_visible_seconds)
-        msg = next_pass_msg(pass_data, min_magnitude)
-        print(f"{msg}")
-
-
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-
-    # shut down
-    loop.run_until_complete(asyncio.sleep(0.500))
-    loop.close()
+        return direction

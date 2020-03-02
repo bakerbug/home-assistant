@@ -13,7 +13,7 @@ class BusNotify(hass.Hass):
         self.alexa = self.get_app("alexa_speak")
 
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
         self.last_date = None
         self.debug_email = config_data["debug_email"]
         self.email_account = config_data["gmail_account"]

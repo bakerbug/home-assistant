@@ -18,7 +18,7 @@ class LocationMonitor(hass.Hass):
 
         self.code_data = None
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
-            config_data = yaml.load(secrets_file)
+            config_data = yaml.safe_load(secrets_file)
             self.code_data = config_data["lock_code_data"]
 
         self.away_on_tuple = (
@@ -31,12 +31,14 @@ class LocationMonitor(hass.Hass):
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
             "automation.lights_on_for_weekday_mornings",
+            "input_boolean.wakeup_light",
         )
 
         self.home_on_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
             "automation.lights_on_for_weekday_mornings",
+            "input_boolean.wakeup_light",
         )
 
         self.home_off_tuple = ("automation.lights_off_when_away", "automation.lights_on_when_away")

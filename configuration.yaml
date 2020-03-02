@@ -428,6 +428,9 @@ input_boolean:
   location_monitor:
     name: Location Monitor
     icon: mdi:map-marker
+  satellite_report:
+    name: Satellite Report
+    icon: mdi:space-station
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
@@ -453,6 +456,8 @@ input_boolean:
   debug_pollen_monitor:
     icon: mdi:bug-check-outline
   debug_reminders:
+    icon: mdi:bug-check-outline
+  debug_satellite_monitor:
     icon: mdi:bug-check-outline
   debug_sleep_monitor:
     icon: mdi:bug-check-outline

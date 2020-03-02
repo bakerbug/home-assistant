@@ -5,7 +5,8 @@ import datetime
 class PollenMonitor(hass.Hass):
     def initialize(self):
         self.pollen_warning_level = 8.00
-        self.max_increase = 1
+        self.max_increase = 1.00
+
         self.alert_time = datetime.time(19, 30, 0)
         self.index_today = "sensor.allergy_index_today"
         self.index_tomorrow = "sensor.allergy_index_tomorrow"
@@ -20,7 +21,6 @@ class PollenMonitor(hass.Hass):
 
         if self.get_state(self.debug_switch) == "on":
 
-            self.call_service("notify/slack_assistant", message="Initializing Pollen Report")
             time, interval, kwargs = self.info_timer(self.daily_report)
             debug_msg = "Daily report: {} every {} seconds.".format(time, interval)
             self.call_service("notify/slack_assistant", message=debug_msg)
@@ -34,14 +34,15 @@ class PollenMonitor(hass.Hass):
     def update_data(self):
         self.today_index = float(self.get_state(self.index_today))
         self.tomorrow_index = float(self.get_state(self.index_tomorrow))
+        self.today_rating = self.get_state(self.index_today, attribute="rating")
         self.tomorrow_rating = self.get_state(self.index_tomorrow, attribute="rating")
         self.increase_amount = round(self.tomorrow_index - self.today_index, 1)
-        self.pollen_state = self.get_state("sensor.allergy_index_tomorrow", attribute="all")
+        self.pollen_state_tomorrow = self.get_state(self.index_tomorrow, attribute="all")
+        self.pollen_state_today = self.get_state(self.index_today, attribute="all")
 
     def on_schedule(self, kwargs):
-        self.slack_debug("Pollen Monitor running scheduled alert.")
         self.update_data()
-
+        self.slack_debug(f"Pollen Report? {self.increase_amount} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
         if self.increase_amount > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
             self.report_pollen(False)
 
@@ -51,15 +52,11 @@ class PollenMonitor(hass.Hass):
         self.turn_off(self.respond_switch)
 
     def report_pollen(self, requested: bool):
-        debug = self.get_state(self.debug_switch) == "on"
-
         report_msg = self.generate_report()
 
-        if debug:
-            self.alexa.announce(report_msg, self.debug_switch)
         if requested:
             self.alexa.respond(report_msg)
-        elif float(self.index_tomorrow) >= self.pollen_warning_level:
+        else:
             report_msg = "Pollen Alert.  " + report_msg
             self.alexa.notify(report_msg)
 
@@ -67,28 +64,24 @@ class PollenMonitor(hass.Hass):
 
         allergens = []
 
-        for key, value in self.pollen_state["attributes"].items():
+        for key, value in self.pollen_state_today["attributes"].items():
             if key.startswith("allergen_name"):
                 allergens.append(value)
 
         allergen_count = len(allergens)
         if allergen_count == 1:
-            alert_msg = "Tomorrow there will be {} levels of {}.".format(
-                self.tomorrow_rating, allergens[0]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}."
         elif allergen_count == 2:
-            alert_msg = "Tomorrow there will be {} levels of {} and {}.".format(
-                self.tomorrow_rating, allergens[0], allergens[1]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]} and {allergens[1]}."
         elif allergen_count > 2:
-            alert_msg = "Tomorrow there will be {} levels of {}, {}, and {}.".format(
-                self.tomorrow_rating, allergens[0], allergens[1], allergens[2]
-            )
+            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}, {allergens[1]}, and {allergens[2]}."
         else:
-            alert_msg = "The pollen level is {}.".format(self.tomorrow_rating)
+            alert_msg = f"The pollen level is {self.today_rating}."
 
         if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" The pollen index has risen by {self.increase_amount}."
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount}."
+        elif self.increase_amount < -abs(self.max_increase):
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)}."
 
         return alert_msg
 
