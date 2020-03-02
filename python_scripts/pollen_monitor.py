@@ -6,6 +6,7 @@ class PollenMonitor(hass.Hass):
     def initialize(self):
         self.pollen_warning_level = 8.00
         self.max_increase = 1.00
+
         self.alert_time = datetime.time(19, 30, 0)
         self.index_today = "sensor.allergy_index_today"
         self.index_tomorrow = "sensor.allergy_index_tomorrow"
