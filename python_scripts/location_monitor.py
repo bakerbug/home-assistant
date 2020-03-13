@@ -30,14 +30,12 @@ class LocationMonitor(hass.Hass):
         self.away_off_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
-            "automation.lights_on_for_weekday_mornings",
             "input_boolean.wakeup_light",
         )
 
         self.home_on_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
-            "automation.lights_on_for_weekday_mornings",
             "input_boolean.wakeup_light",
         )
 
