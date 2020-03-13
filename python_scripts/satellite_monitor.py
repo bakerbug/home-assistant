@@ -4,11 +4,8 @@ import datetime
 import time
 import os
 import yaml
-
 import satellites
 
-# watch_list = {"International Space Station": 25544, "Atlas Centaur 2 upper stage": 694, "Shenzhou 11": 41868, "Hubble Space Telescope": 20580}
-watch_list = {"International Space Station": 25544}
 track_list = (
     {'name': "International Space Station", 'id': 25544, 'mag_limit': -1.5},
     {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
@@ -54,7 +51,7 @@ class SatMon(hass.Hass):
             return
 
         self.alexa.announce(self.alert_msg[kwargs["alert_name"]])
-        self.slack_debug(self.alert_msg[kwargs["alert_name"]])
+        self.slack_msg(self.report_msg[kwargs["alert_name"]])
         del self.alert_msg[kwargs["alert_name"]]
 
     def on_report(self, entity, attribute, old, new, kwargs):
@@ -76,11 +73,9 @@ class SatMon(hass.Hass):
             msg = "Please ask again.  I'm updating the satellite data."
 
         self.alexa.respond(msg)
-        if debug:
-            for k, v in self.alerts_handle.items():
-                self.slack_debug(f"Alert Key: {k} Alert Value: {v}")
 
     def update_data(self, kwargs):
+        self.query_complete = False
         report = None
         self.report_msg.clear()
 
@@ -92,13 +87,13 @@ class SatMon(hass.Hass):
             if brightest_pass is not None:
                 report, alert = self.get_report_msg(brightest_pass, satellite['name'], satellite['mag_limit'])
                 if alert:
-                    self.schedule_alert(brightest_pass, satellite['name'])
+                    self.schedule_alert(brightest_pass, satellite['name'], report)
 
-            self.report_msg.update({satellite['name']: report})
+                self.report_msg.update({satellite['name']: report})
 
         self.query_complete = True
 
-    def schedule_alert(self, alert_pass, name):
+    def schedule_alert(self, alert_pass, name, msg):
         start_dt = datetime.datetime.fromtimestamp(alert_pass['startUTC'])
         alert_dt = start_dt - datetime.timedelta(minutes=self.alert_minutes)
         alert_msg = f"The {name} will be visible in {self.alert_minutes} minutes.  "
