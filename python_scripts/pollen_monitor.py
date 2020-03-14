@@ -61,28 +61,37 @@ class PollenMonitor(hass.Hass):
 
     def generate_report(self):
 
-        allergens = []
+        allergens_today = self._get_allergen_stanza(self.pollen_state_today)
+        allergens_tomorrow = self._get_allergen_stanza(self.pollen_state_tomorrow)
 
-        for key, value in self.pollen_state_today["attributes"].items():
-            if key.startswith("allergen_name"):
-                allergens.append(value)
-
-        allergen_count = len(allergens)
-        if allergen_count == 1:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}."
-        elif allergen_count == 2:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]} and {allergens[1]}."
-        elif allergen_count > 2:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}, {allergens[1]}, and {allergens[2]}."
-        else:
-            alert_msg = f"The pollen level is {self.today_rating}."
+        alert_msg = f"Today, there is a {self.today_rating} levels of {allergens_today}.  "
 
         if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount}."
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount} "
         elif self.increase_amount < -abs(self.max_increase):
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)}."
+            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)} "
+
+        alert_msg = alert_msg + f"with {self.tomorrow_rating} levels of {allergens_tomorrow}."
 
         return alert_msg
+
+    @staticmethod
+    def _get_allergen_stanza(self, pollen_state):
+        allergen_list = []
+        for key, value in pollen_state["attributes"].items():
+            if key.startswith("allergen_name"):
+                allergen_list.append(value)
+
+        allergen_count = len(allergen_list)
+
+        if allergen_count == 1:
+            response = f"{allergen_list[0]}."
+        elif allergen_count == 2:
+            response = f"{allergen_list[0]} and {allergen_list[1]}."
+        elif allergen_count > 2:
+            response = f"{allergen_list[0]}, {allergen_list[1]}, and {allergen_list[2]}."
+
+        return response
 
     def slack_debug(self, message):
         debug = self.get_state(self.debug_switch) == "on"
