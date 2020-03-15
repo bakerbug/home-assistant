@@ -76,7 +76,7 @@ class PollenMonitor(hass.Hass):
         return alert_msg
 
     @staticmethod
-    def _get_allergen_stanza(self, pollen_state):
+    def _get_allergen_stanza(pollen_state):
         allergen_list = []
         for key, value in pollen_state["attributes"].items():
             if key.startswith("allergen_name"):
