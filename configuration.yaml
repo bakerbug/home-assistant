@@ -105,6 +105,7 @@ history:
             - sensor.bill_location
             - sensor.cricket_location
             - lock.front_door
+            - lock.back_door
             - cover.left_bay
             - cover.right_bay
             - binary_sensor.front_door_cam_motion
@@ -485,7 +486,7 @@ input_boolean:
     icon: mdi:message-text
   respond_pollen_monitor:
     name: Pollen Monitor Response
-    icon: mdi:amazon-alexa
+    icon: mdi:tree-outline
 
   notify_pollen_monitor:
     icon: mdi:message-text

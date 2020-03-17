@@ -13,13 +13,16 @@ class LocationMonitor(hass.Hass):
         self.alexa = self.get_app("alexa_speak")
         self.lock_list = [
             "lock.front_door",
+            "lock.back_door"
         ]
         self.SUN_ELEV_HIGH = 15.00
 
-        self.code_data = None
+        self.code_data_front = None
+        self.code_data_back = None
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
             config_data = yaml.safe_load(secrets_file)
-            self.code_data = config_data["lock_code_data"]
+            self.code_data_front = config_data["lock_code_data_front"]
+            self.code_data_back = config_data["lock_code_data_back"]
 
         self.away_on_tuple = (
             "automation.hvac_balancing",
@@ -54,6 +57,7 @@ class LocationMonitor(hass.Hass):
             self.handle_bill = self.listen_state(self.location_change, entity="sensor.bill_location")
             self.handle_cricket = self.listen_state(self.location_change, entity="sensor.cricket_location")
             self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
+            self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
@@ -78,7 +82,10 @@ class LocationMonitor(hass.Hass):
         lock_code = self.get_state(entity, attribute="code_id")
         if lock_code is not None:
             try:
-                code_name = self.code_data[lock_code]
+                if entity == "lock.front_door":
+                    code_name = self.code_data_front[lock_code]
+                if entity == "lock.back_door":
+                    code_name = self.code_data_back[lock_code]
             except KeyError:
                 code_name = f"Unregistered Code {lock_code}"
 
