@@ -8,11 +8,12 @@ import satellites
 
 track_list = (
     {'name': "International Space Station", 'id': 25544, 'mag_limit': -1.5},
-    {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
-    {'name': "Shenzhou 11", 'id': 41868, 'mag_limit': 2.0},
-    {'name': "Hubble Space Telescope", 'id': 20580, 'mag_limit': 2.0},
+    {'name': "Hubble Space Telescope", 'id': 20580, 'mag_limit': 3.0},
 )
 
+### Previously tracked:
+#  {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
+#  {'name': "Shenzhou 11", 'id': 41868, 'mag_limit': 2.0},
 
 class SatMon(hass.Hass):
     def initialize(self):
@@ -21,7 +22,7 @@ class SatMon(hass.Hass):
         self.debug_switch = "input_boolean.debug_satellite_monitor"
         self.report_switch = "input_boolean.satellite_report"
         self.weather = "weather.dark_sky"
-        self.bad_weather = ("cloudy", "rainy")
+        self.bad_weather = ("cloudy", "rainy", "partlycloudy")
         self.turn_off(self.report_switch)
         self.query_complete = False
 
