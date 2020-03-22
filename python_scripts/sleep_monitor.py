@@ -84,6 +84,9 @@ class SleepMonitor(hass.Hass):
             self.set_fan_speed("high")
 
     def on_tv_change(self, entity, attribute, old, new, kwargs):
+        if new == "unavailable" or old == "unavailable":
+            return
+
         bedroom_fan_state = self.get_state(self.bedroom_fan)
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 
