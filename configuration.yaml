@@ -516,6 +516,3 @@ input_datetime:
 # Pollen Sensor
 iqvia:
   zip_code: "35758"
-  monitored_conditions:
-    - allergy_index_today
-    - allergy_index_tomorrow
