@@ -35,14 +35,14 @@ class PollenMonitor(hass.Hass):
         self.tomorrow_index = float(self.get_state(self.index_tomorrow))
         self.today_rating = self.get_state(self.index_today, attribute="rating")
         self.tomorrow_rating = self.get_state(self.index_tomorrow, attribute="rating")
-        self.increase_amount = round(self.tomorrow_index - self.today_index, 1)
+        self.index_change = round(self.tomorrow_index - self.today_index, 1)
         self.pollen_state_tomorrow = self.get_state(self.index_tomorrow, attribute="all")
         self.pollen_state_today = self.get_state(self.index_today, attribute="all")
 
     def on_schedule(self, kwargs):
         self.update_data()
-        self.slack_debug(f"Pollen Report? {self.increase_amount} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
-        if self.increase_amount > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
+        self.slack_debug(f"Pollen Report? {self.index_change} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
+        if self.index_change > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
             self.report_pollen(False)
 
     def on_request(self, entity, attribute, old, new, kwargs):
@@ -64,14 +64,17 @@ class PollenMonitor(hass.Hass):
         allergens_today = self._get_allergen_stanza(self.pollen_state_today)
         allergens_tomorrow = self._get_allergen_stanza(self.pollen_state_tomorrow)
 
-        alert_msg = f"Today, there is a {self.today_rating} levels of {allergens_today}.  "
+        alert_msg = f"Today, there is a {self.today_rating} level of {allergens_today}.  "
 
-        if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount} "
-        elif self.increase_amount < -abs(self.max_increase):
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)} "
+        if self.index_change > 0:
+            direction = "increase by"
+        elif self.index_change < 0:
+            direction = "decrease by"
+        else:
+            direction = "remain at"
 
-        alert_msg = alert_msg + f"with {self.tomorrow_rating} levels of {allergens_tomorrow}."
+        alert_msg = alert_msg + f"Tomorrow, the pollen index will {direction} {abs(self.index_change)} "
+        alert_msg = alert_msg + f"with a {self.tomorrow_rating} level of {allergens_tomorrow}."
 
         return alert_msg
 
