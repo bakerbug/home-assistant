@@ -65,15 +65,12 @@ class SleepMonitor(hass.Hass):
             self.slack_debug("Turning on night lights.")
 
     def on_fan_change(self, entity, attribute, old, new, kwargs):
-        tv_state = self.get_state(self.bedroom_tv)
-
-        if tv_state != "standby":
-            return
-
-        if new == "on":
-            self.turn_on(self.floor_fan)
-        else:
+        if new == "off":
             self.turn_off(self.floor_fan)
+        else:
+            fan_speed = self.get_state(self.bedroom_fan, attribute="speed")
+            if fan_speed == "medium" or fan_speed == "high":
+                self.turn_on(self.floor_fan)
 
     def on_temp_change(self, entity, attribute, old, new, kwargs):
         temperature = int(self.get_state(self.downstairs_temp))
@@ -84,6 +81,9 @@ class SleepMonitor(hass.Hass):
             self.set_fan_speed("high")
 
     def on_tv_change(self, entity, attribute, old, new, kwargs):
+        if new == "unavailable" or old == "unavailable":
+            return
+
         bedroom_fan_state = self.get_state(self.bedroom_fan)
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 

@@ -105,6 +105,7 @@ history:
             - sensor.bill_location
             - sensor.cricket_location
             - lock.front_door
+            - lock.back_door
             - cover.left_bay
             - cover.right_bay
             - binary_sensor.front_door_cam_motion
@@ -477,6 +478,9 @@ input_boolean:
   announce_location_monitor:
     name: Announce Locations
     icon: mdi:amazon-alexa
+  announce_lock_change:
+    name: Announce Lock Change
+    icon: mdi:key-variant
   announce_oven_monitor:
     name: Announce Oven Temperature
     icon: mdi:amazon-alexa
@@ -485,7 +489,7 @@ input_boolean:
     icon: mdi:message-text
   respond_pollen_monitor:
     name: Pollen Monitor Response
-    icon: mdi:amazon-alexa
+    icon: mdi:tree-outline
 
   notify_pollen_monitor:
     icon: mdi:message-text
@@ -515,6 +519,3 @@ input_datetime:
 # Pollen Sensor
 iqvia:
   zip_code: "35758"
-  monitored_conditions:
-    - allergy_index_today
-    - allergy_index_tomorrow

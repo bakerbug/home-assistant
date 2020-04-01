@@ -40,6 +40,7 @@ Then run `sudo systemctl enable mqtt-bridge.service`.
 
 # Re-enroll certificate
 cd /home/homeassistant/dehydrated
-sudo -i -u homeassistant ./dehydrated --cron
+# sudo -i -u homeassistant ./dehydrated --cron
+sudo ./dehydrated --cron
 - ensure all files in cert/bakerbug.duckdns.org/ belong to homeassistant
 reboot

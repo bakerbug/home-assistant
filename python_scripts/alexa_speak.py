@@ -45,6 +45,7 @@ class AlexaSpeak(hass.Hass):
 
     def _select_destinations(self):
         debug_mode = self.get_state(self.debug_switch) == "on"
+        bill_in_bed = self.get_state("binary_sensor.sleepnumber_bill_bill_is_in_bed") == "on"
         cricket_in_bed = self.get_state("binary_sensor.sleepnumber_bill_cricket_is_in_bed") == "on"
         time = self.get_state("sensor.time")
         hour, minute = time.split(":")
@@ -57,7 +58,7 @@ class AlexaSpeak(hass.Hass):
                 "media_player.computer_room",
             ]
         else:
-            if cricket_in_bed:
+            if bill_in_bed or cricket_in_bed:
                 target_list.remove("media_player.master_bedroom")
 
             if hour >= 20 or hour <= 8:

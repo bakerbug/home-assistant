@@ -6,7 +6,6 @@ class PollenMonitor(hass.Hass):
     def initialize(self):
         self.pollen_warning_level = 8.00
         self.max_increase = 1.00
-
         self.alert_time = datetime.time(19, 30, 0)
         self.index_today = "sensor.allergy_index_today"
         self.index_tomorrow = "sensor.allergy_index_tomorrow"
@@ -36,14 +35,14 @@ class PollenMonitor(hass.Hass):
         self.tomorrow_index = float(self.get_state(self.index_tomorrow))
         self.today_rating = self.get_state(self.index_today, attribute="rating")
         self.tomorrow_rating = self.get_state(self.index_tomorrow, attribute="rating")
-        self.increase_amount = round(self.tomorrow_index - self.today_index, 1)
+        self.index_change = round(self.tomorrow_index - self.today_index, 1)
         self.pollen_state_tomorrow = self.get_state(self.index_tomorrow, attribute="all")
         self.pollen_state_today = self.get_state(self.index_today, attribute="all")
 
     def on_schedule(self, kwargs):
         self.update_data()
-        self.slack_debug(f"Pollen Report? {self.increase_amount} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
-        if self.increase_amount > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
+        self.slack_debug(f"Pollen Report? {self.index_change} > {self.max_increase} or {self.tomorrow_index} >= {self.pollen_warning_level}")
+        if self.index_change > self.max_increase or self.tomorrow_index >= self.pollen_warning_level:
             self.report_pollen(False)
 
     def on_request(self, entity, attribute, old, new, kwargs):
@@ -62,28 +61,42 @@ class PollenMonitor(hass.Hass):
 
     def generate_report(self):
 
-        allergens = []
+        allergens_today = self._get_allergen_stanza(self.pollen_state_today)
+        allergens_tomorrow = self._get_allergen_stanza(self.pollen_state_tomorrow)
 
-        for key, value in self.pollen_state_today["attributes"].items():
-            if key.startswith("allergen_name"):
-                allergens.append(value)
+        alert_msg = f"Today, there is a {self.today_rating} level of {allergens_today}.  "
 
-        allergen_count = len(allergens)
-        if allergen_count == 1:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}."
-        elif allergen_count == 2:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]} and {allergens[1]}."
-        elif allergen_count > 2:
-            alert_msg = f"Today, there will be {self.today_rating} levels of {allergens[0]}, {allergens[1]}, and {allergens[2]}."
+        if self.index_change > 0:
+            direction = "increase by"
+        elif self.index_change < 0:
+            direction = "decrease by"
         else:
-            alert_msg = f"The pollen level is {self.today_rating}."
+            direction = "remain at"
 
-        if self.increase_amount > self.max_increase:
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will increase by {self.increase_amount}."
-        elif self.increase_amount < -abs(self.max_increase):
-            alert_msg = alert_msg + f" Tomorrow, the pollen index will decrease by {abs(self.increase_amount)}."
+        alert_msg = alert_msg + f"Tomorrow, the pollen index will {direction} {abs(self.index_change)} "
+        alert_msg = alert_msg + f"with a {self.tomorrow_rating} level of {allergens_tomorrow}."
 
         return alert_msg
+
+    @staticmethod
+    def _get_allergen_stanza(pollen_state):
+        allergen_list = []
+        for key, value in pollen_state["attributes"].items():
+            if key.startswith("allergen_name"):
+                allergen_list.append(value)
+
+        allergen_count = len(allergen_list)
+
+        if allergen_count == 1:
+            response = f"{allergen_list[0]}."
+        elif allergen_count == 2:
+            response = f"{allergen_list[0]} and {allergen_list[1]}."
+        elif allergen_count == 3:
+            response = f"{allergen_list[0]}, {allergen_list[1]}, and {allergen_list[2]}."
+        else:
+            response = f"{allergen_count} types of pollen."
+
+        return response
 
     def slack_debug(self, message):
         debug = self.get_state(self.debug_switch) == "on"

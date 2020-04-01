@@ -21,7 +21,11 @@ class LaundryMonitor(hass.Hass):
         power_value = self.get_state("sensor.washing_machine_power")
         if power_value == "unavailable":
             return
-        self.power_level = float(power_value)
+        try:
+            self.power_level = float(power_value)
+        except ValueError:
+            self.log(f'Unable to cast {power_value} to float.')
+            return
 
         if self.DEBUG:
             self.alexa.announce(f"The laundry power is {self.power_level}", self.debug_switch)

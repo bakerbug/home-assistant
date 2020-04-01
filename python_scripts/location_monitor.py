@@ -6,6 +6,7 @@ class LocationMonitor(hass.Hass):
     def initialize(self):
         self.debug_switch = "input_boolean.debug_location_monitor"
         self.active_switch = "input_boolean.location_monitor"
+        self.announce_lock_change = "input_boolean.announce_lock_change"
         self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
         # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
@@ -13,13 +14,16 @@ class LocationMonitor(hass.Hass):
         self.alexa = self.get_app("alexa_speak")
         self.lock_list = [
             "lock.front_door",
+            "lock.back_door"
         ]
         self.SUN_ELEV_HIGH = 15.00
 
-        self.code_data = None
+        self.code_data_front = None
+        self.code_data_back = None
         with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
             config_data = yaml.safe_load(secrets_file)
-            self.code_data = config_data["lock_code_data"]
+            self.code_data_front = config_data["lock_code_data_front"]
+            self.code_data_back = config_data["lock_code_data_back"]
 
         self.away_on_tuple = (
             "automation.hvac_balancing",
@@ -30,14 +34,12 @@ class LocationMonitor(hass.Hass):
         self.away_off_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
-            "automation.lights_on_for_weekday_mornings",
             "input_boolean.wakeup_light",
         )
 
         self.home_on_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
-            "automation.lights_on_for_weekday_mornings",
             "input_boolean.wakeup_light",
         )
 
@@ -56,6 +58,7 @@ class LocationMonitor(hass.Hass):
             self.handle_bill = self.listen_state(self.location_change, entity="sensor.bill_location")
             self.handle_cricket = self.listen_state(self.location_change, entity="sensor.cricket_location")
             self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
+            self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
@@ -76,11 +79,19 @@ class LocationMonitor(hass.Hass):
             self.presence_behavior()
 
     def lock_change(self, entity, attribute, old, new, kwargs):
+        announce_lock = self.get_state(self.announce_lock_change) == "on"
+
+        if not announce_lock:
+            return
+
         lock_name = self.friendly_name(entity)
         lock_code = self.get_state(entity, attribute="code_id")
         if lock_code is not None:
             try:
-                code_name = self.code_data[lock_code]
+                if entity == "lock.front_door":
+                    code_name = self.code_data_front[lock_code]
+                if entity == "lock.back_door":
+                    code_name = self.code_data_back[lock_code]
             except KeyError:
                 code_name = f"Unregistered Code {lock_code}"
 
