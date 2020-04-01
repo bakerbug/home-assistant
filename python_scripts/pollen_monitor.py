@@ -91,8 +91,10 @@ class PollenMonitor(hass.Hass):
             response = f"{allergen_list[0]}."
         elif allergen_count == 2:
             response = f"{allergen_list[0]} and {allergen_list[1]}."
-        elif allergen_count > 2:
+        elif allergen_count == 3:
             response = f"{allergen_list[0]}, {allergen_list[1]}, and {allergen_list[2]}."
+        else:
+            response = f"{allergen_count} types of pollen."
 
         return response
 
