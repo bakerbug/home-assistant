@@ -6,6 +6,7 @@ class LocationMonitor(hass.Hass):
     def initialize(self):
         self.debug_switch = "input_boolean.debug_location_monitor"
         self.active_switch = "input_boolean.location_monitor"
+        self.announce_lock_change = "input_boolean.announce_lock_change"
         self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
         # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
@@ -78,6 +79,11 @@ class LocationMonitor(hass.Hass):
             self.presence_behavior()
 
     def lock_change(self, entity, attribute, old, new, kwargs):
+        announce_lock = self.get_state(self.announce_lock_change) == "on"
+
+        if not announce_lock:
+            return
+
         lock_name = self.friendly_name(entity)
         lock_code = self.get_state(entity, attribute="code_id")
         if lock_code is not None:

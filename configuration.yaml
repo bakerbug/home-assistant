@@ -478,6 +478,9 @@ input_boolean:
   announce_location_monitor:
     name: Announce Locations
     icon: mdi:amazon-alexa
+  announce_lock_change:
+    name: Announce Lock Change
+    icon: mdi:key-variant
   announce_oven_monitor:
     name: Announce Oven Temperature
     icon: mdi:amazon-alexa
