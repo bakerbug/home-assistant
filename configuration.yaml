@@ -351,8 +351,9 @@ nest:
 
 # Weather
 weather:
-  - platform: darksky
-    api_key: !secret darksky_api_key
+  - platform: nws
+    api_key: !secret nws_api_key
+    station: HSV
 
 # Plex
 #media_player:
