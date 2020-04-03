@@ -98,7 +98,7 @@ history:
     use_include_order: True
     include:
         entities:
-            - weather.dark_sky
+            - weather.khsv
             - sun.sun
             - binary_sensor.workday
             - binary_sensor.bayberry_away
@@ -209,11 +209,11 @@ sensor:
       weather_humidity:
         friendly_name: "Outdoor Humidity"
         unit_of_measurement: "%"
-        value_template: "{{ states.weather.dark_sky.attributes.humidity }}"
+        value_template: "{{ states.weather.khsv.attributes.humidity }}"
       weather_temperature:
         friendly_name: "Outdoor Temperature"
         unit_of_measurement: "\u00B0F"
-        value_template: "{{ states.weather.dark_sky.attributes.temperature }}"
+        value_template: "{{ states.weather.khsv.attributes.temperature }}"
 
   - platform: version
     name: Installed HA Version
@@ -353,7 +353,7 @@ nest:
 weather:
   - platform: nws
     api_key: !secret nws_api_key
-    station: HSV
+    station: khsv
 
 # Plex
 #media_player:

@@ -21,7 +21,7 @@ class SatMon(hass.Hass):
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_satellite_monitor"
         self.report_switch = "input_boolean.satellite_report"
-        self.weather = "weather.dark_sky"
+        self.weather = "weather.khsv"
         self.bad_weather = ("cloudy", "rainy", "partlycloudy")
         self.turn_off(self.report_switch)
         self.query_complete = False
