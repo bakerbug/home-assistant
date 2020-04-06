@@ -275,3 +275,17 @@
     domain: switch
     entity_id: switch.wemo_delta
     type: turn_off
+- id: '1586198422944'
+  alias: Secure the House
+  description: ''
+  trigger:
+  - entity_id: input_boolean.secure_house
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - scene: scene.secure_the_house
+  - data: {}
+    entity_id: input_boolean.secure_house
+    service: input_boolean.turn_off
