@@ -9,7 +9,7 @@ class FireplaceTemp(hass.Hass):
         self.OUTSIDE_FIRE_TEMP = 60
         self.upstairs = "sensor.upstairs_thermostat_temperature"
         self.downstairs = "sensor.downstairs_thermostat_temperature"
-        self.outside = "weather.dark_sky"
+        self.outside = "weather.khsv"
         self.fireplace_switch = "input_boolean.fireplace_temperature"
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_fireplace_temp"
