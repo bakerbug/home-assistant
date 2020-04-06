@@ -263,3 +263,15 @@
     data:
       entity_id: switch.washing_machine
     service: switch.turn_on
+- id: '1586061135312'
+  alias: Turn Off Printer
+  description: ''
+  trigger:
+  - at: '23:00'
+    platform: time
+  condition: []
+  action:
+  - device_id: c75027221e7749d6ae8cfca9aa0693e2
+    domain: switch
+    entity_id: switch.wemo_delta
+    type: turn_off
