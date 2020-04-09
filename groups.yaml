@@ -1,7 +1,6 @@
 all_indoor_lights:
   name: All Indoor Lights
   entities:
-    - group.christmas
     - group.living_area_lights
     - group.bedroom_lights
     - switch.wemo_bravo
