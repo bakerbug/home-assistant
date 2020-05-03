@@ -47,7 +47,7 @@ frontend:
 
 # Enables configuration UI
 config:
-
+scene: !include scenes.yaml
 http:
   # Secrets are defined in the file secrets.yaml
   # api_password: !secret http_password
@@ -433,6 +433,9 @@ input_boolean:
   satellite_report:
     name: Satellite Report
     icon: mdi:space-station
+  secure_house:
+    name: Secure The House
+    icon: mdi:shield-home-outline
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
