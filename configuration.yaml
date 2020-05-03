@@ -349,16 +349,6 @@ nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
 
-# Weather
-weather:
-  - platform: nws
-    api_key: !secret nws_api_key
-    station: khsv
-
-# Plex
-#media_player:
-#  - platform: plex
-
 # Sleep Number Bed
 sleepiq:
   username: !secret sleepnumber_user
