@@ -5,7 +5,7 @@ class SleepMonitor(hass.Hass):
     def initialize(self):
         self.COLD_TEMP = 65
 
-        self.bedroom_fan = "fan.bedroom_fan"
+        self.bedroom_fan = "sensor.bedroom_fan_speed"
         self.bedroom_tv = "media_player.bedroom_tv"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
@@ -46,30 +46,33 @@ class SleepMonitor(hass.Hass):
 
     def on_bed_change(self, entity, attribute, old, new, kwargs):
         sun = self.get_state("sun.sun")
-        self.slack_debug(f"Sleep monitor: on_bed_change sun is {sun}.")
+        self.slack_debug(f"Sleep monitor: (on_bed_change) {entity} went from {old} to {new} while sun is {sun}.")
 
         if sun == "above_horizon":
             return
 
         bill_in_bed = self.get_state(self.bill_in_bed) == "on"
         cricket_in_bed = self.get_state(self.cricket_in_bed) == "on"
-        livingroom_tv_is_off = self.get_state(self.living_room_tv) == "off"
+        livingroom_tv_is_off = self.get_state(self.living_room_tv) == "off" or self.get_state(self.living_room_tv) == "idle"
 
         if livingroom_tv_is_off and bill_in_bed and cricket_in_bed:
             self.turn_off(self.living_area_lights)
             self.turn_on(self.hvac_balance)
             self.slack_debug("Turning off living area lights.")
+        else:
+            self.slack_debug(f"Not yet turning off lights: Livingroom TV: {livingroom_tv_is_off} Bill in bed: {bill_in_bed} Cricket in bed: {cricket_in_bed}")
 
         if old == "on" and new == "off":
             self.turn_on(self.night_lights)
             self.slack_debug("Turning on night lights.")
 
     def on_fan_change(self, entity, attribute, old, new, kwargs):
+        self.slack_debug(f"Sleep monitor (on_fan_change) {entity} went from {old} to {new}.")
         if new == "off":
             self.turn_off(self.floor_fan)
         else:
-            fan_speed = self.get_state(self.bedroom_fan, attribute="speed")
-            if fan_speed == "medium" or fan_speed == "high":
+            self.slack_debug(f"Sleep monitor (on_fan_change) Bedroom Fan speed now {new}.")
+            if new == "medium" or new == "high":
                 self.turn_on(self.floor_fan)
 
     def on_temp_change(self, entity, attribute, old, new, kwargs):
@@ -87,11 +90,16 @@ class SleepMonitor(hass.Hass):
         bedroom_fan_state = self.get_state(self.bedroom_fan)
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 
-        if bedroom_fan_state == "on":
+        if bedroom_fan_state != "off":
             if new == "standby":
+                self.slack_debug(f"Bedroom TV turned off while fan is on.  Turning on floor fan.")
                 self.turn_on(self.floor_fan)
             elif old == "standby":
+                self.slack_debug(f"Bedroom TV turned on while fan is on.  Turning off floor fan.")
                 self.turn_off(self.floor_fan)
+            else:
+                self.slack_debug(f"Bedroom TV went from {old} to {new}. Not adjusting fan.")
+
 
         if crickets_lamp_state == "on":
             if new == "standby":
@@ -102,10 +110,9 @@ class SleepMonitor(hass.Hass):
                 self.turn_off(self.bills_lamp)
 
     def set_fan_speed(self, new_speed):
-        fan_state = self.get_state(self.bedroom_fan)
-        fan_speed = self.get_state(self.bedroom_fan, attribute="speed")
+        fan_speed = self.get_state(self.bedroom_fan)
 
-        if fan_state == "off" or new_speed == fan_speed:
+        if fan_speed == "off" or new_speed == fan_speed:
             return
 
         self.call_service("fan/set_speed", entity_id=self.bedroom_fan, speed=new_speed)
