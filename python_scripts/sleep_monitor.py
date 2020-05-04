@@ -5,7 +5,8 @@ class SleepMonitor(hass.Hass):
     def initialize(self):
         self.COLD_TEMP = 65
 
-        self.bedroom_fan = "sensor.bedroom_fan_speed"
+        self.bedroom_fan = "fan.bedroom_fan"
+        self.bedroom_fan_speed = "sensor.bedroom_fan_speed"
         self.bedroom_tv = "media_player.bedroom_tv"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
@@ -33,7 +34,7 @@ class SleepMonitor(hass.Hass):
             self.bed_bill = self.listen_state(self.on_bed_change, self.bill_in_bed)
             self.bed_cricket = self.listen_state(self.on_bed_change, self.cricket_in_bed)
             self.downstairs_temp_handle = self.listen_state(self.on_temp_change, self.downstairs_temp)
-            self.fan_handle = self.listen_state(self.on_fan_change, self.bedroom_fan)
+            self.fan_handle = self.listen_state(self.on_fan_change, self.bedroom_fan_speed)
             self.tv_handle = self.listen_state(self.on_tv_change, self.bedroom_tv)
             self.slack_debug("Enabled sleep monitor handlers.")
         else:
@@ -68,12 +69,10 @@ class SleepMonitor(hass.Hass):
 
     def on_fan_change(self, entity, attribute, old, new, kwargs):
         self.slack_debug(f"Sleep monitor (on_fan_change) {entity} went from {old} to {new}.")
-        if new == "off":
+        if new == "off" or new == "low":
             self.turn_off(self.floor_fan)
-        else:
-            self.slack_debug(f"Sleep monitor (on_fan_change) Bedroom Fan speed now {new}.")
-            if new == "medium" or new == "high":
-                self.turn_on(self.floor_fan)
+        elif new == "medium" or new == "high":
+            self.turn_on(self.floor_fan)
 
     def on_temp_change(self, entity, attribute, old, new, kwargs):
         temperature = int(self.get_state(self.downstairs_temp))
@@ -87,7 +86,7 @@ class SleepMonitor(hass.Hass):
         if new == "unavailable" or old == "unavailable":
             return
 
-        bedroom_fan_state = self.get_state(self.bedroom_fan)
+        bedroom_fan_state = self.get_state(self.bedroom_fan_speed)
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 
         if bedroom_fan_state != "off":
@@ -110,7 +109,7 @@ class SleepMonitor(hass.Hass):
                 self.turn_off(self.bills_lamp)
 
     def set_fan_speed(self, new_speed):
-        fan_speed = self.get_state(self.bedroom_fan)
+        fan_speed = self.get_state(self.bedroom_fan_speed)
 
         if fan_speed == "off" or new_speed == fan_speed:
             return
