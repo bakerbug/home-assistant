@@ -6,21 +6,23 @@ class LocationMonitor(hass.Hass):
     def initialize(self):
         self.debug_switch = "input_boolean.debug_location_monitor"
         self.active_switch = "input_boolean.location_monitor"
+        self.announce_location_change = "input_boolean.announce_location_change"
         self.announce_lock_change = "input_boolean.announce_lock_change"
-        self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
+        self.handle_active = self.listen_state(
+            self.on_active_change, entity=self.active_switch
+        )
         # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
         # self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
         self.alexa = self.get_app("alexa_speak")
-        self.lock_list = [
-            "lock.front_door",
-            "lock.back_door"
-        ]
+        self.lock_list = ["lock.front_door", "lock.back_door"]
         self.SUN_ELEV_HIGH = 15.00
 
         self.code_data_front = None
         self.code_data_back = None
-        with open("/home/homeassistant/.homeassistant/secrets.yaml", "r") as secrets_file:
+        with open(
+            "/home/homeassistant/.homeassistant/secrets.yaml", "r"
+        ) as secrets_file:
             config_data = yaml.safe_load(secrets_file)
             self.code_data_front = config_data["lock_code_data_front"]
             self.code_data_back = config_data["lock_code_data_back"]
@@ -43,7 +45,10 @@ class LocationMonitor(hass.Hass):
             "input_boolean.wakeup_light",
         )
 
-        self.home_off_tuple = ("automation.lights_off_when_away", "automation.lights_on_when_away")
+        self.home_off_tuple = (
+            "automation.lights_off_when_away",
+            "automation.lights_on_when_away",
+        )
 
         init_msg = "Initialized Location Monitor."
         self.slack(init_msg)
@@ -55,10 +60,18 @@ class LocationMonitor(hass.Hass):
 
     def on_active_change(self, entity, attribute, old, new, kwargs):
         if new == "on":
-            self.handle_bill = self.listen_state(self.location_change, entity="sensor.bill_location")
-            self.handle_cricket = self.listen_state(self.location_change, entity="sensor.cricket_location")
-            self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
-            self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
+            self.handle_bill = self.listen_state(
+                self.location_change, entity="sensor.bill_location"
+            )
+            self.handle_cricket = self.listen_state(
+                self.location_change, entity="sensor.cricket_location"
+            )
+            self.handle_front_door = self.listen_state(
+                self.lock_change, entity="lock.front_door"
+            )
+            self.handle_back_door = self.listen_state(
+                self.lock_change, entity="lock.back_door"
+            )
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
@@ -169,7 +182,9 @@ class LocationMonitor(hass.Hass):
 
         message = f"{name} has {direction} {location}."
 
-        self.alexa.announce(message, self.debug_switch)
+        announce = self.get_state(self.announce_location_change) == "on"
+        if announce:
+            self.alexa.announce(message, self.debug_switch)
         self.slack(message)
 
     def slack(self, message):
