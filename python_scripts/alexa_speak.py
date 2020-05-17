@@ -13,6 +13,7 @@ class AlexaSpeak(hass.Hass):
             "media_player.computer_room",
             "media_player.master_bedroom",
             "media_player.kyle_s_room",
+            "media_player.echo_auto_camry",
         ]
         self.debug_switch = None
 

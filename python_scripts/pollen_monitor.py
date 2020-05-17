@@ -61,25 +61,25 @@ class PollenMonitor(hass.Hass):
 
     def generate_report(self):
 
-        allergens_today = self._get_allergen_stanza(self.pollen_state_today)
-        allergens_tomorrow = self._get_allergen_stanza(self.pollen_state_tomorrow)
+        allergens_today = self.get_allergen_stanza(self.pollen_state_today)
+        allergens_tomorrow = self.get_allergen_stanza(self.pollen_state_tomorrow)
 
         alert_msg = f"Today, there is a {self.today_rating} level of {allergens_today}.  "
 
         if self.index_change > 0:
-            direction = "increase by"
+            direction = f"increase by {abs(self.index_change)} "
         elif self.index_change < 0:
-            direction = "decrease by"
+            direction = f"decrease by {abs(self.index_change)} "
         else:
-            direction = "remain at"
+            direction = "remain the same "
 
-        alert_msg = alert_msg + f"Tomorrow, the pollen index will {direction} {abs(self.index_change)} "
+        alert_msg = alert_msg + f"Tomorrow, the pollen index will {direction} "
         alert_msg = alert_msg + f"with a {self.tomorrow_rating} level of {allergens_tomorrow}."
 
         return alert_msg
 
     @staticmethod
-    def _get_allergen_stanza(pollen_state):
+    def get_allergen_stanza(pollen_state):
         allergen_list = []
         for key, value in pollen_state["attributes"].items():
             if key.startswith("allergen_name"):

@@ -17,8 +17,10 @@ class WakeupLight(hass.Hass):
         self.crickets_lamp = "switch.04200320b4e62d1291c4_4"
         self.debug_switch = "input_boolean.debug_wakeup_light"
         self.house_lights = "group.morning_lights"
+        self.kitchen_lights = "group.kitchen_lights"
         self.light = "light.bedroom_dimmer"
         self.start_switch = "input_boolean.wakeup_light"
+        self.sun = "sun.sun"
         self.wait_timer = "timer.wakup_light"
         self.wakeup_time = "input_datetime.wakeup_time"
         self.workday = "binary_sensor.workday"
@@ -118,7 +120,10 @@ class WakeupLight(hass.Hass):
             self.ticks += 1
 
         if self.ticks == self.MAX_LIGHT:
-            self.turn_on(self.house_lights)
+            if self.get_state(self.sun) == "below_horizon":
+                self.turn_on(self.house_lights)
+            else:
+                self.turn_on(self.kitchen_lights)
             self.listen_for_out_of_bed()
 
 
