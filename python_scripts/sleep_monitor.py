@@ -7,6 +7,7 @@ class SleepMonitor(hass.Hass):
 
         self.bedroom_fan = "fan.bedroom_fan"
         self.bedroom_fan_speed = "sensor.bedroom_fan_speed"
+        self.bedroom_fan_low_temp = "input_number.bedroom_fan_low_temp"
         self.bedroom_tv = "media_player.bedroom_tv"
         self.bedroom_lamp = "switch.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
@@ -52,11 +53,14 @@ class SleepMonitor(hass.Hass):
         self.slack_debug(f"(on_bed_change) {entity} went from {old} to {new} while sun is {sun}.")
         self.slack_debug(f"Bill in bed: {bill_in_bed}  Cricket in be: {cricket_in_bed}")
 
+        # Set bedroom fan to low
         if sun == "above_horizon":
             old_speed = self.get_state(self.bedroom_fan_speed)
 
             if bill_in_bed or cricket_in_bed:
-                if old_speed == "off":
+                downstairs_temp = int(self.get_state(self.downstairs_temp))
+                fan_low_temp = int(float(self.get_state(self.bedroom_fan_low_temp)))
+                if old_speed == "off" and downstairs_temp >= fan_low_temp:
                     self.set_fan_speed("low")
             elif not bill_in_bed and not cricket_in_bed:
                 if old_speed == "low":
@@ -98,11 +102,11 @@ class SleepMonitor(hass.Hass):
         if new == "unavailable" or old == "unavailable":
             return
 
-        bedroom_fan_state = self.get_state(self.bedroom_fan_speed)
+        bedroom_fan_speed = self.get_state(self.bedroom_fan_speed)
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 
-        if bedroom_fan_state != "off":
-            if new == "standby":
+        if bedroom_fan_speed != "off":
+            if new == "standby" and (bedroom_fan_speed == "high" or bedroom_fan_speed == "medium"):
                 self.slack_debug(f"Bedroom TV turned off while fan is on.  Turning on floor fan.")
                 self.turn_on(self.floor_fan)
             elif old == "standby":
@@ -110,7 +114,6 @@ class SleepMonitor(hass.Hass):
                 self.turn_off(self.floor_fan)
             else:
                 self.slack_debug(f"Bedroom TV went from {old} to {new}. Not adjusting fan.")
-
 
         if crickets_lamp_state == "on":
             if new == "standby":

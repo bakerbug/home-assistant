@@ -502,6 +502,11 @@ input_number:
     min: 45
     max: 60
     icon: mdi:fireplace
+  bedroom_fan_low_temp:
+    name: Bedroom Fan Low Temperature
+    min: 65
+    max: 75
+    icon: mdi:fan
 
 input_datetime:
   wakeup_time:
