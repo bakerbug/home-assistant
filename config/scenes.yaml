@@ -1,0 +1,21 @@
+- id: '1592454956029'
+  name: Secure the House
+  entities:
+    cover.left_bay:
+      device_class: garage
+      friendly_name: Left Bay
+      state: closed
+      supported_features: 3
+    cover.right_bay:
+      device_class: garage
+      friendly_name: Right Bay
+      state: closed
+      supported_features: 3
+    lock.back_door:
+      friendly_name: Back Door
+      lock_state: locked
+      state: locked
+    lock.front_door:
+      friendly_name: Front Door
+      lock_state: locked
+      state: locked

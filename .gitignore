@@ -15,3 +15,7 @@ python_scripts/debug.py
 tts/
 custom_components/
 alexa_media_player/
+
+config/appdaemon/compiled/
+
+share/
