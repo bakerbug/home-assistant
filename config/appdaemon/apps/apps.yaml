@@ -58,4 +58,8 @@ version_monitor:
 wakeup_light:
   module: wakeup_light
   class: WakeupLight
+weather_alert:
+  module: weather_alert
+  class: WeatherAlert
+  dependencies: alexa_speak
 

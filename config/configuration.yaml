@@ -295,6 +295,9 @@ input_boolean:
   wakeup_light_weekend:
     name: Weekend Wakeup Light
     icon: mdi:alarm
+  weather_alert_details:
+    name: Weather Alert Details
+    icon: mdi:weather-lightning
 
   # DEBUG
   debug_alexa_speak:
@@ -322,6 +325,8 @@ input_boolean:
   debug_version_monitor:
     icon: mdi:bug-check-outline
   debug_wakeup_light:
+    icon: mdi:bug-check-outline
+  debug_weather_alert:
     icon: mdi:bug-check-outline
 
   # NOTIFY
