@@ -38,7 +38,8 @@ class Reminders(hass.Hass):
         this_year = today.year
         this_month = today.month
         this_day = today.day
-        this_hour = time.localtime().tm_hour - 5  # Subtract 5 to hack appdaemon's weird clock
+        # this_hour = time.localtime().tm_hour - 5  # Subtract 5 to hack appdaemon's weird clock
+        this_hour = time.localtime().tm_hour
         cal = calendar.monthcalendar(this_year, this_month)
 
         if cal[0][self.day] == 0:
