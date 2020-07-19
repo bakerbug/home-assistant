@@ -16,7 +16,7 @@ class SleepMonitor(hass.Hass):
         self.crickets_lamp = "switch.04200320b4e62d1291c4_4"
         self.downstairs_temp = "sensor.downstairs_thermostat_temperature"
         self.floor_fan = "switch.wemo_alpha"
-        self.hvac_balance = "automation.hvac_balancing"
+        self.fan_control = "input_boolean.enable_fan_control"
         self.living_area_lights = "group.living_area_lights"
         self.living_room_tv = "remote.harmony_hub"
         self.night_lights = "group.late_night_lights"
@@ -70,7 +70,7 @@ class SleepMonitor(hass.Hass):
 
             if livingroom_tv_is_off and bill_in_bed and cricket_in_bed:
                 self.turn_off(self.living_area_lights)
-                self.turn_on(self.hvac_balance)
+                self.turn_on(self.fan_control)
                 self.slack_debug("Turning off living area lights.")
             else:
                 self.slack_debug(f"Not yet turning off lights: Livingroom TV: {livingroom_tv_is_off} Bill in bed: {bill_in_bed} Cricket in bed: {cricket_in_bed}")

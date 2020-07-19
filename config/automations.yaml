@@ -52,20 +52,6 @@
   - data:
       entity_id: group.accent_lights
     service: switch.turn_on
-- id: '1532093963927'
-  alias: HVAC Balancing
-  trigger:
-  - event_data:
-      entity_id: sensor.downstairs_thermostat_temperature
-    event_type: state_changed
-    platform: event
-  - event_data:
-      entity_id: sensor.upstairs_thermostat_temperature
-    event_type: state_changed
-    platform: event
-  condition: []
-  action:
-  - service: python_script.fan_control
 - id: '1534730679270'
   alias: Lights Off When Away
   trigger:

@@ -12,6 +12,9 @@ bus_notify:
 debug:
   module: debug
   class: DebugApp
+fan_control:
+  module: fan_control
+  class: FanControl
 fireplace_temperature:
   module: fireplace_temp
   class: FireplaceTemp

@@ -28,7 +28,7 @@ class LocationMonitor(hass.Hass):
             self.code_data_back = config_data["lock_code_data_back"]
 
         self.away_on_tuple = (
-            "automation.hvac_balancing",
+            "input_boolean.enable_fan_control",
             "automation.lights_off_when_away",
             "automation.lights_on_when_away",
         )

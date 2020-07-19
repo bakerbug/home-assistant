@@ -36,7 +36,6 @@ cloud:
       include_entities:
         - cover.left_bay
         - cover.right_bay
-        - switch.fan_control
         - switch.humidifier
       exclude_domains:
         - alert
@@ -137,7 +136,6 @@ history:
             - sensor.weather_symbol
             - group.bed
             - group.garage
-            - switch.fan_control
 
 # Nest
 nest:
@@ -228,18 +226,6 @@ binary_sensor:
 switch:
   - platform: template
     switches:
-      fan_control:
-        friendly_name: "Fan Control"
-        value_template: "{{ is_state('automation.hvac_balancing', 'on') }}"
-        turn_on:
-          - service: automation.turn_on
-            data:
-              entity_id: automation.hvac_balancing
-          - service: python_script.fan_control
-        turn_off:
-          service: automation.turn_off
-          data:
-            entity_id: automation.hvac_balancing
       humidifier:
         friendly_name: "Humidifier"
         value_template: "{{ is_state('switch.0120099868c63aa67ad8_1', 'on') }}"
@@ -276,6 +262,9 @@ input_boolean:
     name: Bus Notify
     initial: off
     icon: mdi:bus-school
+  enable_fan_control:
+    name: Fan Control
+    icon: mdi:home-assistant
   fireplace_temperature:
     name: Fireplace Temperature
     initial: off
