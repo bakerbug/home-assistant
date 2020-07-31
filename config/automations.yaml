@@ -291,3 +291,44 @@
   - data: {}
     entity_id: remote.harmony_hub
     service: remote.turn_off
+- id: '1596166060300'
+  alias: Shelf Lights On
+  description: ''
+  trigger:
+  - entity_id: remote.harmony_hub
+    from: 'on'
+    platform: state
+    to: 'off'
+  - event: sunset
+    offset: -00:45:00
+    platform: sun
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: remote.harmony_hub
+      state: 'off'
+  action:
+  - device_id: 8d49c4eb63064e5d971a925ec1dce2ad
+    domain: switch
+    entity_id: switch.0120099868c63aa67ad8_4
+    type: turn_on
+  mode: single
+- id: '1596166185310'
+  alias: Shelf Lights Off
+  description: ''
+  trigger:
+  - entity_id: remote.harmony_hub
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - device_id: 8d49c4eb63064e5d971a925ec1dce2ad
+    domain: switch
+    entity_id: switch.0120099868c63aa67ad8_4
+    type: turn_off
+  mode: single

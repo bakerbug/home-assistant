@@ -15,7 +15,6 @@ accent_lights:
   name: Accent Lights
   entities:
     - switch.0120099868c63aa67ad8_2
-    - switch.0120099868c63aa67ad8_4
     - switch.wemo_echo
 appliances:
   name: Appliances
