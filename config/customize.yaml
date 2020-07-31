@@ -73,7 +73,7 @@ switch.wemo_echo:
 
 # Z-Wave
 light.bedroom_dimmer:
-  icon: mdi:ceiling-light
+  icon: mdi:dome-light
 switch.dining_room_light:
   icon: mdi:ceiling-light
 switch.driveway_light:
