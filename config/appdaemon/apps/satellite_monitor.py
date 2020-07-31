@@ -7,13 +7,14 @@ import yaml
 import satellites
 
 track_list = (
-    {'name': "International Space Station", 'id': 25544, 'mag_limit': -1.5},
-    {'name': "Hubble Space Telescope", 'id': 20580, 'mag_limit': 3.0},
+    {"name": "International Space Station", "id": 25544, "mag_limit": -1.5},
+    {"name": "Hubble Space Telescope", "id": 20580, "mag_limit": 3.0},
 )
 
 ### Previously tracked:
 #  {'name': "Atlas Centaur 2 upper stage", 'id': 694, 'mag_limit': 2.0},
 #  {'name': "Shenzhou 11", 'id': 41868, 'mag_limit': 2.0},
+
 
 class SatMon(hass.Hass):
     def initialize(self):
@@ -29,8 +30,8 @@ class SatMon(hass.Hass):
         with open(f"{self.config_dir}/secrets.yaml", "r") as secrets_file:
             config_data = yaml.safe_load(secrets_file)
         api_key = config_data["n2yo_key"]
-        lat = self.get_state('zone.home', attribute="latitude")
-        lon = self.get_state('zone.home', attribute="longitude")
+        lat = self.get_state("zone.home", attribute="latitude")
+        lon = self.get_state("zone.home", attribute="longitude")
         elevation = 214.9
         self.sat_tracker = satellites.SatData(api_key, lat, lon, elevation)
 
@@ -56,8 +57,8 @@ class SatMon(hass.Hass):
         del self.alert_msg[kwargs["alert_name"]]
 
     def on_report(self, entity, attribute, old, new, kwargs):
-        self.log('Processing request for satellite report.')
-        msg = ''
+        self.log("Processing request for satellite report.")
+        msg = ""
         found_one = False
         self.turn_off(self.report_switch)
         debug = self.get_state(self.debug_switch) == "on"
@@ -81,27 +82,27 @@ class SatMon(hass.Hass):
         self.report_msg.clear()
 
         for satellite in track_list:
-            pass_data = self.sat_tracker.get_visual_passes(satellite['id'], self.days, self.min_visible_seconds)
+            pass_data = self.sat_tracker.get_visual_passes(satellite["id"], self.days, self.min_visible_seconds)
             if pass_data is None:
                 error_msg = f"There was an error retrieving the orbital data for the {satellite['name']}."
                 self.log(error_msg)
-                self.report_msg.update({satellite['name'], error_msg})
+                self.report_msg.update({satellite["name"], error_msg})
                 continue
 
             self.log(f"Processing data for {satellite['name']}.")
             brightest_pass = self.find_brightest_pass(pass_data)
 
             if brightest_pass is not None:
-                report, alert = self.get_report_msg(brightest_pass, satellite['name'], satellite['mag_limit'])
+                report, alert = self.get_report_msg(brightest_pass, satellite["name"], satellite["mag_limit"])
                 if alert:
-                    self.schedule_alert(brightest_pass, satellite['name'], report)
+                    self.schedule_alert(brightest_pass, satellite["name"], report)
 
-                self.report_msg.update({satellite['name']: report})
+                self.report_msg.update({satellite["name"]: report})
 
         self.query_complete = True
 
     def schedule_alert(self, alert_pass, name, msg):
-        start_dt = datetime.datetime.fromtimestamp(alert_pass['startUTC'])
+        start_dt = datetime.datetime.fromtimestamp(alert_pass["startUTC"])
         alert_dt = start_dt - datetime.timedelta(minutes=self.alert_minutes)
         alert_msg = f"The {name} will be visible in {self.alert_minutes} minutes.  "
         text_msg = f"The {name} will be visible at {start_dt} tonight."

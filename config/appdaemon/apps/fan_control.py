@@ -247,7 +247,7 @@ class FanControl(hass.Hass):
 
         if current_state == new_state:
             return
-        elif new_state == 'on':
+        elif new_state == "on":
             self.turn_on(self.tower_fan)
         else:
             self.turn_off(self.tower_fan)

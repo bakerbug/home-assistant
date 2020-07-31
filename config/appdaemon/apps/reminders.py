@@ -26,9 +26,7 @@ class Reminders(hass.Hass):
             self.message = reminder[3]
 
             if self.DEBUG:
-                debug_msg = "Checking Week {}, Day {}, Hour {}, Message: {}".format(
-                    self.week, self.day, self.hour, self.message
-                )
+                debug_msg = "Checking Week {}, Day {}, Hour {}, Message: {}".format(self.week, self.day, self.hour, self.message)
                 self.call_service("notify/slack_assistant", message=debug_msg)
 
             self.check_schedule()
@@ -55,9 +53,7 @@ class Reminders(hass.Hass):
         if this_day == event_day and this_hour == self.hour:
             self.notify()
         elif self.DEBUG:
-            debug_msg = "this_day {} == event_day {} and this_hour {} == self.hour {}".format(
-                this_day, event_day, this_hour, self.hour
-            )
+            debug_msg = "this_day {} == event_day {} and this_hour {} == self.hour {}".format(this_day, event_day, this_hour, self.hour)
             self.call_service("notify/slack_assistant", message=debug_msg)
 
     def notify(self):

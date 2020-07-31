@@ -126,7 +126,6 @@ class WakeupLight(hass.Hass):
                 self.turn_on(self.kitchen_lights)
             self.listen_for_out_of_bed()
 
-
         if self.ticks <= self.MAX_LIGHT:
             self.turn_on(self.light, brightness_pct=str(self.ticks))
             self.slack_debug(f"Adjusting light to {self.ticks} percent.")

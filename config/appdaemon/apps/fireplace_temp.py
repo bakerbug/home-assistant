@@ -37,9 +37,7 @@ class FireplaceTemp(hass.Hass):
         downstairs_temp = int(self.get_state(self.downstairs))
         outside_temp = int(self.get_state(self.outside, attribute="temperature"))
 
-        self.slack_debug(
-            f"Max Indoor: {max_indoor_temp}, Max Outdoor: {max_outdoor_temp}, Upstairs: {upstairs_temp}, Downstairs: {downstairs_temp}, Outside: {outside_temp}"
-        )
+        self.slack_debug(f"Max Indoor: {max_indoor_temp}, Max Outdoor: {max_outdoor_temp}, Upstairs: {upstairs_temp}, Downstairs: {downstairs_temp}, Outside: {outside_temp}")
 
         msg = random.choice(self.yes_responses)
 

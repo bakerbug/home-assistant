@@ -12,9 +12,7 @@ class WeatherAlert(hass.Hass):
         self.alert_detail = "input_boolean.weather_alert_details"
         self.alert_ids = []
         self.alert_handle = self.listen_state(self.on_alert_change, self.alert_sensor)
-        self.details_handle = self.listen_state(
-            self.on_alert_details, self.alert_detail, new="on"
-        )
+        self.details_handle = self.listen_state(self.on_alert_details, self.alert_detail, new="on")
         self.debug_switch = "input_boolean.debug_weather_alert"
         self.slack_msg("Initialized Weather Alert.")
 

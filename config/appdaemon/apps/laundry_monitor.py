@@ -24,7 +24,7 @@ class LaundryMonitor(hass.Hass):
         try:
             self.power_level = float(power_value)
         except ValueError:
-            self.log(f'Unable to cast {power_value} to float.')
+            self.log(f"Unable to cast {power_value} to float.")
             return
 
         if self.DEBUG:

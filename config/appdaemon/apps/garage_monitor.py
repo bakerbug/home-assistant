@@ -1,6 +1,7 @@
 import appdaemon.plugins.hass.hassapi as hass
 from datetime import time
 
+
 class GarageMonitor(hass.Hass):
     def initialize(self):
         self.message_times = {30, 45, 60}

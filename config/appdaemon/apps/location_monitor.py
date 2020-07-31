@@ -8,9 +8,7 @@ class LocationMonitor(hass.Hass):
         self.active_switch = "input_boolean.location_monitor"
         self.announce_location_change = "input_boolean.announce_location_change"
         self.announce_lock_change = "input_boolean.announce_lock_change"
-        self.handle_active = self.listen_state(
-            self.on_active_change, entity=self.active_switch
-        )
+        self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
         # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
         # self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
@@ -20,9 +18,7 @@ class LocationMonitor(hass.Hass):
 
         self.code_data_front = None
         self.code_data_back = None
-        with open(
-            f"{self.config_dir}/secrets.yaml", "r"
-        ) as secrets_file:
+        with open(f"{self.config_dir}/secrets.yaml", "r") as secrets_file:
             config_data = yaml.safe_load(secrets_file)
             self.code_data_front = config_data["lock_code_data_front"]
             self.code_data_back = config_data["lock_code_data_back"]
@@ -56,22 +52,14 @@ class LocationMonitor(hass.Hass):
         self.on_active_change("bogus", "bogus", "bogus", "on", "bogus")
 
         # For debugging
-        #self.location_change('sensor.bill_location', 'bogus', 'his castle', 'None', 'bogus')
+        # self.location_change('sensor.bill_location', 'bogus', 'his castle', 'None', 'bogus')
 
     def on_active_change(self, entity, attribute, old, new, kwargs):
         if new == "on":
-            self.handle_bill = self.listen_state(
-                self.location_change, entity="sensor.bill_location"
-            )
-            self.handle_cricket = self.listen_state(
-                self.location_change, entity="sensor.cricket_location"
-            )
-            self.handle_front_door = self.listen_state(
-                self.lock_change, entity="lock.front_door"
-            )
-            self.handle_back_door = self.listen_state(
-                self.lock_change, entity="lock.back_door"
-            )
+            self.handle_bill = self.listen_state(self.location_change, entity="sensor.bill_location")
+            self.handle_cricket = self.listen_state(self.location_change, entity="sensor.cricket_location")
+            self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
+            self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
