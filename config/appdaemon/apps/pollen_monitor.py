@@ -31,8 +31,13 @@ class PollenMonitor(hass.Hass):
         self.call_service("notify/slack_assistant", message=init_msg)
 
     def update_data(self):
-        self.today_index = float(self.get_state(self.index_today))
-        self.tomorrow_index = float(self.get_state(self.index_tomorrow))
+        try:
+            self.today_index = float(self.get_state(self.index_today))
+            self.tomorrow_index = float(self.get_state(self.index_tomorrow))
+        except ValueError:
+            self.today_index = 0.0
+            self.tomorrow_index = 0.0
+
         self.today_rating = self.get_state(self.index_today, attribute="rating")
         self.tomorrow_rating = self.get_state(self.index_tomorrow, attribute="rating")
         self.index_change = round(self.tomorrow_index - self.today_index, 1)
@@ -60,6 +65,8 @@ class PollenMonitor(hass.Hass):
             self.alexa.notify(report_msg)
 
     def generate_report(self):
+        if self.get_state(self.index_today) == "unknown":
+            return "Pollen data is currently unavailable."
 
         allergens_today = self.get_allergen_stanza(self.pollen_state_today)
         allergens_tomorrow = self.get_allergen_stanza(self.pollen_state_tomorrow)
