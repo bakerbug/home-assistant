@@ -31,6 +31,7 @@ class FireplaceTemp(hass.Hass):
         self.call_service("notify/slack_assistant", message=init_msg)
 
     def on_request(self, entity, attribute, old, new, kwargs):
+        self.turn_off(self.fireplace_switch)
         max_indoor_temp = int(float(self.get_state(self.max_indoor_temp_setting)))
         max_outdoor_temp = int(float(self.get_state(self.max_outdoor_temp_setting)))
         upstairs_temp = int(self.get_state(self.upstairs))
@@ -47,7 +48,6 @@ class FireplaceTemp(hass.Hass):
             msg = "No, it is too warm outside to turn on the fireplace."
 
         self.alexa.respond(msg)
-        self.turn_off(self.fireplace_switch)
 
     def slack_debug(self, message):
         debug = self.get_state(self.debug_switch) == "on"

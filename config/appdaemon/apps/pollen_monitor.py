@@ -51,9 +51,9 @@ class PollenMonitor(hass.Hass):
             self.report_pollen(False)
 
     def on_request(self, entity, attribute, old, new, kwargs):
+        self.turn_off(self.respond_switch)
         self.update_data()
         self.report_pollen(True)
-        self.turn_off(self.respond_switch)
 
     def report_pollen(self, requested: bool):
         report_msg = self.generate_report()

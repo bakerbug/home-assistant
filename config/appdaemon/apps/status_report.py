@@ -10,10 +10,9 @@ class StatusReport(hass.Hass):
         self.slack("Initialized Status Report.")
 
     def run_report(self, entity, attribute, old, new, kwargs):
+        self.turn_off("input_boolean.status_report")
         message = self.generate_report()
         self.alexa.respond(message)
-
-        self.turn_off("input_boolean.status_report")
 
     def generate_report(self):
         report = ""
