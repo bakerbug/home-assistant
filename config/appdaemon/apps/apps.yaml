@@ -1,0 +1,68 @@
+---
+hello_world:
+  module: hello
+  class: HelloWorld
+alexa_speak:
+  module: alexa_speak
+  class: AlexaSpeak
+bus_notify:
+  module: bus_notify
+  class: BusNotify
+  dependencies: alexa_speak
+debug:
+  module: debug
+  class: DebugApp
+fan_control:
+  module: fan_control
+  class: FanControl
+fireplace_temperature:
+  module: fireplace_temp
+  class: FireplaceTemp
+  dependencies: alexa_speak
+garage_monitor:
+  module: garage_monitor
+  class: GarageMonitor
+  dependencies: alexa_speak
+laundry_monitor:
+  module: laundry_monitor
+  class: LaundryMonitor
+  dependencies: alexa_speak
+location_monitor:
+  module: location_monitor
+  class: LocationMonitor
+  dependencies: alexa_speak
+oven_monitor:
+  module: oven_monitor
+  class: OvenMonitor
+  dependencies: alexa_speak
+pollen_monitor:
+  module: pollen_monitor
+  class: PollenMonitor
+  dependencies: alexa_speak
+reminders:
+  module: reminders
+  class: Reminders
+  dependencies: alexa_speak
+satellite_monitor:
+  module: satellite_monitor
+  class: SatMon
+  dependencies: alexa_speak
+sleep_monitor:
+  module: sleep_monitor
+  class: SleepMonitor
+status_report:
+  module: status_report
+  class: StatusReport
+  dependencies: alexa_speak
+version_monitor:
+  module: version_monitor
+  class: VersionMonitor
+  dependencies: alexa_speak
+wakeup_light:
+  module: wakeup_light
+  class: WakeupLight
+weather_alert:
+  module: weather_alert
+  class: WeatherAlert
+  dependencies: alexa_speak
+

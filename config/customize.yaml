@@ -1,0 +1,130 @@
+# Groups
+group.ceiling_lights:
+  icon: mdi:track-light
+group.counter_lights:
+  icon: mdi:track-light
+
+
+# Nest Thermostats
+sensor.downstairs_thermostat_humidity:
+  friendly_name: Downstairs Humidity
+sensor.downstairs_thermostat_hvac_state:
+  friendly_name: Downstairs HVAC State
+sensor.downstairs_thermostat_temperature:
+  friendly_name: Downstairs Temperature
+sensor.upstairs_thermostat_humidity:
+  friendly_name: Upstairs Humidity
+sensor.upstairs_thermostat_hvac_state:
+  friendly_name: Upstairs HVAC State
+sensor.upstairs_thermostat_temperature:
+  friendly_name: Upstairs Temperature
+
+# Sleep Number
+sensor.sleepnumber_bill_bill_sleepnumber:
+  friendly_name: Bill's Sleep Number
+sensor.sleepnumber_bill_cricket_sleepnumber:
+  friendly_name: Cricket's Sleep Number
+binary_sensor.sleepnumber_bill_bill_is_in_bed:
+  friendly_name: Bill is in bed
+  icon: mdi:sleep
+binary_sensor.sleepnumber_bill_cricket_is_in_bed:
+  friendly_name: Cricket is in bed
+  icon: mdi:sleep
+
+# Tuya outlets
+switch.03200121dc4f221ad1cf_2:
+  friendly_name: Coffee Maker
+  icon: mdi:coffee
+switch.0120099868c63aa67ad8_3:
+  friendly_name: Sky Lights
+  icon: mdi:track-light
+switch.0120099868c63aa67ad8_4:
+  friendly_name: Shelf Lights
+  icon: mdi:spotlight
+switch.0120099868c63aa67ad8_5:
+  friendly_name: Home Assistant Power
+  icon: mdi:home-assistant
+switch.04200320b4e62d1291c4_1:
+  friendly_name: Bills Lamp
+  icon: mdi:lamp
+switch.04200320b4e62d1291c4_4:
+  friendly_name: Crickets Lamp
+  icon: mdi:lamp
+switch.0120099868c63aa67ad8_2:
+  friendly_name: Corner Lamp
+  icon: mdi:lamp
+
+# Wemo outlets
+switch.bedroom_lamp:
+  icon: mdi:lamp
+switch.wemo_alpha:
+  icon: mdi:fan
+switch.wemo_bravo:
+  icon: mdi:desk-lamp
+  friendly_name: Kyle's Light
+switch.entry_lamp:
+  icon: mdi:lamp
+switch.sofa_lamp:
+  icon: mdi:lamp
+switch.sink_light:
+  icon: mdi:ceiling-light
+switch.wemo_echo:
+  icon: mdi:lamp
+
+# Z-Wave
+light.bedroom_dimmer:
+  icon: mdi:dome-light
+switch.dining_room_light:
+  icon: mdi:ceiling-light
+switch.driveway_light:
+  icon: mdi:track-light
+switch.frontdoor_light:
+  icon: mdi:coach-lamp
+switch.patio_light:
+  icon: mdi:track-light
+
+# Hide items from home page.
+sensor.bayberry_eta:
+  hidden: true
+group.evening_lights:
+  hidden: true
+group.evening_early_lights:
+  hidden: true
+group.away_lights:
+  hidden: true
+group.morning_lights:
+  hidden: true
+binary_sensor.downstairs_thermostat_online:
+  hidden: true
+binary_sensor.upstairs_thermostat_online:
+  hidden: true
+binary_sensor.downstairs_thermostat_is_using_emergency_heat:
+  hidden: true
+binary_sensor.upstairs_thermostat_is_using_emergency_heat:
+  hidden: true
+binary_sensor.downstairs_thermostat_fan:
+  hidden: true
+binary_sensor.upstairs_thermostat_fan:
+  hidden: true
+binary_sensor.downstairs_thermostat_is_locked:
+  hidden: true
+binary_sensor.upstairs_thermostat_is_locked:
+  hidden: true
+binary_sensor.workday:
+  hidden: true
+
+# Automations
+switch.coffee_maker:
+  icon: mdi:coffee
+switch.fan_control:
+  icon: mdi:memory
+switch.humidifier:
+  icon: mdi:memory
+switch.kyles_light:
+  icon: mdi:memory
+automation.away_monitor:
+  icon: mdi:language-python
+automation.hvac_balancing:
+  icon: mdi:language-python
+
+
