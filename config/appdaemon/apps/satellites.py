@@ -8,7 +8,7 @@ TOO_FAINT = '{"info":{"satid":33591,"satname":"NOAA 19","transactionscount":9,"p
 
 class SatData:
     def __init__(self, api_key: str, lat: float = None, lon: float = None, elevation: float = None):
-        self.API_URL = "https://www.n2yo.com/rest/v1/satellite/"
+        self.API_URL = "https://api.n2yo.com/rest/v1/satellite/"
         self.DEBUG = False
         self.api_key = api_key
         self.lat = lat
