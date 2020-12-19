@@ -8,6 +8,7 @@ class LocationMonitor(hass.Hass):
         self.active_switch = "input_boolean.location_monitor"
         self.announce_location_change = "input_boolean.announce_location_change"
         self.announce_lock_change = "input_boolean.announce_lock_change"
+        self.meco_location = "device_tracker.meco_location_tracker"
         self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
         # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
         # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
@@ -56,25 +57,39 @@ class LocationMonitor(hass.Hass):
 
     def on_active_change(self, entity, attribute, old, new, kwargs):
         if new == "on":
-            self.handle_bill = self.listen_state(self.location_change, entity="sensor.bill_location")
-            self.handle_cricket = self.listen_state(self.location_change, entity="sensor.cricket_location")
+            self.handle_bill = self.listen_state(self.person_location, entity="sensor.bill_location")
+            self.handle_cricket = self.listen_state(self.person_location, entity="sensor.cricket_location")
+            self.handle_tesla = self.listen_state(self.car_location, entity=self.meco_location)
             self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
             self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
             self.cancel_listen_state(self.handle_cricket)
+            self.cancel_listen_state(self.handle_tesla)
             self.cancel_listen_state(self.handle_front_door)
             self.slack_debug("Disabled Location Monitor.")
 
-    def location_change(self, entity, attribute, old, new, kwargs):
+    def car_location(self, entity, attribute, old, new, kwargs):
+        self.slack_debug(f"car_location: old: {old} new: {new}")
+        if new == "not_home" and old == 'home':
+            self.slack("Closing right bay for Tesla departure.")
+            self.call_service("cover/close_cover", entity_id="cover.right_bay")
+
+    def person_location(self, entity, attribute, old, new, kwargs):
         self.NOTIFY = self.get_state("input_boolean.notify_location_monitor") == "on"
         self.last_entity = entity
         self.last_old = old
         self.last_new = new
+        self.slack_debug(f"person_location: old: {old} new: {new}")
+        meco_away = self.get_state(self.meco_location) == "not_home"
 
         if self.NOTIFY:
             self.generate_message()
+
+        if new == "Home" and meco_away:
+            self.slack("Opening right bay for Tesla arrival.")
+            self.call_service("cover/open_cover", entity_id="cover.right_bay")
 
         if new == "Home" or old == "Home":
             self.presence_behavior()
@@ -161,7 +176,7 @@ class LocationMonitor(hass.Hass):
         else:
             name = "Unidentified Person"
 
-        if self.last_old == "None":
+        if self.last_old == "unknown":
             direction = "arrived at"
             location = self.last_new
         else:
