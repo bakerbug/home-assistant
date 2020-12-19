@@ -46,6 +46,18 @@ class SleepMonitor(hass.Hass):
             self.cancel_listen_state(self.tv_handle)
             self.slack_debug("Disabled sleep monitor handlers.")
 
+    def adj_floor_fan(self):
+        raise NotImplementedError
+
+    def adj_ceiling_fan(self):
+        raise NotImplementedError
+
+    def adj_bedroom_lights(self):
+        raise NotImplementedError
+
+    def adj_house_lights(self):
+        raise NotImplementedError
+
     def on_bed_change(self, entity, attribute, old, new, kwargs):
         sun = self.get_state("sun.sun")
         bill_in_bed = self.get_state(self.bill_in_bed) == "on"
@@ -84,7 +96,8 @@ class SleepMonitor(hass.Hass):
         if new == "off" or new == "low":
             self.turn_off(self.floor_fan)
         elif new == "medium" or new == "high":
-            self.turn_on(self.floor_fan)
+            if self.get_state(self.bedroom_tv) != "playing":
+                self.turn_on(self.floor_fan)
 
     def on_temp_change(self, entity, attribute, old, new, kwargs):
         temperature = int(self.get_state(self.downstairs_temp))
