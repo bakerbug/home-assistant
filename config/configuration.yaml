@@ -65,6 +65,7 @@ alexa_media:
         - "Master Bedroom"
         - "Kyle's Room"
         - "Bill's Echo Auto"
+        - "Extra"
 
 history:
     use_include_order: True
@@ -76,6 +77,7 @@ history:
             - binary_sensor.bayberry_away
             - sensor.bill_location
             - sensor.cricket_location
+            - device_tracker.meco_location_tracker
             - lock.front_door
             - lock.back_door
             - cover.left_bay
@@ -173,6 +175,7 @@ sensor:
           - media_player.master_bedroom
           - media_player.upstairs
           - media_player.echo_auto_camry
+          - media_player.extra
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
