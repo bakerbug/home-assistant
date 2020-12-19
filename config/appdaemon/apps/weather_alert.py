@@ -10,7 +10,11 @@ class WeatherAlert(hass.Hass):
         # self.alert_sensor = "sensor.north_douglas_county_below_6000_feet_denver_west_adams_and_arapahoe_counties_east_broomfield_county"
         self.alert_sensor = "sensor.madison"
         self.alert_detail = "input_boolean.weather_alert_details"
+        self.alerts = {}
         self.alert_ids = []
+        self.alert_events = []
+        self.alert_descriptions = []
+        self.alert_announced = []
         self.alert_handle = self.listen_state(self.on_alert_change, self.alert_sensor)
         self.details_handle = self.listen_state(self.on_alert_details, self.alert_detail, new="on")
         self.debug_switch = "input_boolean.debug_weather_alert"
@@ -20,23 +24,35 @@ class WeatherAlert(hass.Hass):
             self.on_alert_change("bogus", "bogus", "bogus", "bogus", "bogus")
 
     def on_alert_change(self, entity, attribute, old, new, kwargs):
-        alert_count = int(self.get_state(self.alert_sensor))
+        try:
+            alert_count = int(self.get_state(self.alert_sensor))
+        except ValueError:
+            self.log("Weather service unavailable.")
+            return
 
-        if alert_count > 0:
-            full_data = self.get_state(self.alert_sensor, attribute="alerts")
-            for alert_data in full_data:
-                alert_msg = self.parse_alert(alert_data)
-                if alert_msg is not None:
-                    self.alexa.announce(alert_msg, self.debug_switch)
-                    self.slack_msg(alert_msg)
-        else:
+        if alert_count == 0:
             self.alert_ids.clear()
+            self.log("All weather alerts have cleared.")
+            return
+
+        full_data = self.get_state(self.alert_sensor, attribute="alerts")
+        for alert_data in full_data:
+            alert_msg = self.parse_alert(alert_data)
+            if alert_msg is not None:
+                self.alexa.announce(alert_msg, self.debug_switch)
+                self.slack_msg(alert_msg)
+
 
         self.log(self.alert_ids)
 
     def on_alert_details(self, entity, attribute, old, new, kwargs):
         self.turn_off(self.alert_detail)
-        alert_count = int(self.get_state(self.alert_sensor))
+        try:
+            alert_count = int(self.get_state(self.alert_sensor))
+        except ValueError:
+            self.alexa.respond("The weather service is unavailable at this time.")
+            return
+
         self.slack_debug(f"Alert count is {alert_count}.")
 
         if alert_count == 0:
@@ -65,12 +81,16 @@ class WeatherAlert(hass.Hass):
         self.slack_debug(detail_msg)
 
     def parse_alert(self, data):
+        self.log(f'Is {data["id"]} in {self.alert_ids}?')
         if data["id"] in self.alert_ids:
             return None
 
         self.alert_ids.append(data["id"])
         event = data["event"]
-        event_msg = f"The national weather service has issued a {event}."
+        self.alert_events.append(event)
+        self.alert_descriptions.append(data["description"])
+        self.alert_announced.append(False)
+        event_msg = f"The National Weather Service has issued a {event}."
 
         return event_msg
 
