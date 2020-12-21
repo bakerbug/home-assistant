@@ -14,7 +14,7 @@ all_outdoor_lights:
 accent_lights:
   name: Accent Lights
   entities:
-    - switch.0120099868c63aa67ad8_2
+    - light.corner_lamp
     - switch.wemo_echo
 appliances:
   name: Appliances
@@ -24,33 +24,33 @@ appliances:
 away_lights:
   name: Away Lights
   entities:
-    - group.ceiling_lights
-    - switch.0120099868c63aa67ad8_3
+    - light.ceiling_lights
+    - light.sky_lights
     - switch.dining_room_light
 evening_early_lights:
   name: Early Evening Lights
   entities:
     - switch.entry_lamp
     - switch.sofa_lamp
-    - group.counter_lights
+    - light.counter_lights
     - switch.wemo_echo
 evening_lights:
   name: Evening Lights
   entities:
-    - group.ceiling_lights
-    - switch.0120099868c63aa67ad8_3
-    - switch.0120099868c63aa67ad8_2
+    - light.ceiling_lights
+    - light.sky_lights
+    - light.corner_lamp
 late_night_lights:
   name: Late Night Lights
   entities:
     - switch.wemo_echo
-    - switch.0120099868c63aa67ad8_2
+    - light.corner_lamp
 bedroom_lights:
   name: Bedroom Lights
   entities:
     - switch.bedroom_lamp
-    - switch.04200320b4e62d1291c4_1
-    - switch.04200320b4e62d1291c4_4
+    - light.bill_s_lamp
+    - light.cricket_s_lamp
     - light.bedroom_dimmer
 garage_doors:
   name: Garage Doors
@@ -72,9 +72,9 @@ livingroom_lights:
   entities:
     - switch.entry_lamp
     - switch.sofa_lamp
-    - switch.0120099868c63aa67ad8_2
-    - switch.0120099868c63aa67ad8_3
-    - switch.0120099868c63aa67ad8_4
+    - light.sky_lights
+    - light.corner_lamp
+    - light.shelf_lights
     - switch.wemo_echo
 living_area_lights:
   name: Living Area Lights
