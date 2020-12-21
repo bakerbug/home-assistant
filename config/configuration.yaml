@@ -35,12 +35,29 @@ cloud:
       include_entities:
         - cover.left_bay
         - cover.right_bay
+        - input_boolean.enable_fan_control
+        - input_boolean.secure_house
+        - input_boolean.status_report
+        - input_boolean.weather_alert_details
+        - light.bill_s_lamp
+        - light.cricket_s_lamp
+        - light.ceiling_lights
+        - light.counter_lights
+        - light.corner_lamp
+        - light.shelf_lights
+        - light.sky_lights
         - switch.humidifier
+        - switch.03200121dc4f221ad1cf_2 # Coffee Maker
       exclude_domains:
         - alert
         - automation
+        - binary_sensor
+        - camera
+        - climate
         - fan
         - group
+        - input_boolean
+        - input_number
         - light
         - lock
         - media_player
@@ -48,9 +65,13 @@ cloud:
         - script
         - sensor
         - switch
+        - timer
       exclude_entities:
         - climate.downstairs
         - climate.upstairs
+        - group.appliances
+        - group.bed
+        - group.garage_doors
 
 # Alexa media
 alexa_media:
@@ -65,7 +86,7 @@ alexa_media:
         - "Master Bedroom"
         - "Kyle's Room"
         - "Bill's Echo Auto"
-        - "Extra"
+        - "Garage"
 
 history:
     use_include_order: True
@@ -113,15 +134,16 @@ history:
             - switch.frontdoor_light
             - switch.patio_light
             - switch.bedroom_lamp
-            - switch.04200320b4e62d1291c4_1
+            - light.bill_s_lamp
+            - light.cricket_s_lamp
             - switch.04200320b4e62d1291c4_4
             - light.bedroom_dimmer
             - switch.wemo_echo
             - switch.entry_lamp
             - switch.sofa_lamp
-            - switch.0120099868c63aa67ad8_2
-            - switch.0120099868c63aa67ad8_3
-            - switch.0120099868c63aa67ad8_4
+            - light.corner_lamp
+            - light.sky_lights
+            - light.shelf_lights
             - switch.sink_light
             - group.counter_lights
             - group.ceiling_lights
@@ -137,6 +159,64 @@ history:
             - sensor.weather_symbol
             - group.bed
             - group.garage
+
+
+light:
+  - platform: switch
+    name: Stove Counter Light
+    entity_id: switch.03200121dc4f22239eeb_4
+  - platform: switch
+    name: Dishwasher Counter Light
+    entity_id: switch.03200121dc4f221ad1cf_1
+
+  - platform: group
+    name: Counter Lights
+    entities:
+      - light.stove_counter_light
+      - light.dishwasher_counter_light
+
+  - platform: switch
+    name: Ceiling Stove Left
+    entity_id: switch.03200121dc4f22239eeb_2
+  - platform: switch
+    name: Ceiling Stove Right
+    entity_id: switch.03200121dc4f22239eeb_3
+  - platform: switch
+    name: Ceiling Dishwasher Left
+    entity_id: switch.03200121dc4f221ad1cf_3
+  - platform: switch
+    name: Ceiling Dishwasher Right
+    entity_id: switch.03200121dc4f221ad1cf_4
+
+  - platform: group
+    name: Ceiling Lights
+    entities:
+      - light.ceiling_stove_left
+      - light.ceiling_stove_right
+      - light.ceiling_dishwasher_left
+      - light.ceiling_dishwasher_right
+
+  - platform: switch
+    name: Bill's Lamp
+    entity_id: switch.04200320b4e62d1291c4_1
+
+  - platform: switch
+    name: Cricket's Lamp
+    entity_id: switch.04200320b4e62d1291c4_4
+
+  - platform: switch
+    name: Sky Lights
+    entity_id: switch.0120099868c63aa67ad8_3
+
+  - platform: switch
+    name: Shelf Lights
+    entity_id: switch.0120099868c63aa67ad8_4
+
+  - platform: switch
+    name: Corner Lamp
+    entity_id: switch.0120099868c63aa67ad8_2
+
+
 
 # Nest
 nest:
@@ -175,7 +255,7 @@ sensor:
           - media_player.master_bedroom
           - media_player.upstairs
           - media_player.echo_auto_camry
-          - media_player.extra
+          - media_player.garage
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
