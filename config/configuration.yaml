@@ -36,6 +36,9 @@ cloud:
         - cover.left_bay
         - cover.right_bay
         - input_boolean.enable_fan_control
+        - input_boolean.fireplace_temperature
+        - input_boolean.respond_pollen_monitor
+        - input_boolean.satellite_report
         - input_boolean.secure_house
         - input_boolean.status_report
         - input_boolean.weather_alert_details
