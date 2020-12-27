@@ -9,6 +9,7 @@ class FireplaceTemp(hass.Hass):
         self.shutdown_temp = "input_number.fireplace_shutdown_temp"
         self.OUTSIDE_FIRE_TEMP = 60
         self.upstairs = "sensor.upstairs_thermostat_temperature"
+        self.upstairs_last = 0
         self.downstairs = "sensor.downstairs_thermostat_temperature"
         self.outside = "weather.khsv"
         self.fireplace_switch = "input_boolean.fireplace_temperature"
@@ -25,6 +26,7 @@ class FireplaceTemp(hass.Hass):
             "Yes, a fire sounds very cozy.",
             "Oh yes!  Light it up!",
             "Yes, just don't burn down the house.",
+            "Yes!  Light it up, watch it burn."
         )
 
         self.turn_off(self.fireplace_switch)
@@ -59,10 +61,11 @@ class FireplaceTemp(hass.Hass):
         upstairs_temp = int(float(self.get_state(self.upstairs)))
         shutdown_temp = int(float(self.get_state(self.shutdown_temp)))
 
-        if upstairs_temp >= shutdown_temp:
+        if upstairs_temp >= shutdown_temp and upstairs_temp > self.upstairs_last:
             msg = f"The upstairs temperature is {upstairs_temp}.  It is time to turn off the fireplace"
             self.alexa.announce(msg, self.debug_switch)
         else:
+            self.upstairs_last = upstairs_temp
             self.slack_debug(f"The upstairs temperature is {upstairs_temp} and shutdown temperature is {shutdown_temp}.")
 
     def slack_debug(self, message):
