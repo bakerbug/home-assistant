@@ -61,8 +61,8 @@ kitchen_lights:
   name: Kitchen Lights
   entities:
     - switch.sink_light
-    - group.counter_lights
-    - group.ceiling_lights
+    - light.counter_lights
+    - light.ceiling_lights
 kyle_room:
   name: Kyle's Room
   entities:
