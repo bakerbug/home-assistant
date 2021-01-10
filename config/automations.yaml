@@ -48,10 +48,11 @@
   action:
   - data:
       entity_id: group.evening_lights
-    service: switch.turn_on
+    service: light.turn_on
   - data:
       entity_id: group.accent_lights
     service: switch.turn_on
+  mode: single
 - id: '1534730679270'
   alias: Lights Off When Away
   trigger:
@@ -364,9 +365,28 @@
   condition:
   - condition: state
     entity_id: binary_sensor.workday
-    state: 'off'
+    state: 'on'
   action:
   - data:
       entity_id: group.all_indoor_lights
     service: switch.turn_off
+  mode: single
+- id: '1610311093833'
+  alias: Enable Tesla HVAC
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.tesla_hvac_enable
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - device_id: 4db4a7fdfa1b11ea81750701e75842de
+    domain: climate
+    entity_id: climate.meco_hvac_climate_system
+    type: set_hvac_mode
+    hvac_mode: heat_cool
+  - service: input_boolean.turn_off
+    data: {}
+    entity_id: input_boolean.tesla_hvac_enable
   mode: single

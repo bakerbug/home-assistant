@@ -41,6 +41,7 @@ cloud:
         - input_boolean.satellite_report
         - input_boolean.secure_house
         - input_boolean.status_report
+        - input_boolean.tesla_hvac_enable
         - input_boolean.weather_alert_details
         - light.bill_s_lamp
         - light.cricket_s_lamp
@@ -363,6 +364,9 @@ input_boolean:
   secure_house:
     name: Secure The House
     icon: mdi:shield-home-outline
+  tesla_hvac_enable:
+    name: Tesla HVAC Enable
+    icon: mdi:air-conditioner
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
