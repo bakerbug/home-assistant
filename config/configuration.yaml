@@ -140,7 +140,6 @@ history:
             - switch.bedroom_lamp
             - light.bill_s_lamp
             - light.cricket_s_lamp
-            - switch.04200320b4e62d1291c4_4
             - light.bedroom_dimmer
             - switch.wemo_echo
             - switch.entry_lamp
@@ -152,6 +151,7 @@ history:
             - group.counter_lights
             - group.ceiling_lights
             - switch.dining_room_light
+            - light.garage_motion_switch
             - switch.wemo_bravo
             - switch.wemo_charlie
             - switch.wemo_delta

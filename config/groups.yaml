@@ -5,6 +5,7 @@ all_indoor_lights:
     - group.bedroom_lights
     - switch.wemo_bravo
     - switch.dining_room_light
+    - light.garage_motion_switch
 all_outdoor_lights:
   name: All Outdoor Lights
   entities:
