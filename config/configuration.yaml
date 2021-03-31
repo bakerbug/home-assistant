@@ -41,6 +41,7 @@ cloud:
         - input_boolean.satellite_report
         - input_boolean.secure_house
         - input_boolean.status_report
+        - input_boolean.tesla_hvac_enable
         - input_boolean.weather_alert_details
         - light.bill_s_lamp
         - light.cricket_s_lamp
@@ -139,7 +140,6 @@ history:
             - switch.bedroom_lamp
             - light.bill_s_lamp
             - light.cricket_s_lamp
-            - switch.04200320b4e62d1291c4_4
             - light.bedroom_dimmer
             - switch.wemo_echo
             - switch.entry_lamp
@@ -151,6 +151,7 @@ history:
             - group.counter_lights
             - group.ceiling_lights
             - switch.dining_room_light
+            - light.garage_motion_switch
             - switch.wemo_bravo
             - switch.wemo_charlie
             - switch.wemo_delta
@@ -363,6 +364,9 @@ input_boolean:
   secure_house:
     name: Secure The House
     icon: mdi:shield-home-outline
+  tesla_hvac_enable:
+    name: Tesla HVAC Enable
+    icon: mdi:air-conditioner
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
