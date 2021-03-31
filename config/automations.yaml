@@ -342,7 +342,7 @@
   alias: Turn Off Tower Fan
   description: ''
   trigger:
-  - at: '18:00:00'
+  - at: '22:00:00'
     platform: time
   condition: []
   action:
@@ -386,7 +386,51 @@
     entity_id: climate.meco_hvac_climate_system
     type: set_hvac_mode
     hvac_mode: heat_cool
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.meco_update_switch
   - service: input_boolean.turn_off
     data: {}
     entity_id: input_boolean.tesla_hvac_enable
+  mode: single
+- id: '1614023298970'
+  alias: Tesla - Disable Polling
+  description: Disable polling when at home and fully charged.
+  trigger:
+  - platform: state
+    entity_id: sensor.meco_charging_rate_sensor
+    to: '0.0'
+    for: 00:15:00
+  condition:
+  - condition: state
+    entity_id: binary_sensor.meco_charger_sensor
+    state: 'on'
+  - condition: state
+    entity_id: device_tracker.meco_location_tracker
+    state: home
+  action:
+  - type: turn_off
+    device_id: 4db4a7fdfa1b11ea81750701e75842de
+    entity_id: switch.meco_update_switch
+    domain: switch
+  mode: single
+- id: '1615398511068'
+  alias: Tesla - Enable Polling
+  description: Enables polling when someone departs
+  trigger:
+  - platform: state
+    entity_id: device_tracker.life360_bill_baker
+    from: home
+  - platform: state
+    entity_id: device_tracker.life360_cricket
+    from: home
+  condition:
+  - condition: state
+    entity_id: cover.right_bay
+    state: open
+  action:
+  - type: turn_on
+    device_id: 4db4a7fdfa1b11ea81750701e75842de
+    entity_id: switch.meco_update_switch
+    domain: switch
   mode: single
