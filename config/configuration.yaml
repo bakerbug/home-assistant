@@ -48,6 +48,7 @@ cloud:
         - light.ceiling_lights
         - light.counter_lights
         - light.corner_lamp
+        - light.dining_room_light
         - light.shelf_lights
         - light.sky_lights
         - switch.humidifier
@@ -148,12 +149,12 @@ history:
             - light.sky_lights
             - light.shelf_lights
             - switch.sink_light
-            - group.counter_lights
-            - group.ceiling_lights
-            - switch.dining_room_light
+            - light.counter_lights
+            - light.ceiling_lights
+            - light.dining_room_light
             - light.garage_motion_switch
-            - switch.wemo_bravo
-            - switch.wemo_charlie
+            - light.kyle_s_light
+            - light.lava_lamp
             - switch.wemo_delta
     exclude:
         domains:
@@ -201,6 +202,10 @@ light:
       - light.ceiling_dishwasher_right
 
   - platform: switch
+    name: Dining Room Light
+    entity_id: switch.dining_room_light
+
+  - platform: switch
     name: Bill's Lamp
     entity_id: switch.04200320b4e62d1291c4_1
 
@@ -219,6 +224,14 @@ light:
   - platform: switch
     name: Corner Lamp
     entity_id: switch.0120099868c63aa67ad8_2
+
+  - platform: switch
+    name: Kyle's Light
+    entity_id: switch.wemo_bravo
+
+  - platform: switch
+    name: Lava Lamp
+    entity_id: switch.wemo_charlie
 
 
 
