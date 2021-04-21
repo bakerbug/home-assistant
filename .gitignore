@@ -19,3 +19,5 @@ alexa_media_player/
 config/appdaemon/compiled/
 
 share/
+
+venv/
