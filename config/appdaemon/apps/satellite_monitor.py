@@ -9,6 +9,7 @@ import satellites
 track_list = (
     {"name": "International Space Station", "id": 25544, "mag_limit": -1.5},
     {"name": "Hubble Space Telescope", "id": 20580, "mag_limit": 3.0},
+    {"name": "Chinese Space Station", "id": 48274, "mag_limit": 0.0},
 )
 
 ### Previously tracked:
@@ -46,6 +47,9 @@ class SatMon(hass.Hass):
         self.alerts_handle = {}
 
         self.update_data(None)
+
+        init_msg = "Initialized Satellite Monitor."
+        self.slack_msg(init_msg)
 
     def on_alert(self, kwargs):
         weather = self.get_state(self.weather)
