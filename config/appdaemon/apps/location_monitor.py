@@ -34,12 +34,16 @@ class LocationMonitor(hass.Hass):
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
             "input_boolean.wakeup_light",
+            "automation.lava_lamp_evening_turn_on",
+            "automation.lava_lamp_morning_turn_on",
         )
 
         self.home_on_tuple = (
             "automation.lights_on_at_early_sunset",
             "automation.lights_on_at_sunset",
             "input_boolean.wakeup_light",
+            "automation.lava_lamp_evening_turn_on",
+            "automation.lava_lamp_morning_turn_on",
         )
 
         self.home_off_tuple = (

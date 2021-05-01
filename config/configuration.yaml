@@ -35,6 +35,7 @@ cloud:
       include_entities:
         - cover.left_bay
         - cover.right_bay
+        - input_boolean.clean_house
         - input_boolean.enable_fan_control
         - input_boolean.fireplace_temperature
         - input_boolean.respond_pollen_monitor
@@ -48,6 +49,7 @@ cloud:
         - light.ceiling_lights
         - light.counter_lights
         - light.corner_lamp
+        - light.dining_room_light
         - light.shelf_lights
         - light.sky_lights
         - switch.humidifier
@@ -127,6 +129,7 @@ history:
             - switch.wemo_alpha
             - switch.humidifier
             - switch.03200121dc4f221ad1cf_2
+            - vacuum.puck
             - sensor.sleepnumber_bill_bill_sleepnumber
             - sensor.sleepnumber_bill_cricket_sleepnumber
             - binary_sensor.sleepnumber_bill_bill_is_in_bed
@@ -148,12 +151,12 @@ history:
             - light.sky_lights
             - light.shelf_lights
             - switch.sink_light
-            - group.counter_lights
-            - group.ceiling_lights
-            - switch.dining_room_light
+            - light.counter_lights
+            - light.ceiling_lights
+            - light.dining_room_light
             - light.garage_motion_switch
-            - switch.wemo_bravo
-            - switch.wemo_charlie
+            - light.kyle_s_light
+            - light.lava_lamp
             - switch.wemo_delta
     exclude:
         domains:
@@ -201,6 +204,10 @@ light:
       - light.ceiling_dishwasher_right
 
   - platform: switch
+    name: Dining Room Light
+    entity_id: switch.dining_room_light
+
+  - platform: switch
     name: Bill's Lamp
     entity_id: switch.04200320b4e62d1291c4_1
 
@@ -219,6 +226,14 @@ light:
   - platform: switch
     name: Corner Lamp
     entity_id: switch.0120099868c63aa67ad8_2
+
+  - platform: switch
+    name: Kyle's Light
+    entity_id: switch.wemo_bravo
+
+  - platform: switch
+    name: Lava Lamp
+    entity_id: switch.wemo_charlie
 
 
 
@@ -348,6 +363,9 @@ input_boolean:
     name: Bus Notify
     initial: off
     icon: mdi:bus-school
+  clean_house:
+    name: Clean House
+    icon: mdi:robot-vacuum
   enable_fan_control:
     name: Fan Control
     icon: mdi:home-assistant
@@ -381,6 +399,8 @@ input_boolean:
   debug_alexa_speak:
     icon: mdi:bug-check-outline
   debug_bus_notify:
+    icon: mdi:bug-check-outline
+  debug_clean_house:
     icon: mdi:bug-check-outline
   debug_fan_control:
     icon: mdi:bug-check-outline
@@ -423,6 +443,9 @@ input_boolean:
   announce_oven_monitor:
     name: Announce Oven Temperature
     icon: mdi:amazon-alexa
+  announce_weather_alert:
+    name: Announce Weather Alert
+    icon: mdi:weather-lightning
 
   notify_location_monitor:
     icon: mdi:message-text

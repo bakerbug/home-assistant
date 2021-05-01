@@ -3,6 +3,7 @@ all_indoor_lights:
   entities:
     - group.living_area_lights
     - group.bedroom_lights
+    - group.accent_lights
     - switch.wemo_bravo
     - switch.dining_room_light
     - light.garage_motion_switch
@@ -16,6 +17,7 @@ accent_lights:
   name: Accent Lights
   entities:
     - light.corner_lamp
+    - light.lava_lamp
     - switch.wemo_echo
 appliances:
   name: Appliances
@@ -67,7 +69,8 @@ kitchen_lights:
 kyle_room:
   name: Kyle's Room
   entities:
-    - switch.wemo_bravo
+    - light.kyles_light
+    - light.lava_lamp
 livingroom_lights:
   name: Living Room Lights
   entities:
