@@ -42,7 +42,6 @@ class WeatherAlert(hass.Hass):
                 self.alexa.announce(alert_msg, self.debug_switch)
                 self.slack_msg(alert_msg)
 
-
         self.log(self.alert_ids)
 
     def on_alert_details(self, entity, attribute, old, new, kwargs):
