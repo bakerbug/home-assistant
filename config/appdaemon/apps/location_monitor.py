@@ -76,7 +76,7 @@ class LocationMonitor(hass.Hass):
 
     def car_location(self, entity, attribute, old, new, kwargs):
         self.slack_debug(f"car_location: old: {old} new: {new}")
-        if new == "not_home" and old == 'home':
+        if new == "not_home" and old == "home":
             self.slack("Closing right bay for Tesla departure.")
             self.call_service("cover/close_cover", entity_id="cover.right_bay")
 

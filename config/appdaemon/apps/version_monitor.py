@@ -11,7 +11,7 @@ class VersionMonitor(hass.Hass):
         self.notified_list = []
 
         self.ver_monitor = self.run_hourly(self.check_ha_version, self.update_time)
-        self.tesla_monitor = self.listen_state(self.report_tesla_update, entity=self.tesla_update, new='on')
+        self.tesla_monitor = self.listen_state(self.report_tesla_update, entity=self.tesla_update, new="on")
 
         init_msg = "Initialized Version Monitor."
         self.call_service("notify/slack_assistant", message=init_msg)
