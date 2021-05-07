@@ -3,6 +3,47 @@ import appdaemon.plugins.hass.hassapi as hass
 import inflect
 
 
+class AlertData:
+    def __init__(self, nws_alert):
+        self.id = nws_alert["id"]
+        self.type = nws_alert["event"]
+        self.details = nws_alert["description"]
+        self.expiration = nws_alert["expires"]
+
+        self.announced = False
+
+
+class AlertList:
+    def __init__(self):
+        self.alerts = []
+
+    def update_data(self, nws_data):
+        for alert_data in nws_data:
+            if self.alert_is_new(alert_data["id"]):
+                self.alerts.append(AlertData(alert_data))
+
+    def alert_is_new(self, new_id) -> bool:
+        for alert in self.alerts:
+            if new_id == alert.id:
+                return False
+        return True
+
+    def alert_count(self):
+        return len(self.alerts)
+
+    def generate_report(self):
+        current_count = self.alert_count()
+
+        if current_count == 0:
+            report = "There are no active weather alerts at this time.  "
+        elif current_count == 1:
+            report = "There is one active alert.  "
+        else:
+            report = f"There are {current_count} active alerts.  "
+
+        return report
+
+
 class WeatherAlert(hass.Hass):
     def initialize(self):
         self.alexa = self.get_app("alexa_speak")
@@ -18,9 +59,17 @@ class WeatherAlert(hass.Hass):
         self.alert_handle = self.listen_state(self.on_alert_change, self.alert_sensor)
         self.details_handle = self.listen_state(self.on_alert_details, self.alert_detail, new="on")
         self.debug_switch = "input_boolean.debug_weather_alert"
+
+
+        self.new_list = AlertList()
+        self.log('AlertList initialized.')
+
         self.slack_msg("Initialized Weather Alert.")
 
         if self.get_state(self.debug_switch) == "on":
+            self.on_alert_change("bogus", "bogus", "bogus", "bogus", "bogus")
+
+        if int(self.get_state(self.alert_sensor)) > 0:
             self.on_alert_change("bogus", "bogus", "bogus", "bogus", "bogus")
 
     def on_alert_change(self, entity, attribute, old, new, kwargs):
@@ -36,6 +85,9 @@ class WeatherAlert(hass.Hass):
             return
 
         full_data = self.get_state(self.alert_sensor, attribute="alerts")
+        self.log(f'Preparing to update class.  Currently {self.new_list.alert_count()}')
+        self.new_list.update_data(full_data)
+        self.log(f'Class updated. Now contains {self.new_list.alert_count()} items.')
         for alert_data in full_data:
             alert_msg = self.parse_alert(alert_data)
             if alert_msg is not None:
@@ -54,13 +106,15 @@ class WeatherAlert(hass.Hass):
 
         self.slack_debug(f"Alert count is {alert_count}.")
 
-        if alert_count == 0:
-            self.alexa.respond("There are no active weather alerts at this time.")
-            return
-        if alert_count == 1:
-            detail_msg = "There is one active alert.  "
-        else:
-            detail_msg = f"There are {alert_count} active alerts.  "
+        # if alert_count == 0:
+        #     self.alexa.respond("There are no active weather alerts at this time.")
+        #     return
+        # if alert_count == 1:
+        #     detail_msg = "There is one active alert.  "
+        # else:
+        #     detail_msg = f"There are {alert_count} active alerts.  "
+
+        detail_msg = self.new_list.generate_report()
 
         speak = inflect.engine()
         alert_index = 1
@@ -82,7 +136,9 @@ class WeatherAlert(hass.Hass):
     def parse_alert(self, data):
         self.log(f'Is {data["id"]} in {self.alert_ids}?')
         if data["id"] in self.alert_ids:
+            self.log("Yes, done parsing alert.")
             return None
+        self.log("No, continue parsing")
 
         self.alert_ids.append(data["id"])
         event = data["event"]
