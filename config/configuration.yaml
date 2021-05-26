@@ -488,3 +488,11 @@ input_datetime:
     has_time: true
     icon: mdi:alarm
 
+yahoofinance:
+  scan_interval:
+    minutes: 5
+  symbols:
+    - TSLA
+    - FUV
+    - ARKG
+    - VACQ
