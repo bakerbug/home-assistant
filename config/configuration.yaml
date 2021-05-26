@@ -235,7 +235,8 @@ light:
     name: Lava Lamp
     entity_id: switch.wemo_charlie
 
-
+media_player:
+  - platform: yamaha
 
 # Nest
 nest:
