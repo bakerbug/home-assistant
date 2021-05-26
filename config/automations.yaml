@@ -483,3 +483,18 @@
     target:
       entity_id: light.lava_lamp
   mode: single
+- id: '1621479083798'
+  alias: Tesla - Open Garage
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.meco_location_tracker
+    to: home
+    from: not_home
+  condition: []
+  action:
+  - device_id: 6541bfbce5514ad4aca56904f96c4af3
+    domain: cover
+    entity_id: cover.right_bay
+    type: open
+  mode: single
