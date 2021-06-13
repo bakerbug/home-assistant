@@ -1,0 +1,69 @@
+alerts:
+  - area: >-
+      Colbert, AL; Franklin, AL; Lauderdale, AL; Lawrence, AL; Limestone, AL;
+      Madison, AL; Morgan, AL
+    certainty: Observed
+    description: |-
+      At 606 PM CDT, severe thunderstorms were located along a line
+      extending from 8 miles northwest of Athens to near Courtland to near
+      Phil Campbell to 8 miles north of Weston, moving southeast at 45 mph.
+
+      HAZARD...60 mph wind gusts.
+
+      SOURCE...Emergency management and Doppler radar.
+
+      IMPACT...Expect damage to roofs, siding, and trees.
+
+      Locations impacted include...
+      Northwestern Huntsville, Decatur, Madison, Athens, Hartselle,
+      Russellville, Moulton, Meridianville, Moores Mill and Hazel Green.
+    ends: '2021-05-06T18:30:00-05:00'
+    event: Severe Thunderstorm Warning
+    instruction: |-
+      For your protection move to an interior room on the lowest floor of a
+      building.
+
+      This is a DANGEROUS SITUATION. These storms are producing widespread
+      wind damage across north Alabama. SEEK SHELTER NOW inside a sturdy
+      structure and stay away from windows.
+
+      If on or near the Tennessee River, get away from the water and move
+      indoors or inside a vehicle. remember, lightning can strike out to
+      15 miles from the parent thunderstorm. If you can hear thunder, you
+      are close enough to be struck by lightning. Move to safe shelter
+      now!  Do not be caught on the water in a thunderstorm.
+    response: Shelter
+    sent: '2021-05-06T18:07:00-05:00'
+    severity: Severe
+    title: >-
+      Severe Thunderstorm Warning issued May 6 at 6:07PM CDT until May 6 at
+      6:30PM CDT
+    urgency: Immediate
+    NWSheadline:
+      - >-
+        A SEVERE THUNDERSTORM WARNING REMAINS IN EFFECT UNTIL 630 PM CDT FOR
+        NORTHWESTERN MADISON...SOUTHEASTERN LAUDERDALE...LIMESTONE...
+        SOUTHEASTERN COLBERT...FRANKLIN...NORTHWESTERN MORGAN AND LAWRENCE
+        COUNTIES
+    hailSize:
+      - Up to .75
+    windGust:
+      - 60 MPH
+    waterspoutDetection: 'null'
+    effective: '2021-05-06T18:07:00-05:00'
+    expires: '2021-05-06T18:30:00-05:00'
+    endsExpires: '2021-05-06T18:30:00-05:00'
+    onset: '2021-05-06T18:07:00-05:00'
+    status: Actual
+    messageType: Update
+    category: Met
+    sender: w-nws.webmaster@noaa.gov
+    senderName: NWS Huntsville AL
+    id: 'urn:oid:2.49.0.1.840.0.ff170656aeddb23d3b126bbb744d87af3740f084.001.1'
+    zoneid: 'ALZ006,ALC089'
+integration: weatheralerts
+state: AL
+zone: 'ALZ006,ALC089'
+unit_of_measurement: Alerts
+friendly_name: Madison
+icon: 'mdi:alert-octagram'
