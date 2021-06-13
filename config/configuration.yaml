@@ -88,7 +88,7 @@ alexa_media:
       include_devices:
         - "Kitchen"
         - "Computer Room"
-        - "Upstairs"
+        - "Guest Bathroom"
         - "Master Bedroom"
         - "Kyle's Room"
         - "Bill's Echo Auto"
@@ -273,7 +273,7 @@ sensor:
           - media_player.kitchen
           - media_player.kyle_s_room
           - media_player.master_bedroom
-          - media_player.upstairs
+          - media_player.guest_bathroom
           - media_player.echo_auto_camry
           - media_player.garage
         value_template: >
