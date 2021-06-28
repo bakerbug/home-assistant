@@ -7,6 +7,7 @@ all_indoor_lights:
     - switch.wemo_bravo
     - switch.dining_room_light
     - light.garage_motion_switch
+    - light.guest_bathroom
 all_outdoor_lights:
   name: All Outdoor Lights
   entities:
@@ -63,6 +64,7 @@ garage_doors:
 kitchen_lights:
   name: Kitchen Lights
   entities:
+    - light.island_light
     - switch.sink_light
     - light.counter_lights
     - light.ceiling_lights

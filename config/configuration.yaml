@@ -150,10 +150,12 @@ history:
             - light.corner_lamp
             - light.sky_lights
             - light.shelf_lights
+            - light.island_light
             - switch.sink_light
             - light.counter_lights
             - light.ceiling_lights
             - light.dining_room_light
+            - light.guest_bathroom
             - light.garage_motion_switch
             - light.kyle_s_light
             - light.lava_lamp
@@ -234,6 +236,15 @@ light:
   - platform: switch
     name: Lava Lamp
     entity_id: switch.wemo_charlie
+
+  - platform: switch
+    name: Guest Bathroom
+    entity_id: switch.guest_bathroom
+
+  - platform: switch
+    name: Island Light
+    entity_id: switch.island_light
+
 
 media_player:
   - platform: yamaha
