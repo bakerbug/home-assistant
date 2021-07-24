@@ -9,7 +9,7 @@ class LaundryMonitor(hass.Hass):
         every_minute = self.run_minutely(self.check_power, clock)
         self.alexa = self.get_app("alexa_speak")
         self.washer_on = False
-        self.power_limit = 10
+        self.power_limit = 3
         self.wait_minutes = 5
         self.ticks = 0
 
