@@ -45,6 +45,7 @@ class VersionMonitor(hass.Hass):
 
     def report_ha_version(self, new_version):
         self.notified_list.append(new_version)
+        new_version = new_version.replace(".", " dot ")
         alert_msg = "A new version of Home Assistant is available. {} has been released.".format(new_version)
         self.alexa.notify(alert_msg)
 
