@@ -138,7 +138,7 @@ history:
             - media_player.playstation_4
             - media_player.bedroom_tv
             - switch.driveway_light
-            - switch.frontdoor_light
+            - switch.front_door_light
             - switch.patio_light
             - switch.bedroom_lamp
             - light.bill_s_lamp

@@ -127,7 +127,7 @@
       entity_id: switch.driveway_light
     service: switch.turn_on
   - data:
-      entity_id: switch.frontdoor_light
+      entity_id: switch.front_door_light
     service: switch.turn_on
 - id: '1551362916030'
   alias: Exterior Lights Off
@@ -143,7 +143,7 @@
       entity_id: switch.driveway_light
     service: switch.turn_off
   - data:
-      entity_id: switch.frontdoor_light
+      entity_id: switch.front_door_light
     service: switch.turn_off
 - id: '1531353746820'
   alias: Patio Light Timer
@@ -167,18 +167,18 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: switch.frontdoor_light
+    entity_id: switch.front_door_light
     state: 'off'
   - condition: state
     entity_id: sun.sun
     state: below_horizon
   action:
   - data:
-      entity_id: switch.frontdoor_light
+      entity_id: switch.front_door_light
     service: switch.turn_on
   - delay: 00:05:00
   - data:
-      entity_id: switch.frontdoor_light
+      entity_id: switch.front_door_light
     service: switch.turn_off
 - id: '1555681619396'
   alias: Driveway Motion

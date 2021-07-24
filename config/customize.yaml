@@ -77,7 +77,7 @@ light.dining_room_light:
   icon: mdi:ceiling-light
 switch.driveway_light:
   icon: mdi:track-light
-switch.frontdoor_light:
+switch.front_door_light:
   icon: mdi:coach-lamp
 switch.patio_light:
   icon: mdi:track-light

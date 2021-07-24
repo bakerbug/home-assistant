@@ -12,7 +12,7 @@ all_outdoor_lights:
   name: All Outdoor Lights
   entities:
     - switch.driveway_light
-    - switch.frontdoor_light
+    - switch.front_door_light
     - switch.patio_light
 accent_lights:
   name: Accent Lights
