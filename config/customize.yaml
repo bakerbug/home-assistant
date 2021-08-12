@@ -52,6 +52,9 @@ light.cricket_s_lamp:
   icon: mdi:lamp
 light.corner_lamp:
   icon: mdi:lamp
+switch.04200320b4e62d1291c4_2:
+  friendly_name: Bill's CPAP
+  icon: mdi:bell-sleep-outline
 
 # Wemo outlets
 switch.bedroom_lamp:

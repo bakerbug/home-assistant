@@ -54,6 +54,7 @@ cloud:
         - light.sky_lights
         - switch.humidifier
         - switch.03200121dc4f221ad1cf_2 # Coffee Maker
+        - switch.04200320b4e62d1291c4_2 # Bill's CPAP
       exclude_domains:
         - alert
         - automation
