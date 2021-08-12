@@ -36,7 +36,7 @@ class StatusReport(hass.Hass):
             charge_level = self.get_state(self.tesla_bat_lvl)
             charge_connected = self.get_state(self.tesla_charge_connected) == "on"
             range_mi = int(round(float(self.get_state(self.tesla_range))))
-        except ValueError:
+        except (TypeError, ValueError):
             return "Tesla charge status is currently unavailable.  "
 
         if charge_connected:
