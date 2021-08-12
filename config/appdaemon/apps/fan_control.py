@@ -1,11 +1,20 @@
 import appdaemon.plugins.hass.hassapi as hass
+from collections import OrderedDict
 
-FAN_SPEED = {0: "off", 1: "low", 2: "medium", 3: "high"}
+FAN_SPEED = OrderedDict()
+FAN_SPEED['off'] = 0
+FAN_SPEED['low'] = 33
+FAN_SPEED['medium'] = 66
+FAN_SPEED['high'] = 100
+
+OUTDOOR_TEMPS = {"cool": 60, "warm": 80, "hot": 90}
+INDOOR_TEMPS = {"cool": 70, "warm": 75, "hot": 76}
 SUN_ELEV_HIGH = 60.00
 SUN_ELEV_LOW = 25.00
 SUN_AZ_HIGH = 180
 WEATHER_SUNNY = ("sunny", "partlycloudy")
-HIGH_OUTDOOR_TEMP = 80
+WARM_OUTDOOR_TEMP = 80
+HOT_OUTDOOR_TEMP = 90
 HIGH_INDOOR_TEMP = 75
 LOW_INDOOR_TEMP = 70
 
@@ -31,7 +40,7 @@ class FanControl(hass.Hass):
         self.house_upstairs_warm = False
         self.house_downstairs_warm = False
         self.sky_clear = False
-        self.weather_warm = False
+        self.weather_temp = None
         self.temp_delta = 0
 
         self.handle_enable = self.listen_state(self.on_enable_change, entity=self.switch_enable)
@@ -56,12 +65,13 @@ class FanControl(hass.Hass):
             self.handle_sun = self.listen_state(self.on_sun_change, entity=self.sun, attribute="elevation")
             self.handle_temp_up = self.listen_state(self.on_temp_change, entity=self.temp_up)
             self.handle_temp_down = self.listen_state(self.on_temp_change, entity=self.temp_down)
+            self.handle_temp_outside = self.listen_state(self.on_weather_change, entity=self.weather, attribute="temperature")
             self.handle_weather = self.listen_state(self.on_weather_change, entity=self.weather)
             self.check_fans()
 
             self.slack_msg("Enabled Fan Control.")
         else:
-            cancel_handle_list = {self.handle_b_bed, self.handle_c_bed, self.handle_sun, self.handle_temp_up, self.handle_temp_down, self.handle_weather}
+            cancel_handle_list = {self.handle_b_bed, self.handle_c_bed, self.handle_sun, self.handle_temp_up, self.handle_temp_down, self.handle_temp_outside, self.handle_weather}
             for cancel_handle in cancel_handle_list:
                 try:
                     self.cancel_listen_state(cancel_handle)
@@ -163,6 +173,8 @@ class FanControl(hass.Hass):
     def on_weather_change(self, entity, attribute, old, new, kwargs):
         self.slack_debug("Called on_weather_change.")
         need_update = False
+        result_warm = False
+        result_hot = False
         sky = self.get_state(self.weather)
         outside_temp = int(self.get_state(self.weather, attribute="temperature"))
 
@@ -178,37 +190,51 @@ class FanControl(hass.Hass):
             need_update = True
             self.slack_msg("The sky is no longer clear.")
 
-        if outside_temp >= HIGH_OUTDOOR_TEMP:
+        if outside_temp >= WARM_OUTDOOR_TEMP:
             result_warm = True
         else:
             result_warm = False
 
-        if result_warm is True and self.weather_warm is False:
+        if outside_temp >= HOT_OUTDOOR_TEMP:
+            result_hot = True
+        else:
+            result_hot = False
+
+        if result_hot is True and self.weather_temp != "hot":
+            need_update = True
+            self.slack_msg(f"It is hot outside at {outside_temp} degrees.")
+        elif result_hot is False and self.weather_temp == "hot":
+            self.slack_msg(f"It is no longer hot outside at {outside_temp} degrees.")
+            need_update = True
+        if result_warm is True and self.weather_temp != "warm":
             need_update = True
             self.slack_msg(f"It is now warm outside at {outside_temp} degrees.")
-        elif result_warm is False and self.weather_warm is True:
+        elif result_warm is False and self.weather_temp == "warm":
             need_update = True
             self.slack_msg(f"It is no longer warm outside at {outside_temp} degrees.")
 
         if need_update:
             self.sky_clear = result_clear
-            self.weather_warm = result_warm
+            if result_hot:
+                self.weather_temp = "hot"
+            elif result_warm:
+                self.weather_temp = "warm"
             self.check_fans()
 
     def find_speed(self):
         # When to keep the fan off
         if self.house_cool and not self.house_asleep:
-            self.slack_debug(f"find_speed(): House is cool and not asleep.  Speed: {FAN_SPEED[0]}.")
-            return FAN_SPEED[0]
+            self.slack_debug(f"find_speed(): House is cool and not asleep.  Speed: {FAN_SPEED['off']}.")
+            return FAN_SPEED["off"]
 
         # When the fan should always be high
-        # if self.house_downstairs_warm:
-        #     self.slack_debug(f"find_speed(): House is warm downstairs.  Speed: {FAN_SPEED[3]}.")
-        #     return FAN_SPEED[3]
+        if self.weather_temp == "hot":
+            self.slack_debug(f"find_speed(): Weather is hot.  Speed: {FAN_SPEED['high']}.")
+            return FAN_SPEED["high"]
 
-        if self.direct_sun and self.sky_clear and self.weather_warm:
-            self.slack_debug(f"find_speed(): Warm, sunny, and clear.  Speed: {FAN_SPEED[3]}.")
-            return FAN_SPEED[3]
+        if self.direct_sun and self.sky_clear and self.weather_temp == "warm":
+            self.slack_debug(f"find_speed(): Warm, sunny, and clear.  Speed: {FAN_SPEED['high']}.")
+            return FAN_SPEED["high"]
 
         # Determine variable speed
         if self.house_asleep or self.house_downstairs_warm:
@@ -218,7 +244,14 @@ class FanControl(hass.Hass):
 
         calculated_speed = min(max(self.temp_delta - speed_adjustment, 0), 3)
         self.slack_debug(f"Speed adjustment is {speed_adjustment}.  Calculated speed is {calculated_speed}.")
-        return FAN_SPEED[calculated_speed]
+        if calculated_speed == 0:
+            return FAN_SPEED["off"]
+        elif calculated_speed == 1:
+            return FAN_SPEED['low']
+        elif calculated_speed == 2:
+            return FAN_SPEED['medium']
+        else:
+            return FAN_SPEED['high']
 
     def check_fans(self, **kwargs):
         self.slack_debug("Called check_fans.")
@@ -226,18 +259,18 @@ class FanControl(hass.Hass):
         # self.check_tower()
 
     def check_living_room(self):
-        current_speed = self.get_state(self.ceiling_fan, attribute="speed") or "off"
-        self.slack_debug(f"Fan speed is {current_speed}.")
+        current_speed = int(self.get_state(self.ceiling_fan, attribute="percentage")) or "off"
+        self.slack_debug(f"Fan speed is {current_speed}%.")
 
         new_speed = self.find_speed()
-        self.slack_debug(f"Requested fan speed is {new_speed}.")
+        self.slack_debug(f"Requested fan speed is {new_speed}%.")
 
         if new_speed == current_speed:
             self.slack_debug("No fan adjustment needed.")
             return
         else:
-            self.slack_msg(f"Adjusting fan from {current_speed} to {new_speed}.")
-            self.call_service("fan/set_speed", entity_id=self.ceiling_fan, speed=new_speed)
+            self.slack_msg(f"Adjusting fan from {current_speed}% to {new_speed}%.")
+            self.call_service("fan/set_percentage", entity_id=self.ceiling_fan, percentage=new_speed)
 
     def check_tower(self):
         self.slack_debug("Called check_tower.")
