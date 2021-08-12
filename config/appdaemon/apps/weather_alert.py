@@ -28,8 +28,40 @@ class AlertList:
                 return False
         return True
 
-    def alert_count(self):
+    def alert_count_total(self):
         return len(self.alerts)
+
+    def alert_count_new(self):
+        if self.alert_count_total() == 0:
+            return 0
+
+        new_count = 0
+        for alert in self.alerts:
+            if alert.announced is False:
+                new_count += 1
+        return new_count
+
+    def alert_count_old(self):
+        if self.alert_count_total() == 0:
+            return 0
+
+        old_count = 0
+        for alert in self.alerts:
+            if alert.announced is True:
+                old_count += 1
+        return old_count
+
+    def announce_new_alerts(self):
+        for alert in self.alerts:
+            if alert.announced is False:
+                self.send_alert (alert)
+
+    def send_alert(self, announcement):
+        # This doesn't belong in the AlertList.  Move to WeatherAlert class.
+        event = announcement["event"]
+        event_msg = f"The National Weather Service has issued a {event}."
+        return event_msg
+
 
     def generate_report(self):
         current_count = self.alert_count()
@@ -47,21 +79,14 @@ class AlertList:
 class WeatherAlert(hass.Hass):
     def initialize(self):
         self.alexa = self.get_app("alexa_speak")
-        # self.alert_sensor = "sensor.ilz014"
-        # self.alert_sensor = "sensor.north_douglas_county_below_6000_feet_denver_west_adams_and_arapahoe_counties_east_broomfield_county"
         self.alert_sensor = "sensor.madison"
-        self.alert_detail = "input_boolean.weather_alert_details"
-        self.alerts = {}
-        self.alert_ids = []
-        self.alert_events = []
-        self.alert_descriptions = []
-        self.alert_announced = []
+        self.report_requested = "input_boolean.weather_alert_details"
         self.alert_handle = self.listen_state(self.on_alert_change, self.alert_sensor)
-        self.details_handle = self.listen_state(self.on_alert_details, self.alert_detail, new="on")
+        self.details_handle = self.listen_state(self.on_report_requested, self.report_requested, new="on")
         self.debug_switch = "input_boolean.debug_weather_alert"
 
 
-        self.new_list = AlertList()
+        self.weather_alerts = AlertList()
         self.log('AlertList initialized.')
 
         self.slack_msg("Initialized Weather Alert.")
@@ -84,20 +109,12 @@ class WeatherAlert(hass.Hass):
             self.log("All weather alerts have cleared.")
             return
 
-        full_data = self.get_state(self.alert_sensor, attribute="alerts")
-        self.log(f'Preparing to update class.  Currently {self.new_list.alert_count()}')
-        self.new_list.update_data(full_data)
-        self.log(f'Class updated. Now contains {self.new_list.alert_count()} items.')
-        for alert_data in full_data:
-            alert_msg = self.parse_alert(alert_data)
-            if alert_msg is not None:
-                self.alexa.announce(alert_msg, self.debug_switch)
-                self.slack_msg(alert_msg)
+        self.log(f"Preparing to update data.")
+        self.weather_alerts.update_data(self.get_state(self.alert_sensor, attribute="alerts"))
 
-        self.log(self.alert_ids)
 
-    def on_alert_details(self, entity, attribute, old, new, kwargs):
-        self.turn_off(self.alert_detail)
+    def on_report_requested(self, entity, attribute, old, new, kwargs):
+        self.turn_off(self.report_requested)
         try:
             alert_count = int(self.get_state(self.alert_sensor))
         except ValueError:
