@@ -9,6 +9,7 @@ class PollenMonitor(hass.Hass):
         self.alert_time = datetime.time(19, 30, 0)
         self.index_today = "sensor.allergy_index_today"
         self.index_tomorrow = "sensor.allergy_index_tomorrow"
+        self.index_forcast = "sensor.allergy_index_forecasted_average"
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_pollen_monitor"
         self.respond_switch = "input_boolean.respond_pollen_monitor"
@@ -43,6 +44,7 @@ class PollenMonitor(hass.Hass):
         self.index_change = round(self.tomorrow_index - self.today_index, 1)
         self.pollen_state_tomorrow = self.get_state(self.index_tomorrow, attribute="all")
         self.pollen_state_today = self.get_state(self.index_today, attribute="all")
+        self.pollen_outlook = self.get_state(self.index_forcast, attribute="outlook")
 
     def on_schedule(self, kwargs):
         self.update_data()
@@ -81,7 +83,8 @@ class PollenMonitor(hass.Hass):
             direction = "remain the same "
 
         alert_msg = alert_msg + f"Tomorrow, the pollen index will {direction} "
-        alert_msg = alert_msg + f"with a {self.tomorrow_rating} level of {allergens_tomorrow}."
+        alert_msg = alert_msg + f"with a {self.tomorrow_rating} level of {allergens_tomorrow}.  "
+        alert_msg = alert_msg + self.pollen_outlook
 
         return alert_msg
 
