@@ -138,21 +138,21 @@ history:
             - media_player.living_room
             - media_player.playstation_4
             - media_player.bedroom_tv
-            - switch.driveway_light
-            - switch.front_door_light
-            - switch.patio_light
-            - switch.bedroom_lamp
+            - light.driveway_light
+            - light.front_door_light
+            - light.patio_light
+            - light.bedroom_lamp
             - light.bill_s_lamp
             - light.cricket_s_lamp
             - light.bedroom_dimmer
-            - switch.wemo_echo
-            - switch.entry_lamp
-            - switch.sofa_lamp
+            - light.bottle_lamp
+            - light.entry_lamp
+            - light.sofa_lamp
             - light.corner_lamp
             - light.sky_lights
             - light.shelf_lights
             - light.island_light
-            - switch.sink_light
+            - light.sink_light
             - light.counter_lights
             - light.ceiling_lights
             - light.dining_room_light
@@ -172,6 +172,7 @@ history:
 
 
 light:
+  # Kitchen
   - platform: switch
     name: Stove Counter Light
     entity_id: switch.03200121dc4f22239eeb_4
@@ -207,9 +208,19 @@ light:
       - light.ceiling_dishwasher_right
 
   - platform: switch
+    name: Sink Light
+    entity_id: switch.sink_light
+
+  - platform: switch
+    name: Island Light
+    entity_id: switch.island_light
+
+#  # Dining Room
+  - platform: switch
     name: Dining Room Light
     entity_id: switch.dining_room_light
 
+  # Master Bedroom
   - platform: switch
     name: Bill's Lamp
     entity_id: switch.04200320b4e62d1291c4_1
@@ -218,6 +229,11 @@ light:
     name: Cricket's Lamp
     entity_id: switch.04200320b4e62d1291c4_4
 
+  - platform: switch
+    name: Bedroom Lamp
+    entity_id: switch.bedroom_lamp
+
+  # Living Room
   - platform: switch
     name: Sky Lights
     entity_id: switch.0120099868c63aa67ad8_3
@@ -231,6 +247,19 @@ light:
     entity_id: switch.0120099868c63aa67ad8_2
 
   - platform: switch
+    name: Sofa Lamp
+    entity_id: switch.sofa_lamp
+
+  - platform: switch
+    name: Entry Lamp
+    entity_id: switch.entry_lamp
+
+  - platform: switch
+    name: Bottle Lamp
+    entity_id: switch.wemo_echo
+
+  # Kyle's Room
+  - platform: switch
     name: Kyle's Light
     entity_id: switch.wemo_bravo
 
@@ -238,13 +267,24 @@ light:
     name: Lava Lamp
     entity_id: switch.wemo_charlie
 
+  # Guest Bathroom
   - platform: switch
     name: Guest Bathroom
     entity_id: switch.guest_bathroom
 
+  # Outdoor Lights
   - platform: switch
-    name: Island Light
-    entity_id: switch.island_light
+    name: Driveway Light
+    entity_id: switch.driveway_light
+
+  - platform: switch
+    name: Front Door Light
+    entity_id: switch.front_door_light
+
+  - platform: switch
+    name: Patio Light
+    entity_id: switch.patio_light
+
 
 
 media_player:
