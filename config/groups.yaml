@@ -4,22 +4,22 @@ all_indoor_lights:
     - group.living_area_lights
     - group.bedroom_lights
     - group.accent_lights
-    - switch.wemo_bravo
-    - switch.dining_room_light
+    - light.kyle_s_light
+    - light.dining_room_light
     - light.garage_motion_switch
     - light.guest_bathroom
 all_outdoor_lights:
   name: All Outdoor Lights
   entities:
-    - switch.driveway_light
-    - switch.front_door_light
-    - switch.patio_light
+    - light.driveway_light
+    - light.front_door_light
+    - light.patio_light
 accent_lights:
   name: Accent Lights
   entities:
     - light.corner_lamp
     - light.lava_lamp
-    - switch.wemo_echo
+    - light.bottle_lamp
 appliances:
   name: Appliances
   entities:
@@ -30,14 +30,14 @@ away_lights:
   entities:
     - light.ceiling_lights
     - light.sky_lights
-    - switch.dining_room_light
+    - light.dining_room_light
 evening_early_lights:
   name: Early Evening Lights
   entities:
-    - switch.entry_lamp
-    - switch.sofa_lamp
+    - light.entry_lamp
+    - light.sofa_lamp
     - light.counter_lights
-    - switch.wemo_echo
+    - light.bottle_lamp
 evening_lights:
   name: Evening Lights
   entities:
@@ -47,12 +47,12 @@ evening_lights:
 late_night_lights:
   name: Late Night Lights
   entities:
-    - switch.wemo_echo
+    - light.bottle_lamp
     - light.corner_lamp
 bedroom_lights:
   name: Bedroom Lights
   entities:
-    - switch.bedroom_lamp
+    - light.bedroom_lamp
     - light.bill_s_lamp
     - light.cricket_s_lamp
     - light.bedroom_dimmer
@@ -65,7 +65,7 @@ kitchen_lights:
   name: Kitchen Lights
   entities:
     - light.island_light
-    - switch.sink_light
+    - light.sink_light
     - light.counter_lights
     - light.ceiling_lights
 kyle_room:
@@ -76,18 +76,18 @@ kyle_room:
 livingroom_lights:
   name: Living Room Lights
   entities:
-    - switch.entry_lamp
-    - switch.sofa_lamp
+    - light.entry_lamp
+    - light.sofa_lamp
     - light.sky_lights
     - light.corner_lamp
     - light.shelf_lights
-    - switch.wemo_echo
+    - light.bottle_lamp
 living_area_lights:
   name: Living Area Lights
   entities:
     - group.kitchen_lights
     - group.livingroom_lights
-    - switch.dining_room_light
+    - light.dining_room_light
 morning_lights:
   name: Morning Lights
   entities:

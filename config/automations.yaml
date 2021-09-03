@@ -37,7 +37,7 @@
   action:
   - data:
       entity_id: group.evening_early_lights
-    service: switch.turn_on
+    service: light.turn_on
 - id: '8881234567890'
   alias: Lights on at Sunset
   trigger:
@@ -51,7 +51,7 @@
     service: light.turn_on
   - data:
       entity_id: group.accent_lights
-    service: switch.turn_on
+    service: light.turn_on
   mode: single
 - id: '1534730679270'
   alias: Lights Off When Away
@@ -65,7 +65,7 @@
   action:
   - data:
       entity_id: group.all_indoor_lights
-    service: switch.turn_off
+    service: light.turn_off
 - id: '1537990954788'
   alias: Lights On When Away
   trigger:
@@ -76,7 +76,7 @@
   action:
   - data:
       entity_id: group.away_lights
-    service: switch.turn_on
+    service: light.turn_on
 - id: '1542775976127'
   alias: Watch TV - Start
   trigger:
@@ -124,11 +124,11 @@
   condition: []
   action:
   - data:
-      entity_id: switch.driveway_light
-    service: switch.turn_on
+      entity_id: light.driveway_light
+    service: light.turn_on
   - data:
-      entity_id: switch.front_door_light
-    service: switch.turn_on
+      entity_id: light.front_door_light
+    service: light.turn_on
 - id: '1551362916030'
   alias: Exterior Lights Off
   trigger:
@@ -140,15 +140,15 @@
       entity_id: timer.motion_debounce
     service: timer.start
   - data:
-      entity_id: switch.driveway_light
-    service: switch.turn_off
+      entity_id: light.driveway_light
+    service: light.turn_off
   - data:
-      entity_id: switch.front_door_light
-    service: switch.turn_off
+      entity_id: light.front_door_light
+    service: light.turn_off
 - id: '1531353746820'
   alias: Patio Light Timer
   trigger:
-  - entity_id: switch.patio_light
+  - entity_id: light.patio_light
     for:
       minutes: 30
     platform: state
@@ -156,8 +156,8 @@
   condition: []
   action:
   - data:
-      entity_id: switch.patio_light
-    service: switch.turn_off
+      entity_id: light.patio_light
+    service: light.turn_off
 - id: '1555681619395'
   alias: Front Door Motion
   trigger:
@@ -167,19 +167,19 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: switch.front_door_light
+    entity_id: light.front_door_light
     state: 'off'
   - condition: state
     entity_id: sun.sun
     state: below_horizon
   action:
   - data:
-      entity_id: switch.front_door_light
-    service: switch.turn_on
+      entity_id: light.front_door_light
+    service: light.turn_on
   - delay: 00:05:00
   - data:
-      entity_id: switch.front_door_light
-    service: switch.turn_off
+      entity_id: light.front_door_light
+    service: light.turn_off
 - id: '1555681619396'
   alias: Driveway Motion
   trigger:
@@ -192,22 +192,22 @@
     entity_id: timer.motion_debounce
     state: idle
   - condition: state
-    entity_id: switch.driveway_light
+    entity_id: light.driveway_light
     state: 'off'
   - condition: state
     entity_id: sun.sun
     state: below_horizon
   action:
   - data:
-      entity_id: switch.driveway_light
-    service: switch.turn_on
+      entity_id: light.driveway_light
+    service: light.turn_on
   - delay: 00:05:00
   - data:
       entity_id: timer.motion_debounce
     service: timer.start
   - data:
-      entity_id: switch.driveway_light
-    service: switch.turn_off
+      entity_id: light.driveway_light
+    service: light.turn_off
 - id: '1559082914918'
   alias: Pollen Monitor
   trigger:
@@ -340,22 +340,30 @@
     type: turn_off
   mode: single
 - id: '1596613817892'
-  alias: Turn Off Tower Fan
+  alias: Tower Fan - Off
   description: ''
   trigger:
-  - at: '22:00:00'
+  - at: 00:00:00
     platform: time
   condition: []
   action:
-  - device_id: 232fe132fd4f42f1b76cb4f510bdc28a
+  - type: turn_off
+    device_id: a6be51fb35c540950f65b0c7ff1f8618
+    entity_id: switch.shellyplugu1_f0442b
     domain: switch
-    entity_id: switch.wemo_charlie
-    type: turn_off
+  - type: turn_off
+    device_id: 3dd5f3416fa56e4dc59b691491e7fdd0
+    entity_id: switch.shellyplugu1_ebc777
+    domain: switch
   - delay: 0:01:00
-  - device_id: 232fe132fd4f42f1b76cb4f510bdc28a
+  - type: turn_on
+    device_id: a6be51fb35c540950f65b0c7ff1f8618
+    entity_id: switch.shellyplugu1_f0442b
     domain: switch
-    entity_id: switch.wemo_charlie
-    type: turn_on
+  - type: turn_on
+    device_id: 3dd5f3416fa56e4dc59b691491e7fdd0
+    entity_id: switch.shellyplugu1_ebc777
+    domain: switch
   mode: single
 - id: '1598452535055'
   alias: Weekday Morning Lights Off
@@ -370,7 +378,7 @@
   action:
   - data:
       entity_id: group.all_indoor_lights
-    service: switch.turn_off
+    service: light.turn_off
   mode: single
 - id: '1610311093833'
   alias: Enable Tesla HVAC
