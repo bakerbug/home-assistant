@@ -46,18 +46,6 @@ cloud:
         - input_boolean.status_report
         - input_boolean.tesla_hvac_enable
         - input_boolean.weather_alert_details
-        - light.bedroom_dimmer
-        - light.bill_s_lamp
-        - light.cricket_s_lamp
-        - light.ceiling_lights
-        - light.counter_lights
-        - light.corner_lamp
-        - light.dining_room_light
-        - light.driveway_light
-        - light.front_door_light
-        - light.patio_light
-        - light.shelf_lights
-        - light.sky_lights
         - switch.humidifier
         - switch.03200121dc4f221ad1cf_2 # Coffee Maker
         - switch.04200320b4e62d1291c4_2 # Bill's CPAP
@@ -72,7 +60,6 @@ cloud:
         - group
         - input_boolean
         - input_number
-        - light
         - lock
         - media_player
         - scene
@@ -86,6 +73,12 @@ cloud:
         - group.appliances
         - group.bed
         - group.garage_doors
+        - light.dishwasher_counter_light
+        - light.stove_counter_light
+        - light.ceiling_dishwasher_left
+        - light.ceiling_dishwasher_right
+        - light.ceiling_stove_left
+        - light.ceiling_stove_right
 
 # Alexa media
 alexa_media:
