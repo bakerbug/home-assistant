@@ -6,7 +6,7 @@ all_indoor_lights:
     - group.accent_lights
     - light.kyle_s_light
     - light.dining_room_light
-    - light.garage_motion_switch
+    - light.garage_light
     - light.guest_bathroom
 all_outdoor_lights:
   name: All Outdoor Lights

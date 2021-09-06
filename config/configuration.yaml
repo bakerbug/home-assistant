@@ -35,6 +35,8 @@ cloud:
       include_entities:
         - cover.left_bay
         - cover.right_bay
+        - fan.bedroom_fan
+        - fan.living_room_ceiling_fan
         - input_boolean.clean_house
         - input_boolean.enable_fan_control
         - input_boolean.fireplace_temperature
@@ -44,17 +46,22 @@ cloud:
         - input_boolean.status_report
         - input_boolean.tesla_hvac_enable
         - input_boolean.weather_alert_details
+        - light.bedroom_dimmer
         - light.bill_s_lamp
         - light.cricket_s_lamp
         - light.ceiling_lights
         - light.counter_lights
         - light.corner_lamp
         - light.dining_room_light
+        - light.driveway_light
+        - light.front_door_light
+        - light.patio_light
         - light.shelf_lights
         - light.sky_lights
         - switch.humidifier
         - switch.03200121dc4f221ad1cf_2 # Coffee Maker
         - switch.04200320b4e62d1291c4_2 # Bill's CPAP
+        - switch.guest_exhaust_fan
       exclude_domains:
         - alert
         - automation
@@ -129,6 +136,7 @@ history:
             - sensor.bedroom_fan_speed
             - switch.wemo_alpha
             - switch.humidifier
+            - switch.guest_exhaust_fan
             - switch.03200121dc4f221ad1cf_2
             - vacuum.puck
             - sensor.sleepnumber_bill_bill_sleepnumber
@@ -157,7 +165,7 @@ history:
             - light.ceiling_lights
             - light.dining_room_light
             - light.guest_bathroom
-            - light.garage_motion_switch
+            - light.garage_light
             - light.kyle_s_light
             - light.lava_lamp
             - switch.wemo_delta
