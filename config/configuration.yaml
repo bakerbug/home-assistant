@@ -50,6 +50,7 @@ cloud:
         - switch.03200121dc4f221ad1cf_2 # Coffee Maker
         - switch.04200320b4e62d1291c4_2 # Bill's CPAP
         - switch.guest_exhaust_fan
+        - switch.meco_polling_switch
       exclude_domains:
         - alert
         - automation

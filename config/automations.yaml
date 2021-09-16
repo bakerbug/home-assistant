@@ -418,10 +418,9 @@
     entity_id: device_tracker.meco_location_tracker
     state: home
   action:
-  - type: turn_off
-    device_id: 4db4a7fdfa1b11ea81750701e75842de
-    entity_id: switch.meco_update_switch
-    domain: switch
+  - service: switch.turn_off
+    target:
+      entity_id: switch.meco_polling_switch
   mode: single
 - id: '1615398511068'
   alias: Tesla - Enable Polling
@@ -438,10 +437,9 @@
     entity_id: cover.right_bay
     state: open
   action:
-  - type: turn_on
-    device_id: 4db4a7fdfa1b11ea81750701e75842de
-    entity_id: switch.meco_update_switch
-    domain: switch
+  - service: switch.turn_on
+    target:
+      entity_id: switch.meco_polling_switch
   mode: single
 - id: '1618931632586'
   alias: Lava Lamp - Morning Turn On
