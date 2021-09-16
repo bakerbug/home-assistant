@@ -506,3 +506,21 @@
     entity_id: cover.right_bay
     type: open
   mode: single
+- id: '1630878353267'
+  alias: Exhaust Fan Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.guest_exhaust_fan
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.guest_exhaust_fan
+  mode: single
