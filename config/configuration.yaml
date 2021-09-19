@@ -37,6 +37,10 @@ cloud:
         - cover.right_bay
         - fan.bedroom_fan
         - fan.living_room_ceiling_fan
+        - group.bedroom_lights
+        - group.kitchen_lights
+        - group.bright_kitchen
+        - group.livingroom_lights
         - input_boolean.clean_house
         - input_boolean.enable_fan_control
         - input_boolean.fireplace_temperature
@@ -51,6 +55,7 @@ cloud:
         - switch.04200320b4e62d1291c4_2 # Bill's CPAP
         - switch.guest_exhaust_fan
         - switch.meco_polling_switch
+        - switch.wemo_delta # printer
       exclude_domains:
         - alert
         - automation

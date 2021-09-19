@@ -64,10 +64,13 @@ garage_doors:
 kitchen_lights:
   name: Kitchen Lights
   entities:
-    - light.island_light
-    - light.sink_light
     - light.counter_lights
     - light.ceiling_lights
+bright_kitchen:
+  name: Bright Kitchen
+  entities:
+    - light.island_light
+    - light.sink_light
 kyle_room:
   name: Kyle's Room
   entities:
