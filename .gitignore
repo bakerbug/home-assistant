@@ -21,3 +21,5 @@ config/appdaemon/compiled/
 share/
 
 venv/
+
+config/appdaemon/google_keys.json

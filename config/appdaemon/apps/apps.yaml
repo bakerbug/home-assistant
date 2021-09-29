@@ -54,6 +54,9 @@ status_report:
   module: status_report
   class: StatusReport
   dependencies: alexa_speak
+tesla_charge_logger:
+  module: tesla_charge_logger
+  class: ChargeLogger
 version_monitor:
   module: version_monitor
   class: VersionMonitor
