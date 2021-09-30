@@ -436,6 +436,9 @@ input_boolean:
   location_monitor:
     name: Location Monitor
     icon: mdi:map-marker
+  motion_lights:
+    name: Motion Lights
+    icon: mdi:motion-sensor
   satellite_report:
     name: Satellite Report
     icon: mdi:space-station

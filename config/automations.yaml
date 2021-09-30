@@ -158,56 +158,6 @@
   - data:
       entity_id: light.patio_light
     service: light.turn_off
-- id: '1555681619395'
-  alias: Front Door Motion
-  trigger:
-  - entity_id: binary_sensor.front_door_cam_motion
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: light.front_door_light
-    state: 'off'
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  action:
-  - data:
-      entity_id: light.front_door_light
-    service: light.turn_on
-  - delay: 00:05:00
-  - data:
-      entity_id: light.front_door_light
-    service: light.turn_off
-- id: '1555681619396'
-  alias: Driveway Motion
-  trigger:
-  - entity_id: binary_sensor.driveway_cam_motion
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: timer.motion_debounce
-    state: idle
-  - condition: state
-    entity_id: light.driveway_light
-    state: 'off'
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  action:
-  - data:
-      entity_id: light.driveway_light
-    service: light.turn_on
-  - delay: 00:05:00
-  - data:
-      entity_id: timer.motion_debounce
-    service: timer.start
-  - data:
-      entity_id: light.driveway_light
-    service: light.turn_off
 - id: '1559082914918'
   alias: Pollen Monitor
   trigger:
@@ -541,4 +491,67 @@
   - service: light.turn_on
     target:
       entity_id: light.garage_light
+  mode: single
+- id: '1632776956755'
+  alias: Timer - External Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.motion_lights
+    to: 'on'
+  condition: []
+  action:
+  - service: light.turn_on
+    target:
+      entity_id:
+      - light.front_door_light
+      - light.driveway_light
+      - light.patio_light
+  - delay:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.front_door_light
+      - light.driveway_light
+      - light.patio_light
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.motion_lights
+  mode: single
+- id: '1632779744639'
+  alias: Outdoor Motion
+  description: Turns on the outdoor lights when a camera detects motion
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.front_door_cam_motion
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.driveway_cam_motion
+    from: 'off'
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.backyard_cam_motion
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.motion_lights
+    state: 'off'
+  - condition: time
+    after: '21:00:00'
+    before: 06:00:00
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.motion_lights
   mode: single
