@@ -15,19 +15,17 @@ class ChargeLogger(hass.Hass):
         self.charge_connected = "binary_sensor.meco_charger_sensor"
         self.charge_level = "sensor.meco_battery_sensor"
         self.charge_rate = "sensor.meco_charging_rate_sensor"
+        self.record_switch = "input_boolean.tesla_record_range"
         self.milage = "sensor.meco_mileage_sensor"
         self.range = "sensor.meco_range_sensor"
-        self.handle_active = self.listen_state(self.log_charge, entity=self.charge_rate)
+        self.auto_record = self.listen_state(self.auto_log, entity=self.charge_rate)
+        self.manual_record = self.listen_state(self.manual_log, entity=self.record_switch, new="on")
         self.log("Initializing ChargeLogger")
 
-        # self.log_charge("bogus", "bogus", "31.8", "0.0", "bogus")
-
-    def log_charge(self, entity, attribute, old, new, kwargs):
-        charging = self.get_state(self.charge_connected) == "on"
-        level = self.get_state(self.charge_level)
+    def auto_log(self, entity, attribute, old, new, kwargs):
+        self.log(f"ChargeLogger.auto_log called.")
         rate = float(new)
-        sheet_name = None
-        credentials = None
+        charging = self.get_state(self.charge_connected) == "on"
 
         if not charging:
             return
@@ -35,6 +33,19 @@ class ChargeLogger(hass.Hass):
             return
         if old == new:
             return
+
+        self.log_charge()
+
+    def manual_log(self, entity, attribute, old, new, kwargs):
+        self.log(f"ChargeLogger.manual_log called.")
+        self.turn_off(self.record_switch)
+
+        self.log_charge()
+
+    def log_charge(self):
+        level = self.get_state(self.charge_level)
+        sheet_name = None
+        credentials = None
 
         if level == "80":
             sheet_range = "'80% Charge'!A2"
@@ -44,7 +55,7 @@ class ChargeLogger(hass.Hass):
             sheet_range = "'Partial Charge'!A2"
 
         current_range = self.get_state(self.range)
-        milage = self.get_state(self.milage)
+        mileage = self.get_state(self.milage)
         today = datetime.date.today().strftime("%x")
         level = f"{level}%"
 
@@ -53,7 +64,8 @@ class ChargeLogger(hass.Hass):
         sheet = service.spreadsheets()
         self.log(f"Sheets: {sheet}")
 
-        value_range_body = {"range": sheet_range, "majorDimension": "COLUMNS", "values": [[today], [current_range], [milage], [level]]}
+        value_range_body = {"range": sheet_range, "majorDimension": "COLUMNS", "values": [[today], [current_range], [mileage], [level]]}
 
         request = sheet.values().append(spreadsheetId=SHEET_ID, range=sheet_range, valueInputOption="USER_ENTERED", insertDataOption="INSERT_ROWS", body=value_range_body)
         response = request.execute()
+        self.log(f"Response: {response}")

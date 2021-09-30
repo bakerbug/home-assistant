@@ -448,6 +448,9 @@ input_boolean:
   tesla_hvac_enable:
     name: Tesla HVAC Enable
     icon: mdi:air-conditioner
+  tesla_record_range:
+    name: Tesla Record Range
+    icon: mdi:car-electric
   wakeup_light:
     name: Wakeup Light
     icon: mdi:alarm
