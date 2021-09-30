@@ -17,13 +17,5 @@ class OvenMonitor(hass.Hass):
         disable = self.get_state("input_boolean.announce_oven_monitor") == "off"
         if disable:
             return
-        # oven_on = self.get_state("sensor.range_oven_job_state") == "cooking"
-        # if not oven_on:
-        #    return
 
-        # current_temp = int(float(self.get_state("sensor.range_temperature_measurement")))
-        # set_temp = int(float(self.get_state("sensor.range_thermostat_heating_setpoint")))
-        set_temp = int(float(self.get_state("sensor.range_oven_set_point")))
-
-        # if set_temp == current_temp:
-        self.alexa.announce(f"The oven has reached {set_temp} degrees.")
+        self.alexa.announce(f"The oven has completed preheating.")
