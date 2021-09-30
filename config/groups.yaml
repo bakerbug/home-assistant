@@ -3,7 +3,9 @@ all_indoor_lights:
   entities:
     - group.living_area_lights
     - group.bedroom_lights
+    - group.bright_kitchen
     - group.accent_lights
+    - light.bedroom_dimmer
     - light.kyle_s_light
     - light.dining_room_light
     - light.garage_light
@@ -55,7 +57,6 @@ bedroom_lights:
     - light.bedroom_lamp
     - light.bill_s_lamp
     - light.cricket_s_lamp
-    - light.bedroom_dimmer
 garage_doors:
   name: Garage Doors
   entities:
