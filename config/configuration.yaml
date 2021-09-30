@@ -305,6 +305,10 @@ nest:
 
 # Sensors
 sensor:
+  - platform: statistics
+    entity_id: sensor.meco_mileage_sensor
+    name: Mileage Stats
+
   - platform: time_date
     display_options:
       - 'time'
