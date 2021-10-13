@@ -25,10 +25,7 @@ class ChargeLogger(hass.Hass):
     def auto_log(self, entity, attribute, old, new, kwargs):
         self.log(f"ChargeLogger.auto_log called.")
         rate = float(new)
-        charging = self.get_state(self.charge_connected) == "on"
 
-        if not charging:
-            return
         if rate > 0.0:
             return
         if old == new:
