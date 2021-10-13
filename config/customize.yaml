@@ -32,7 +32,7 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
   icon: mdi:sleep
 
 # Tuya outlets
-switch.03200121dc4f221ad1cf_2:
+switch.power_strip_dishwasher_2:
   friendly_name: Coffee Maker
   icon: mdi:coffee
 light.ceiling_lights:
@@ -43,7 +43,7 @@ light.sky_lights:
   icon: mdi:track-light
 light.shelf_lights:
   icon: mdi:spotlight
-switch.0120099868c63aa67ad8_5:
+switch.living_room_power_bar_usb1:
   friendly_name: Home Assistant Power
   icon: mdi:home-assistant
 light.bill_s_lamp:
@@ -52,9 +52,6 @@ light.cricket_s_lamp:
   icon: mdi:lamp
 light.corner_lamp:
   icon: mdi:lamp
-switch.04200320b4e62d1291c4_2:
-  friendly_name: Bill's CPAP
-  icon: mdi:bell-sleep-outline
 
 # Wemo outlets
 switch.bedroom_lamp:
