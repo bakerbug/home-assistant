@@ -87,19 +87,19 @@ cloud:
         - light.ceiling_stove_right
 
 # Alexa media
-alexa_media:
-  accounts:
-    - email: !secret amazon_user
-      password: !secret amazon_password
-      url: amazon.com
-      include_devices:
-        - "Kitchen"
-        - "Computer Room"
-        - "Guest Bathroom"
-        - "Master Bedroom"
-        - "Kyle's Room"
-        - "Bill's Echo Auto"
-        - "Garage"
+#alexa_media:
+#  accounts:
+#    - email: !secret amazon_user
+#      password: !secret amazon_password
+#      url: amazon.com
+#      include_devices:
+#        - "Kitchen"
+#        - "Computer Room"
+#        - "Guest Bathroom"
+#        - "Master Bedroom"
+#        - "Kyle's Room"
+#        - "Bill's Echo Auto"
+#        - "Garage"
 
 history:
     use_include_order: True
@@ -314,6 +314,14 @@ sensor:
       - 'time'
   - platform: template
     sensors:
+      air_quality_downstairs:
+        device_class: "aqi"
+        friendly_name: "Air Quality Downstairs"
+        value_template: "{{ states.fan.winix_living_room.attributes.air_qvalue }}"
+      air_quality_upstairs:
+        device_class: "aqi"
+        friendly_name: "Air Quality Upstairs"
+        value_template: "{{ states.fan.winix_office.attributes.air_qvalue }}"
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
         value_template: "{{ states.fan.living_room_ceiling_fan.attributes.speed }}"
@@ -557,6 +565,10 @@ input_datetime:
     has_date: false
     has_time: true
     icon: mdi:alarm
+
+winix:
+  username: !secret winix_username
+  password: !secret winix_password
 
 yahoofinance:
   scan_interval:
