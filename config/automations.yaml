@@ -1,14 +1,14 @@
 - id: '1531343546892'
   alias: Coffee Timer
   trigger:
-  - entity_id: switch.power_strip_dishwasher_2
+  - entity_id: switch.power_strip_dishwasher_socket_2
     for: '1:00:00'
     platform: state
     to: 'on'
   condition: []
   action:
   - data:
-      entity_id: switch.power_strip_dishwasher_2
+      entity_id: switch.power_strip_dishwasher_socket_2
     service: switch.turn_off
 - id: '1531347206490'
   alias: Restart Humidifier
@@ -86,7 +86,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.living_room_power_bar_1
+      entity_id: switch.living_room_power_bar_socket_1
     service: switch.turn_off
 - id: '1542776135207'
   alias: Watch TV - Stop
@@ -97,7 +97,7 @@
   condition: []
   action:
   - data:
-      entity_id: switch.living_room_power_bar_1
+      entity_id: switch.living_room_power_bar_socket_1
     service: switch.turn_on
   - data:
       entity_id: automation.restart_humidifier

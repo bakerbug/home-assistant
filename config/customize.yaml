@@ -32,7 +32,7 @@ binary_sensor.sleepnumber_bill_cricket_is_in_bed:
   icon: mdi:sleep
 
 # Tuya outlets
-switch.power_strip_dishwasher_2:
+switch.power_strip_dishwasher_socket_2:
   friendly_name: Coffee Maker
   icon: mdi:coffee
 light.ceiling_lights:
@@ -43,7 +43,7 @@ light.sky_lights:
   icon: mdi:track-light
 light.shelf_lights:
   icon: mdi:spotlight
-switch.living_room_power_bar_usb1:
+switch.living_room_power_bar_usb_1:
   friendly_name: Home Assistant Power
   icon: mdi:home-assistant
 light.bill_s_lamp:

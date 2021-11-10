@@ -51,8 +51,8 @@ cloud:
         - input_boolean.tesla_hvac_enable
         - input_boolean.weather_alert_details
         - switch.humidifier
-        - switch.power_strip_dishwasher_2 # Coffee Maker
-        - switch.bedroom_power_strip_2 # Bill's CPAP
+        - switch.power_strip_dishwasher_socket_2 # Coffee Maker
+        - switch.bedroom_power_strip_socket_2 # Bill's CPAP
         - switch.guest_exhaust_fan
         - switch.meco_polling_switch
         - switch.wemo_delta # printer
@@ -136,7 +136,7 @@ history:
             - switch.wemo_alpha
             - switch.humidifier
             - switch.guest_exhaust_fan
-            - switch.power_strip_dishwasher_2
+            - switch.power_strip_dishwasher_socket_2
             - vacuum.puck
             - sensor.sleepnumber_bill_bill_sleepnumber
             - sensor.sleepnumber_bill_cricket_sleepnumber
@@ -182,10 +182,10 @@ light:
   # Kitchen
   - platform: switch
     name: Stove Counter Light
-    entity_id: switch.power_strip_stove_4
+    entity_id: switch.power_strip_stove_socket_4
   - platform: switch
     name: Dishwasher Counter Light
-    entity_id: switch.power_strip_dishwasher_1
+    entity_id: switch.power_strip_dishwasher_socket_1
 
   - platform: group
     name: Counter Lights
@@ -195,16 +195,16 @@ light:
 
   - platform: switch
     name: Ceiling Stove Left
-    entity_id: switch.power_strip_stove_2
+    entity_id: switch.power_strip_stove_socket_2
   - platform: switch
     name: Ceiling Stove Right
-    entity_id: switch.power_strip_stove_3
+    entity_id: switch.power_strip_stove_socket_3
   - platform: switch
     name: Ceiling Dishwasher Left
-    entity_id: switch.power_strip_dishwasher_3
+    entity_id: switch.power_strip_dishwasher_socket_3
   - platform: switch
     name: Ceiling Dishwasher Right
-    entity_id: switch.power_strip_dishwasher_4
+    entity_id: switch.power_strip_dishwasher_socket_4
 
   - platform: group
     name: Ceiling Lights
@@ -230,11 +230,11 @@ light:
   # Master Bedroom
   - platform: switch
     name: Bill's Lamp
-    entity_id: switch.bedroom_power_strip_1
+    entity_id: switch.bedroom_power_strip_socket_1
 
   - platform: switch
     name: Cricket's Lamp
-    entity_id: switch.bedroom_power_strip_4
+    entity_id: switch.bedroom_power_strip_socket_4
 
   - platform: switch
     name: Bedroom Lamp
@@ -243,15 +243,15 @@ light:
   # Living Room
   - platform: switch
     name: Sky Lights
-    entity_id: switch.living_room_power_bar_3
+    entity_id: switch.living_room_power_bar_socket_3
 
   - platform: switch
     name: Shelf Lights
-    entity_id: switch.living_room_power_bar_4
+    entity_id: switch.living_room_power_bar_socket_4
 
   - platform: switch
     name: Corner Lamp
-    entity_id: switch.living_room_power_bar_2
+    entity_id: switch.living_room_power_bar_socket_2
 
   - platform: switch
     name: Sofa Lamp
