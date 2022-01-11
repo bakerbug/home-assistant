@@ -11,6 +11,7 @@ all_indoor_lights:
     - light.dining_room_light
     - light.garage_light
     - light.guest_bathroom
+    - light.bridge_lights
 all_outdoor_lights:
   name: All Outdoor Lights
   entities:
