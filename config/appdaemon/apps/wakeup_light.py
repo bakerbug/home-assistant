@@ -10,11 +10,11 @@ class WakeupLight(hass.Hass):
         self.OUT_OF_BED_DELAY = self.MAX_LIGHT + 5
         self.PRIOR_MINUTES = (self.MAX_LIGHT - self.INITIAL_LIGHT) * 2
         self.active = "input_boolean.wakeup_light"
-        self.bedroom_lamp = "switch.bedroom_lamp"
+        self.bedroom_lamp = "light.bedroom_lamp"
         self.bill_in_bed = "binary_sensor.sleepnumber_bill_bill_is_in_bed"
-        self.bills_lamp = "switch.04200320b4e62d1291c4_1"
+        self.bills_lamp = "light.bill_s_lamp"
         self.cricket_in_bed = "binary_sensor.sleepnumber_bill_cricket_is_in_bed"
-        self.crickets_lamp = "switch.04200320b4e62d1291c4_4"
+        self.crickets_lamp = "light.cricket_s_lamp"
         self.debug_switch = "input_boolean.debug_wakeup_light"
         self.house_lights = "group.morning_lights"
         self.kitchen_lights = "group.kitchen_lights"
