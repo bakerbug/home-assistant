@@ -38,6 +38,7 @@ cloud:
         - fan.bedroom_fan
         - fan.living_room_ceiling_fan
         - group.bedroom_lights
+        - group.bridge_lights
         - group.kitchen_lights
         - group.bright_kitchen
         - group.livingroom_lights
@@ -159,6 +160,8 @@ history:
             - light.sky_lights
             - light.shelf_lights
             - light.island_light
+            - switch.upper_bridge
+            - switch.lower_bridge
             - light.sink_light
             - light.counter_lights
             - light.ceiling_lights
@@ -191,6 +194,12 @@ light:
   - platform: switch
     name: Dishwasher Counter Light
     entity_id: switch.power_strip_dishwasher_socket_1
+
+  - platform: group
+    name: Bridge Lights
+    entities:
+      - light.upper_bridge
+      - light.lower_bridge
 
   - platform: group
     name: Counter Lights

@@ -52,6 +52,11 @@
   - data:
       entity_id: group.accent_lights
     service: light.turn_on
+  - service: light.turn_on
+    data:
+      brightness_pct: 30
+    target:
+      entity_id: light.bridge_lights
   mode: single
 - id: '1534730679270'
   alias: Lights Off When Away
