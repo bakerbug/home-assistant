@@ -5,6 +5,10 @@ hello_world:
 alexa_speak:
   module: alexa_speak
   class: AlexaSpeak
+battery_monitor:
+  module: battery_monitor
+  class: BatteryMon
+  dependencies: alexa_speak
 bus_notify:
   module: bus_notify
   class: BusNotify
