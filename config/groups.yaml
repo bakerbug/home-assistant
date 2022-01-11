@@ -5,6 +5,7 @@ all_indoor_lights:
     - group.bedroom_lights
     - group.bright_kitchen
     - group.accent_lights
+    - light.computer_room_light
     - light.bedroom_dimmer
     - light.kyle_s_light
     - light.dining_room_light
@@ -32,7 +33,7 @@ away_lights:
   entities:
     - light.ceiling_lights
     - light.sky_lights
-    - light.dining_room_light
+    - light.computer_room_light
 evening_early_lights:
   name: Early Evening Lights
   entities:
