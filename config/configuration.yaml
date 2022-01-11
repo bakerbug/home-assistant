@@ -436,6 +436,10 @@ input_boolean:
   active_sleep_monitor:
     name: Sleep Monitor
     icon: mdi:language-python
+  battery_monitor:
+    name: Battery Monitor
+    initial: off
+    icon: mdi:battery
   bus_notify:
     name: Bus Notify
     initial: off
@@ -443,6 +447,9 @@ input_boolean:
   clean_house:
     name: Clean House
     icon: mdi:robot-vacuum
+  environment_report:
+    name: Environment Report
+    icon: mdi:home-thermometer-outline
   enable_fan_control:
     name: Fan Control
     icon: mdi:home-assistant

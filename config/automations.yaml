@@ -377,15 +377,10 @@
   description: Enables polling when someone departs
   trigger:
   - platform: state
-    entity_id: device_tracker.life360_bill_baker
-    from: home
-  - platform: state
-    entity_id: device_tracker.life360_cricket
-    from: home
-  condition:
-  - condition: state
-    entity_id: cover.right_bay
-    state: open
+    entity_id: binary_sensor.tesla_wall_connector_vehicle_connected
+    from: 'on'
+    to: 'off'
+  condition: []
   action:
   - service: switch.turn_on
     target:
