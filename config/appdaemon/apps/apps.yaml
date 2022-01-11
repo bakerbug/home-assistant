@@ -16,6 +16,10 @@ bus_notify:
 debug:
   module: debug
   class: DebugApp
+environment_report:
+  module: environment_report
+  class: EnvReport
+  dependencies: alexa_speak
 fan_control:
   module: fan_control
   class: FanControl
