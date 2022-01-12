@@ -38,6 +38,11 @@
   - data:
       entity_id: group.evening_early_lights
     service: light.turn_on
+  - service: light.turn_on
+    target:
+      entity_id: light.bridge_lights
+    data:
+      brightness_pct: 10
 - id: '8881234567890'
   alias: Lights on at Sunset
   trigger:
@@ -291,7 +296,10 @@
     from: 'off'
     platform: state
     to: 'on'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizion
   action:
   - service: light.turn_off
     target:
