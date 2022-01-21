@@ -27,6 +27,12 @@ class FireplaceTemp(hass.Hass):
             "Oh yes!  Light it up!",
             "Yes, just don't burn down the house.",
             "Yes!  Light it up, watch it burn.",
+            "Yes!  Do you want to build a snowman?",
+            "Yes.  Winter is coming.",
+            "Yes.  Your cold blood cannot be worked into a fever; your veins are full of ice water; but mine are boiling, and the sight of such chillness makes them dance.",
+            "Yes.  To keep a warm heart in winter is the real victory.",
+            "Yes.  Abandon all cold ye who gather here!",
+            "Yes.  Let the spark warm your heart, let the flame warm your soul, and let the light show you the way.",
         )
 
         self.turn_off(self.fireplace_switch)
