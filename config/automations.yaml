@@ -57,11 +57,6 @@
   - data:
       entity_id: group.accent_lights
     service: light.turn_on
-  - service: light.turn_on
-    data:
-      brightness_pct: 40
-    target:
-      entity_id: light.bridge_lights
   mode: single
 - id: '1534730679270'
   alias: Lights Off When Away
@@ -287,6 +282,7 @@
       entity_id: light.bridge_lights
     data:
       brightness_pct: 40
+      transition: 10
   mode: single
 - id: '1596166185310'
   alias: Lighting - TV On
@@ -299,7 +295,7 @@
   condition:
   - condition: state
     entity_id: sun.sun
-    state: below_horizion
+    state: below_horizon
   action:
   - service: light.turn_off
     target:
@@ -309,6 +305,7 @@
       entity_id: light.bridge_lights
     data:
       brightness_pct: 10
+      transition: 10
   mode: single
 - id: '1596613817892'
   alias: Tower Fan - Off
@@ -746,4 +743,54 @@
       device_id: ec592e051c254e3390b907ab100d3698
     data:
       activity: Play PS4
+  mode: single
+- id: '1642108579107'
+  alias: Lighting - Entry Lamp on Front Door Unlock
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: lock.front_door
+    from: locked
+    to: unlocked
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: state
+    entity_id: light.entry_lamp
+    state: 'off'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.entry_lamp
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    target:
+      entity_id: light.entry_lamp
+  mode: single
+- id: '1642397289684'
+  alias: Lights on at Sunset - TV Off
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -00:45:00
+  condition:
+  - condition: state
+    entity_id: remote.harmony_hub
+    state: 'off'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.shelf_lights
+  - service: light.turn_on
+    target:
+      entity_id: light.bridge_lights
+    data:
+      transition: 2
+      brightness_pct: 40
   mode: single

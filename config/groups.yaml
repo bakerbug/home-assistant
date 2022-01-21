@@ -94,6 +94,10 @@ living_area_lights:
     - group.kitchen_lights
     - group.livingroom_lights
     - light.dining_room_light
+    - light.computer_room_light
+    - light.bridge_lights
+    - light.sink_light
+    - light.island_light
 morning_lights:
   name: Morning Lights
   entities:
