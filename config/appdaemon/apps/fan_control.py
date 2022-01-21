@@ -43,7 +43,7 @@ class FanControl(hass.Hass):
         self.weather_temp = None
         self.temp_delta = 0
 
-        self.handle_enable = self.listen_state(self.on_enable_change, entity=self.switch_enable)
+        self.handle_enable = self.listen_state(self.on_enable_change, entity_id=self.switch_enable)
         init_state = self.get_state(self.switch_enable)
         self.on_enable_change(None, None, None, init_state, None)
 
@@ -60,13 +60,13 @@ class FanControl(hass.Hass):
         self.slack_debug("Called on_enable_change.")
         if new == "on":
             self.collect_data()
-            self.handle_b_bed = self.listen_state(self.on_bed_change, entity=self.bed_b)
-            self.handle_c_bed = self.listen_state(self.on_bed_change, entity=self.bed_c)
-            self.handle_sun = self.listen_state(self.on_sun_change, entity=self.sun, attribute="elevation")
-            self.handle_temp_up = self.listen_state(self.on_temp_change, entity=self.temp_up)
-            self.handle_temp_down = self.listen_state(self.on_temp_change, entity=self.temp_down)
-            self.handle_temp_outside = self.listen_state(self.on_weather_change, entity=self.weather, attribute="temperature")
-            self.handle_weather = self.listen_state(self.on_weather_change, entity=self.weather)
+            self.handle_b_bed = self.listen_state(self.on_bed_change, entity_id=self.bed_b)
+            self.handle_c_bed = self.listen_state(self.on_bed_change, entity_id=self.bed_c)
+            self.handle_sun = self.listen_state(self.on_sun_change, entity_id=self.sun, attribute="elevation")
+            self.handle_temp_up = self.listen_state(self.on_temp_change, entity_id=self.temp_up)
+            self.handle_temp_down = self.listen_state(self.on_temp_change, entity_id=self.temp_down)
+            self.handle_temp_outside = self.listen_state(self.on_weather_change, entity_id=self.weather, attribute="temperature")
+            self.handle_weather = self.listen_state(self.on_weather_change, entity_id=self.weather)
             self.check_fans()
 
             self.slack_msg("Enabled Fan Control.")

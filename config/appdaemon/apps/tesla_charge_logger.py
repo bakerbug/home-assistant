@@ -18,8 +18,8 @@ class ChargeLogger(hass.Hass):
         self.record_switch = "input_boolean.tesla_record_range"
         self.milage = "sensor.meco_mileage_sensor"
         self.range = "sensor.meco_range_sensor"
-        self.auto_record = self.listen_state(self.auto_log, entity=self.charge_rate)
-        self.manual_record = self.listen_state(self.manual_log, entity=self.record_switch, new="on")
+        self.auto_record = self.listen_state(self.auto_log, entity_id=self.charge_rate)
+        self.manual_record = self.listen_state(self.manual_log, entity_id=self.record_switch, new="on")
         self.log("Initializing ChargeLogger")
 
     def auto_log(self, entity, attribute, old, new, kwargs):

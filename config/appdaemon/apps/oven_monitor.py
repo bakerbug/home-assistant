@@ -5,8 +5,8 @@ import appdaemon.plugins.hass.hassapi as hass
 
 class OvenMonitor(hass.Hass):
     def initialize(self):
-        # self.oven_handler = self.listen_state(self.oven_check, entity="sensor.range_temperature_measurement")
-        self.oven_handler = self.listen_state(self.oven_check, entity="sensor.range_oven_job_state", new="cooking")
+        # self.oven_handler = self.listen_state(self.oven_check, entity_id="sensor.range_temperature_measurement")
+        self.oven_handler = self.listen_state(self.oven_check, entity_id="sensor.range_oven_job_state", new="cooking")
         self.alexa = self.get_app("alexa_speak")
         # self.oven_check("bogus", "bogus", "bogus", "bogus", "bogus")
 

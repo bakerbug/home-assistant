@@ -15,7 +15,7 @@ class CleanHouse(hass.Hass):
         self.alexa = self.get_app("alexa_speak")
 
         self.turn_off(ACTIVE_SWITCH)
-        self.handle_active = self.listen_state(self.on_active_change, entity=ACTIVE_SWITCH)
+        self.handle_active = self.listen_state(self.on_active_change, entity_id=ACTIVE_SWITCH)
         init_msg = "Initialized Clean House."
         self.call_service("notify/slack_assistant", message=init_msg)
 
@@ -45,7 +45,7 @@ class CleanHouse(hass.Hass):
 
     def begin_cleaning(self, kwargs):
         self.slack_msg("Beginning cleaning.")
-        self.handle_vacuum = self.listen_state(self.on_vacuum_change, entity=PUCK)
+        self.handle_vacuum = self.listen_state(self.on_vacuum_change, entity_id=PUCK)
         self.call_service("vacuum/start", entity_id=PUCK)
         # Turn off ACTIVE_SWITCH
 

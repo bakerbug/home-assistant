@@ -9,10 +9,10 @@ class LocationMonitor(hass.Hass):
         self.announce_location_change = "input_boolean.announce_location_change"
         self.announce_lock_change = "input_boolean.announce_lock_change"
         self.meco_location = "device_tracker.meco_location_tracker"
-        self.handle_active = self.listen_state(self.on_active_change, entity=self.active_switch)
-        # self.handle_bill = self.listen_state(self.location_change, entity='sensor.bill_location')
-        # self.handle_cricket = self.listen_state(self.location_change, entity='sensor.cricket_location')
-        # self.handle_front_door = self.listen_state(self.lock_change, entity='lock.front_door')
+        self.handle_active = self.listen_state(self.on_active_change, entity_id=self.active_switch)
+        # self.handle_bill = self.listen_state(self.location_change, entity_id='sensor.bill_location')
+        # self.handle_cricket = self.listen_state(self.location_change, entity_id='sensor.cricket_location')
+        # self.handle_front_door = self.listen_state(self.lock_change, entity_id='lock.front_door')
         self.alexa = self.get_app("alexa_speak")
         self.lock_list = ["lock.front_door", "lock.back_door"]
         self.SUN_ELEV_HIGH = 15.00
@@ -61,11 +61,11 @@ class LocationMonitor(hass.Hass):
 
     def on_active_change(self, entity, attribute, old, new, kwargs):
         if new == "on":
-            self.handle_bill = self.listen_state(self.person_location, entity="sensor.bill_location")
-            self.handle_cricket = self.listen_state(self.person_location, entity="sensor.cricket_location")
-            self.handle_tesla = self.listen_state(self.car_location, entity=self.meco_location)
-            self.handle_front_door = self.listen_state(self.lock_change, entity="lock.front_door")
-            self.handle_back_door = self.listen_state(self.lock_change, entity="lock.back_door")
+            self.handle_bill = self.listen_state(self.person_location, entity_id="sensor.bill_location")
+            self.handle_cricket = self.listen_state(self.person_location, entity_id="sensor.cricket_location")
+            self.handle_tesla = self.listen_state(self.car_location, entity_id=self.meco_location)
+            self.handle_front_door = self.listen_state(self.lock_change, entity_id="lock.front_door")
+            self.handle_back_door = self.listen_state(self.lock_change, entity_id="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)

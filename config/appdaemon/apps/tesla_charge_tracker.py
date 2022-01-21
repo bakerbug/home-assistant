@@ -22,7 +22,7 @@ class ChargeLogger(hass.Hass):
         self.charge_connected = "binary_sensor.meco_charger_sensor"
         self.charge_level = "sensor.meco_battery_sensor"
         self.range = "sensor.meco_range_sensor"
-        self.handle_active = self.listen_state(self.log_charge, entity=self.charge_level)
+        self.handle_active = self.listen_state(self.log_charge, entity_id=self.charge_level)
 
         self.log_charge('bogus', 'bogus', 'bogus', '80', 'bogus')
 
