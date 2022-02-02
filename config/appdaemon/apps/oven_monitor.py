@@ -18,4 +18,4 @@ class OvenMonitor(hass.Hass):
         if disable:
             return
 
-        self.alexa.announce(f"The oven has completed preheating.")
+        self.alexa.announce(f"The oven is preheated.")
