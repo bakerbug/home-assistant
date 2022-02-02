@@ -31,6 +31,10 @@ garage_monitor:
   module: garage_monitor
   class: GarageMonitor
   dependencies: alexa_speak
+humidity_monitor:
+  module: humidity_monitor
+  class: HumidityMonitor
+  dependencies: alexa_speak
 laundry_monitor:
   module: laundry_monitor
   class: LaundryMonitor
