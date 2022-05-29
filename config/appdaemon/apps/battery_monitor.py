@@ -8,6 +8,7 @@ class BatteryMon(hass.Hass):
         self.schedule = datetime.time(16, 0, 0)
         self.front_door = "sensor.front_door_battery"
         self.back_door = "sensor.back_door_battery"
+        self.orbit_tracker = "sensor.orbit_battery_level"
         self.trigger = "input_boolean.battery_monitor"
 
         self.trigger_handler = self.listen_state(self.on_trigger, self.trigger, new="on")
@@ -25,6 +26,7 @@ class BatteryMon(hass.Hass):
         self.turn_off(self.trigger)
         back_level = int(self.get_state(self.back_door))
         front_level = int(self.get_state(self.front_door))
+        orbit_level = int(self.get_state(self.orbit_tracker))
 
         msg = None
 
@@ -34,6 +36,10 @@ class BatteryMon(hass.Hass):
 
         if front_level <= 30:
             msg = f"The battery level for the front door lock is {front_level} percent.  "
+            self.alexa.notify(msg)
+
+        if orbit_level <= 40:
+            msg = f"The battery level for Orbit's location tracker is {orbit_level} percent.  Please recharge the tracker now.  "
             self.alexa.notify(msg)
 
     def slack_debug(self, message):

@@ -82,7 +82,7 @@ kyle_room:
 livingroom_lights:
   name: Living Room Lights
   entities:
-    - light.entry_lamp
+    - light.bridge_lights
     - light.sofa_lamp
     - light.sky_lights
     - light.corner_lamp
@@ -95,9 +95,9 @@ living_area_lights:
     - group.livingroom_lights
     - light.dining_room_light
     - light.computer_room_light
-    - light.bridge_lights
     - light.sink_light
     - light.island_light
+    - light.entry_lamp
 morning_lights:
   name: Morning Lights
   entities:

@@ -30,6 +30,12 @@ binary_sensor.sleepnumber_bill_bill_is_in_bed:
 binary_sensor.sleepnumber_bill_cricket_is_in_bed:
   friendly_name: Cricket is in bed
   icon: mdi:sleep
+sensor.sleepnumber_bill_bill_pressure:
+  friendly_name: Bill's bed pressure
+  device_class: pressure
+sensor.sleepnumber_bill_cricket_pressure:
+  friendly_name: Cricket's bed pressure
+  device_class: pressure
 
 # Tuya outlets
 switch.power_strip_dishwasher_socket_2:

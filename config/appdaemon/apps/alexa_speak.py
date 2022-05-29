@@ -26,6 +26,9 @@ class AlexaSpeak(hass.Hass):
             self.log("######")
             self.log(self.config_dir)
 
+        # self.meeting_status = "binary_sensor.zoom_synapse"
+        self.meeting_status = 'switch.shellyplugu1_ebc777'
+
         init_msg = "Initialized Alexa Speak."
         self.call_service("notify/slack_assistant", message=init_msg)
 
@@ -56,6 +59,7 @@ class AlexaSpeak(hass.Hass):
         debug_mode = self.get_state(self.debug_switch) == "on"
         bill_in_bed = self.get_state("binary_sensor.sleepnumber_bill_bill_is_in_bed") == "on"
         cricket_in_bed = self.get_state("binary_sensor.sleepnumber_bill_cricket_is_in_bed") == "on"
+        in_meeting = self.get_state(self.meeting_status) == "on"
         time = self.get_state("sensor.time")
         hour, minute = time.split(":")
         hour = int(hour)
@@ -73,5 +77,8 @@ class AlexaSpeak(hass.Hass):
             if hour >= 20 or hour <= 8:
                 # No announcements from 8PM to 8AM.
                 target_list.remove("media_player.kyle_s_room")
+
+            if in_meeting:
+                target_list.remove("media_player.computer_room")
 
         return target_list

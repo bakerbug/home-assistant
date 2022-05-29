@@ -3,7 +3,6 @@ import appdaemon.plugins.hass.hassapi as hass
 
 class SleepMonitor(hass.Hass):
     def initialize(self):
-        self.COLD_TEMP = 65
 
         self.bedroom_fan = "fan.bedroom_fan"
         self.bedroom_fan_speed = "sensor.bedroom_fan_speed"
@@ -72,11 +71,11 @@ class SleepMonitor(hass.Hass):
             if bill_in_bed or cricket_in_bed:
                 downstairs_temp = int(self.get_state(self.downstairs_temp))
                 fan_low_temp = int(float(self.get_state(self.bedroom_fan_low_temp)))
-                if old_speed == "off" and downstairs_temp >= fan_low_temp:
-                    self.set_fan_speed("low")
+                if old_speed == "0" and downstairs_temp >= fan_low_temp:
+                    self.set_fan_speed(33)
             elif not bill_in_bed and not cricket_in_bed:
                 if old_speed == "low":
-                    self.set_fan_speed("off")
+                    self.set_fan_speed(0)
         else:
             livingroom_tv_is_off = self.get_state(self.living_room_tv) == "off" or self.get_state(self.living_room_tv) == "idle"
 
@@ -93,9 +92,10 @@ class SleepMonitor(hass.Hass):
 
     def on_fan_change(self, entity, attribute, old, new, kwargs):
         self.slack_debug(f"(on_fan_change) {entity} went from {old} to {new}.")
-        if new == "off" or new == "low":
+        new = int(new)
+        if new < 60:
             self.turn_off(self.floor_fan)
-        elif new == "medium" or new == "high":
+        else:
             if self.get_state(self.bedroom_tv) != "playing":
                 self.turn_on(self.floor_fan)
 
@@ -106,7 +106,7 @@ class SleepMonitor(hass.Hass):
         if fan_speed == "off" or fan_speed == "low":
             return
 
-        if temperature < self.COLD_TEMP:
+        if temperature <= int(float(self.get_state(self.bedroom_fan_low_temp))):
             self.set_fan_speed("medium")
         else:
             self.set_fan_speed("high")
@@ -119,7 +119,7 @@ class SleepMonitor(hass.Hass):
         crickets_lamp_state = self.get_state(self.crickets_lamp)
 
         if bedroom_fan_speed != "off":
-            if new == "standby" and (bedroom_fan_speed == "high" or bedroom_fan_speed == "medium"):
+            if new == "standby" and int(bedroom_fan_speed) > 60:
                 self.slack_debug(f"Bedroom TV turned off while fan is on.  Turning on floor fan.")
                 self.turn_on(self.floor_fan)
             elif old == "standby":
@@ -142,7 +142,7 @@ class SleepMonitor(hass.Hass):
         if new_speed == old_speed:
             return
 
-        self.call_service("fan/set_speed", entity_id=self.bedroom_fan, speed=new_speed)
+        self.call_service("fan/set_percentage", entity_id=self.bedroom_fan, speed=new_speed)
         self.slack_debug(f"Set bedroom fan from {old_speed} to {new_speed}.")
 
     def slack_debug(self, message, prefix="Sleep Monitor"):

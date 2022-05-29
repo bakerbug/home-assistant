@@ -7,7 +7,7 @@ import time
 class Reminders(hass.Hass):
     def initialize(self):
         # (<week>, <day>, <hour> <message>)  Week of the month, 0 based.  Day of the week, Monday == 0.
-        self.reminders = ((2, 3, 6, "Today is recycling day."),)  # Third thursday of the month at 6 AM
+        self.reminders = ((2, 2, 18, "Tomorrow is recycling day."),)  # Third Wednesday of the month at 6 PM
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_reminders"
         self.update_time = datetime.time(0, 0, 0)

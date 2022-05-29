@@ -14,15 +14,3 @@ http:
 admin:
 api:
 hadashboard:
-#logs:
-#  main_log:
-#    filename: /var/log/appdaemon/appdaemon.log
-#  access_log:
-#    filename: /var/log/appdaemon/access.log
-#  error_log:
-#    filename: /var/log/appdaemon/error.log
-#  diag_log:
-#    filename: /var/log/appdaemon/diag.log
-#    log_generations: 5
-#    log_size: 1024
-#    format: "{asctime} {levelname:<8} {appname:<10}: {message}"6

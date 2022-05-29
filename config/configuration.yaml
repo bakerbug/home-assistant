@@ -12,9 +12,19 @@ http:
   cors_allowed_origins:
     - http://10.99.10.10:8123
 
+#logger:
+#  default: warning
+#  logs:
+#    custom_components.tesla_custom: debug
+#    teslajsonpy: debug
+
 # Text to speech
 tts:
   - platform: google_translate
+
+google:
+  client_id: 549022495206-83o3jhsmaif3smbrkiqfllm9sqk5h48l.apps.googleusercontent.com
+  client_secret: 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
 
 automation: !include automations.yaml
 group: !include groups.yaml
@@ -23,7 +33,7 @@ scene: !include scenes.yaml
 
 recorder:
   purge_keep_days: 7
-  db_url: 'sqlite:///:memory:'
+  # db_url: 'sqlite:///:memory:'
   exclude:
     entities:
       - sun.sun
@@ -44,7 +54,9 @@ cloud:
         - group.livingroom_lights
         - input_boolean.clean_house
         - input_boolean.enable_fan_control
+        - input_boolean.environment_report
         - input_boolean.fireplace_temperature
+        - input_boolean.good_night
         - input_boolean.respond_pollen_monitor
         - input_boolean.satellite_report
         - input_boolean.secure_house
@@ -55,6 +67,7 @@ cloud:
         - switch.power_strip_dishwasher_socket_2 # Coffee Maker
         - switch.bedroom_power_strip_socket_2 # Bill's CPAP
         - switch.guest_exhaust_fan
+        - switch.shellyplugu1_f0442b # tower fan
         - switch.meco_polling_switch
         - switch.wemo_delta # printer
       exclude_domains:
@@ -87,20 +100,6 @@ cloud:
         - light.ceiling_stove_left
         - light.ceiling_stove_right
 
-# Alexa media
-#alexa_media:
-#  accounts:
-#    - email: !secret amazon_user
-#      password: !secret amazon_password
-#      url: amazon.com
-#      include_devices:
-#        - "Kitchen"
-#        - "Computer Room"
-#        - "Guest Bathroom"
-#        - "Master Bedroom"
-#        - "Kyle's Room"
-#        - "Bill's Echo Auto"
-#        - "Garage"
 
 history:
     use_include_order: True
@@ -338,10 +337,10 @@ sensor:
         value_template: "{{ states.fan.winix_office.attributes.air_qvalue }}"
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
-        value_template: "{{ states.fan.living_room_ceiling_fan.attributes.speed }}"
+        value_template: "{{ states.fan.living_room_ceiling_fan.attributes.percentage }}"
       bedroom_fan_speed:
         friendly_name: "Bedroom Fan Speed"
-        value_template: "{{ states.fan.bedroom_fan.attributes.speed }}"
+        value_template: "{{ states.fan.bedroom_fan.attributes.percentage }}"
       sun_elevation:
         friendly_name: "Sun Elevation"
         value_template: "{{ states.sun.sun.attributes.elevation }}"
@@ -361,6 +360,7 @@ sensor:
           - media_player.guest_bathroom
           - media_player.echo_auto_camry
           - media_player.garage
+          - media_player.synapse
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
       washing_machine_power:
@@ -441,7 +441,7 @@ timer:
 input_boolean:
   announce_all:
     name: Alexa Anouncements
-    icon: mdi:amazon-alexa
+    icon: mdi:bullhorn-outline
   active_sleep_monitor:
     name: Sleep Monitor
     icon: mdi:language-python
@@ -449,6 +449,9 @@ input_boolean:
     name: Battery Monitor
     initial: off
     icon: mdi:battery
+  bed_adjust:
+    name: Sleep Number Bed Adjustment
+    icon: mdi:bed
   bus_notify:
     name: Bus Notify
     initial: off
@@ -466,6 +469,9 @@ input_boolean:
     name: Fireplace Temperature
     initial: off
     icon: mdi:fireplace
+  good_night:
+    name: Good Night
+    icon: mdi:weather-night
   location_monitor:
     name: Location Monitor
     icon: mdi:map-marker
@@ -535,13 +541,13 @@ input_boolean:
 
   announce_location_change:
     name: Announce Locations
-    icon: mdi:amazon-alexa
+    icon: mdi:bullhorn-outline
   announce_lock_change:
     name: Announce Lock Change
     icon: mdi:key-variant
   announce_oven_monitor:
     name: Announce Oven Temperature
-    icon: mdi:amazon-alexa
+    icon: mdi:bullhorn-outline
   announce_weather_alert:
     name: Announce Weather Alert
     icon: mdi:weather-lightning
@@ -579,6 +585,18 @@ input_number:
     min: 65
     max: 75
     icon: mdi:fan
+  bill_sleep_number:
+    name: Bill's Sleep Number
+    step: 5
+    min: 0
+    max: 100
+    icon: mdi:speedometer
+  cricket_sleep_number:
+    name: Cricket's Sleep Number
+    step: 5
+    min: 0
+    max: 100
+    icon: mdi:speedometer
 
 input_datetime:
   wakeup_time:
@@ -591,11 +609,12 @@ winix:
   username: !secret winix_username
   password: !secret winix_password
 
-yahoofinance:
-  scan_interval:
-    minutes: 5
-  symbols:
-    - TSLA
-    - FUV
-    - ARKG
-    - VACQ
+## Leave this here until I decide if I want to use it or not.
+#yahoofinance:
+#  scan_interval:
+#    minutes: 5
+#  symbols:
+#    - TSLA
+#    - FUV
+#    - ARKG
+#    - RKLB
