@@ -5,7 +5,12 @@
     for: '1:00:00'
     platform: state
     to: 'on'
-  condition: []
+  - platform: homeassistant
+    event: start
+  condition:
+  - condition: state
+    entity_id: switch.power_strip_dishwasher_socket_2
+    state: 'on'
   action:
   - service: notify.alexa_media_kitchen
     data:
@@ -20,6 +25,15 @@
   - data:
       entity_id: switch.power_strip_dishwasher_socket_2
     service: switch.turn_off
+  - if:
+    - condition: state
+      entity_id: light.ceiling_lights
+      state: 'off'
+    then:
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.counter_lights
 - id: '1531347206490'
   alias: Restart Humidifier
   initial_state: 'off'
@@ -168,40 +182,13 @@
       minutes: 30
     platform: state
     to: 'on'
+  - platform: homeassistant
+    event: start
   condition: []
   action:
   - data:
       entity_id: light.patio_light
     service: light.turn_off
-- id: '1559082914918'
-  alias: Pollen Monitor
-  trigger:
-  - at: '18:00:00'
-    platform: time
-  condition: []
-  action:
-  - service: python_script.pollen_monitor
-- id: '1569264293957'
-  alias: Arrive Home from Work
-  trigger:
-  - entity_id: sensor.bill_location
-    platform: state
-    to: Home
-  - entity_id: sensor.cricket_location
-    platform: state
-    to: Home
-  condition:
-  - after: '16:00:00'
-    before: '18:00:00'
-    condition: time
-  action:
-  - alias: ''
-    data:
-      entity_id: cover.right_bay
-    service: cover.open_cover
-  - data:
-      entity_id: cover.left_bay
-    service: cover.open_cover
 - id: '1572571564942'
   alias: Washing Machine Power On
   description: ''
@@ -292,7 +279,8 @@
   action:
   - service: light.turn_on
     target:
-      entity_id: light.shelf_lights
+      entity_id:
+      - light.shelf_lights
     data: {}
   - service: light.turn_on
     target:
@@ -333,8 +321,13 @@
     platform: time
   - platform: state
     entity_id:
-    - sensor.upstairs_thermostat_temperature
-    to: '72'
+    - climate.upstairs
+    to: idle
+    attribute: hvac_action
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
   condition: []
   action:
   - service: switch.turn_off
@@ -367,11 +360,11 @@
     to: 'on'
   condition: []
   action:
-  - device_id: 4db4a7fdfa1b11ea81750701e75842de
-    domain: climate
-    entity_id: climate.meco_hvac_climate_system
-    type: set_hvac_mode
-    hvac_mode: heat_cool
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: heat_cool
+    target:
+      entity_id: climate.meco_hvac_climate_system
   - service: switch.turn_on
     data: {}
     entity_id: switch.meco_update_switch
@@ -396,8 +389,9 @@
     state: home
   action:
   - service: switch.turn_off
+    data: {}
     target:
-      entity_id: switch.meco_polling_switch
+      entity_id: switch.meco_polling
   mode: single
 - id: '1615398511068'
   alias: Tesla - Enable Polling
@@ -407,74 +401,16 @@
     entity_id: binary_sensor.tesla_wall_connector_vehicle_connected
     from: 'on'
     to: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.tesla_wall_connector_contactor_closed
+    to: 'on'
   condition: []
   action:
   - service: switch.turn_on
+    data: {}
     target:
-      entity_id: switch.meco_polling_switch
-  mode: single
-- id: '1618931632586'
-  alias: Lava Lamp - Morning Turn On
-  description: Turn on the Lava Lamp every mornings
-  trigger:
-  - platform: time
-    at: 05:00
-  condition: []
-  action:
-  - service: light.turn_on
-    target:
-      entity_id: light.lava_lamp
-  mode: single
-- id: '1618931692851'
-  alias: Lava Lamp - Morning Turn Off
-  description: ''
-  trigger:
-  - platform: time
-    at: '10:00'
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
-      entity_id: light.lava_lamp
-  mode: single
-- id: '1618931786001'
-  alias: Lava Lamp - Evening Turn On
-  description: ''
-  trigger:
-  - platform: time
-    at: '17:30'
-  condition: []
-  action:
-  - service: light.turn_on
-    target:
-      entity_id: light.lava_lamp
-  mode: single
-- id: '1618931854773'
-  alias: Lava Lamp - Evening Turn Off
-  description: ''
-  trigger:
-  - platform: time
-    at: '22:00'
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
-      entity_id: light.lava_lamp
-  mode: single
-- id: '1621479083798'
-  alias: Tesla - Open Garage
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: device_tracker.meco_location_tracker
-    to: home
-    from: not_home
-  condition: []
-  action:
-  - device_id: 6541bfbce5514ad4aca56904f96c4af3
-    domain: cover
-    entity_id: cover.right_bay
-    type: open
+      entity_id: switch.meco_polling
   mode: single
 - id: '1630878353267'
   alias: Exhaust Fan Off
@@ -554,16 +490,16 @@
   description: Turns on the outdoor lights when a camera detects motion
   trigger:
   - platform: state
-    entity_id: binary_sensor.front_door_cam_motion
-    from: 'off'
+    entity_id:
+    - binary_sensor.front_door_cam_motion
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.driveway_cam_motion
-    from: 'off'
+    entity_id:
+    - binary_sensor.driveway_cam_motion
     to: 'on'
   - platform: state
-    entity_id: binary_sensor.backyard_cam_motion
-    from: 'off'
+    entity_id:
+    - binary_sensor.backyard_cam_motion
     to: 'on'
   condition:
   - condition: state
@@ -576,9 +512,10 @@
   - service: input_boolean.turn_on
     target:
       entity_id: input_boolean.motion_lights
+    data: {}
   mode: single
 - id: '1635307756729'
-  alias: Turn on Skull
+  alias: Holiday Decorations
   description: ''
   trigger:
   - platform: time
@@ -586,8 +523,19 @@
   condition: []
   action:
   - service: switch.turn_on
+    data: {}
     target:
-      entity_id: switch.wemo_delta
+      entity_id: switch.wemo_charlie_2
+  - wait_for_trigger:
+    - platform: state
+      entity_id:
+      - input_boolean.good_night
+      from: 'off'
+      to: 'on'
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.wemo_charlie_2
   mode: single
 - id: '1635740211031'
   alias: Air Filter On - Living Room
@@ -854,7 +802,8 @@
   - service: input_boolean.turn_on
     data: {}
     target:
-      entity_id: input_boolean.secure_house
+      entity_id:
+      - input_boolean.secure_house
   - service: fan.set_percentage
     data:
       percentage: 90
@@ -873,10 +822,17 @@
     data: {}
     target:
       entity_id: input_boolean.good_night
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.bed_adjust
+  - if:
+    - condition: state
+      entity_id: input_boolean.guest_mode
+      state: 'off'
+    then:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.bed_adjust_bill
+        - input_boolean.bed_adjust_cricket
   mode: single
 - id: '1644612565703'
   alias: Good Night - Bridge Lights
@@ -903,6 +859,10 @@
   - platform: state
     entity_id: weather.khsv
     to: rainy
+  - platform: state
+    entity_id:
+    - weather.khsv
+    to: lightning, rainy
   condition:
   - condition: sun
     before: sunset
@@ -961,6 +921,8 @@
       hours: 3
       minutes: 0
       seconds: 0
+  - platform: homeassistant
+    event: start
   condition:
   - condition: state
     entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
@@ -984,10 +946,6 @@
       value: '100'
     target:
       entity_id: number.sleepnumber_bill_bill_firmness
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.bed_adjust
   mode: single
 - id: '1650144311550'
   alias: Bed - Adjust Bill
@@ -1002,7 +960,7 @@
       minutes: 1
       seconds: 0
   - platform: state
-    entity_id: input_boolean.bed_adjust
+    entity_id: input_boolean.bed_adjust_bill
     from: 'off'
     to: 'on'
     for:
@@ -1014,7 +972,7 @@
     entity_id: binary_sensor.sleepnumber_bill_bill_is_in_bed
     state: 'on'
   - condition: state
-    entity_id: input_boolean.bed_adjust
+    entity_id: input_boolean.bed_adjust_bill
     state: 'on'
   action:
   - service: number.set_value
@@ -1022,6 +980,11 @@
       value: '{{ states("input_number.bill_sleep_number") }}'
     target:
       entity_id: number.sleepnumber_bill_bill_firmness
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.bed_adjust_bill
   mode: single
 - id: '1650144311551'
   alias: Bed - Adjust Cricket
@@ -1032,7 +995,7 @@
     from: 'off'
     to: 'on'
   - platform: state
-    entity_id: input_boolean.bed_adjust
+    entity_id: input_boolean.bed_adjust_cricket
     from: 'off'
     to: 'on'
   condition:
@@ -1040,7 +1003,7 @@
     entity_id: binary_sensor.sleepnumber_bill_cricket_is_in_bed
     state: 'on'
   - condition: state
-    entity_id: input_boolean.bed_adjust
+    entity_id: input_boolean.bed_adjust_cricket
     state: 'on'
   action:
   - service: number.set_value
@@ -1048,6 +1011,11 @@
       value: '{{ states("input_number.cricket_sleep_number") }}'
     target:
       entity_id: number.sleepnumber_bill_cricket_firmness
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id:
+      - input_boolean.bed_adjust_cricket
   mode: single
 - id: '1653777055158'
   alias: Tower Fan - On
@@ -1055,12 +1023,410 @@
   trigger:
   - platform: state
     entity_id:
-    - sensor.upstairs_thermostat_temperature
-    to: '73'
+    - climate.upstairs
+    to: cooling
+    attribute: hvac_action
   condition: []
   action:
   - service: switch.turn_on
     data: {}
     target:
       entity_id: switch.shellyplugu1_f0442b
+  mode: single
+- id: '1660600266868'
+  alias: Ice Maker - Finished Cleaning
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.ice_maker_status
+    from: Cleaning
+  condition: []
+  action:
+  - service: notify.alexa_media_kitchen
+    data:
+      data:
+        type: tts
+      message: The ice maker has completed the cleaning cycle.
+  mode: single
+- id: '1660608198912'
+  alias: Ice Maker - Out of Water
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.ice_maker_status
+    to: Add Water
+  condition: []
+  action:
+  - service: notify.alexa_media_kitchen
+    data:
+      data:
+        type: tts
+      message: The ice maker has run out of water. Please refil the resevoir.
+  mode: single
+- id: '1660683183089'
+  alias: Ice Maker - Morning On
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: sensor.bill_location
+      state: Home
+    - condition: state
+      entity_id: sensor.cricket_location
+      state: Home
+  action:
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.ice_maker_power
+  mode: single
+- id: '1660689774114'
+  alias: Ice Maker - Off at Night
+  description: ''
+  trigger:
+  - platform: time
+    at: '19:00:00'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.ice_maker_power
+  mode: single
+- id: '1660926859420'
+  alias: Door - Front - Left Open
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: '*'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.front_door_contact
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  action:
+  - service: notify.alexa_media_computer_room
+    data:
+      message: '"<audio src="soundbank://soundlibrary/musical/amzn_sfx_electronic_beep_01"/><amazon:emotion
+        name=''excited'' intensity=''low''>The front door has been left open! </amazon:emotion>"'
+      data:
+        type: tts
+        method: speak
+  - service: notify.alexa_media_kitchen
+    data:
+      message: '"<audio src="soundbank://soundlibrary/musical/amzn_sfx_electronic_beep_01"/><amazon:emotion
+        name=''excited'' intensity=''low''>The front door has been left open! </amazon:emotion>"'
+      data:
+        type: tts
+        method: speak
+  - service: notify.alexa_media_master_bedroom
+    data:
+      message: '"<audio src="soundbank://soundlibrary/musical/amzn_sfx_electronic_beep_01"/><amazon:emotion
+        name=''excited'' intensity=''low''>The front door has been left open! </amazon:emotion>"'
+      data:
+        type: tts
+        method: speak
+  - service: notify.slack_assistant
+    data:
+      message: The front door has been left open.
+  mode: single
+- id: '1660932555601'
+  alias: Door - Front - Entry Lamp
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.front_door_contact
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: state
+    entity_id: light.entry_lamp
+    state: 'off'
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.entry_lamp
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.entry_lamp
+  mode: single
+- id: '1660940549952'
+  alias: Freezer Door Left Open
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: '*'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.freezer_door_contact
+    state: 'on'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  action:
+  - service: notify.alexa_media_computer_room
+    data:
+      message: <audio src="soundbank://soundlibrary/scifi/amzn_sfx_scifi_alarm_06"/><amazon:emotion
+        name='excited' intensity='low'>The freezer door has been left open! </amazon:emotion>
+      data:
+        type: tts
+        mode: speak
+  - service: notify.alexa_media_kitchen
+    data:
+      message: <audio src="soundbank://soundlibrary/scifi/amzn_sfx_scifi_alarm_06"/><amazon:emotion
+        name='excited' intensity='low'>The freezer door has been left open! </amazon:emotion>
+      data:
+        type: tts
+        method: speak
+  - service: notify.alexa_media_master_bedroom
+    data:
+      message: <audio src="soundbank://soundlibrary/scifi/amzn_sfx_scifi_alarm_06"/><amazon:emotion
+        name='excited' intensity='low'>The freezer door has been left open! </amazon:emotion>
+      data:
+        type: tts
+        method: speak
+  - service: notify.alexa_media_garage
+    data:
+      message: <audio src="soundbank://soundlibrary/scifi/amzn_sfx_scifi_alarm_06"/><amazon:emotion
+        name='excited' intensity='low'>The freezer door has been left open! </amazon:emotion>
+      data:
+        type: tts
+        method: speak
+  - service: notify.slack_assistant
+    data:
+      message: The freezer door has been left open.
+  mode: single
+- id: '1661602479997'
+  alias: Coffee - Turn on Counter Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.power_strip_dishwasher_socket_2
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.counter_lights
+  mode: single
+- id: '1663246833393'
+  alias: Lava Lamp
+  description: ''
+  trigger:
+  - platform: time
+    at: '19:00:00'
+  - platform: time
+    at: 05:00:00
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.lava_lamp
+  - delay:
+      hours: 3
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.lava_lamp
+  mode: single
+- id: '1664497419692'
+  alias: Guest - Living Room Lights On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.lower_bridge
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id:
+      - light.sky_lights
+      - light.sofa_lamp
+      - light.old_lamp
+      - light.corner_lamp
+  mode: single
+- id: '1664497781655'
+  alias: Guest - Living Room Lights Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.lower_bridge
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.sky_lights
+      - light.sofa_lamp
+      - light.old_lamp
+      - light.corner_lamp
+  mode: single
+- id: '1664497891880'
+  alias: Guest - Kitchen Lights On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.island_light
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id:
+      - light.counter_lights
+      - light.ceiling_lights
+  mode: single
+- id: '1664497950171'
+  alias: Guest - Kitchen Lights Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.island_light
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.counter_lights
+      - light.ceiling_lights
+  mode: single
+- id: '1664511203183'
+  alias: Guest - Good Night
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.good_night
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.bedroom_dimmer
+  mode: single
+- id: '1664560769398'
+  alias: Guest  - Good Night Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.good_night
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id:
+      - light.bedroom_lamp
+      - light.bill_s_lamp
+      - light.cricket_s_lamp
+      - light.bedroom_dimmer
+      - light.bridge_lights
+      - light.ceiling_lights
+      - light.computer_room_light
+      - light.corner_lamp
+      - light.counter_lights
+      - light.dining_room_light
+      - light.entry_lamp
+      - light.guest_bathroom
+      - light.island_light
+      - light.old_lamp
+      - light.shelf_lights
+      - light.sink_light
+      - light.sky_lights
+      - light.sofa_lamp
+  mode: single
+- id: '1664735868338'
+  alias: Guest Mode - On
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.guest_mode
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.announce_location_change
+  mode: single
+- id: '1664747485488'
+  alias: Guest Mode - Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.guest_mode
+    from: 'on'
+    to: 'off'
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    target:
+      entity_id: input_boolean.announce_location_change
   mode: single

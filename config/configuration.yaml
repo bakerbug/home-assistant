@@ -22,9 +22,9 @@ http:
 tts:
   - platform: google_translate
 
-google:
-  client_id: 549022495206-83o3jhsmaif3smbrkiqfllm9sqk5h48l.apps.googleusercontent.com
-  client_secret: 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
+#google:
+#  client_id: !secret google_client_id
+#  client_secret: !secret google_client_secret
 
 automation: !include automations.yaml
 group: !include groups.yaml
@@ -32,11 +32,69 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 recorder:
-  purge_keep_days: 7
-  # db_url: 'sqlite:///:memory:'
-  exclude:
-    entities:
-      - sun.sun
+  purge_keep_days: 30
+  db_url: !secret mysql_db_url
+
+#  include:
+#    entities:
+#      - sensor.bill_location
+#      - sensor.cricket_location
+#      - device_trakcer.meco_location_tracker
+#      - lock.front_door
+#      - lock.back_door
+#      - cover.left_bay
+#      - cover.right_bay
+#      - binary_sensor.front_door_cam_motion
+#      - binary_sensor.driveway_cam_motion
+#      - binary_sensor.backyard_cam_motion
+#      - sensor.upstairs_thermostat_hvac_state
+#      - sensor.downstairs_thermostat_hvac_state
+#      - sensor.fan_speed
+#      - sensor.bedroom_fan_speed
+#      - switch.wemo_alpha
+#      - switch.humidifier
+#      - switch.guest_exhaust_fan
+#      - switch.power_strip_dishwasher_socket_2
+#      - vacuum.puck
+#      - sensor.sleepnumber_bill_bill_sleepnumber
+#      - sensor.sleepnumber_bill_cricket_sleepnumber
+#      - binary_sensor.sleepnumber_bill_bill_is_in_bed
+#      - binary_sensor.sleepnumber_bill_cricket_is_in_bed
+#      - media_player.living_room
+#      - media_player.playstation_4
+#      - media_player.bedroom_tv
+#      - light.driveway_light
+#      - light.front_door_light
+#      - light.patio_light
+#      - light.bedroom_lamp
+#      - light.bill_s_lamp
+#      - light.cricket_s_lamp
+#      - light.bedroom_dimmer
+#      - light.bottle_lamp
+#      - light.entry_lamp
+#      - light.sofa_lamp
+#      - light.corner_lamp
+#      - light.sky_lights
+#      - light.shelf_lights
+#      - light.old_lamp
+#      - light.upper_bridge
+#      - light.lower_bridge
+#      - light.island_light
+#      - light.sink_light
+#      - light.counter_lights
+#      - light.ceiling_lights
+#      - light.dinning_room_light
+#      - light.computer_room_light
+#      - light.guest_bathroom
+#      - light.garage_light
+#      - light.kyle_s_light
+#      - light.lava_lamp
+#      - switch.wemo_delta
+#      - sensor.upstairs_thermostat_temperature
+#      - sensor.downstairs_thermostat_temperature
+#      - sensor.garage_temperature
+#      - sensor.weather_temperature
+#      - sensor.washing_machine_current_power
 
 # Cloud
 cloud:
@@ -47,6 +105,7 @@ cloud:
         - cover.right_bay
         - fan.bedroom_fan
         - fan.living_room_ceiling_fan
+        - fan.tower_fan
         - group.bedroom_lights
         - group.bridge_lights
         - group.kitchen_lights
@@ -57,6 +116,8 @@ cloud:
         - input_boolean.environment_report
         - input_boolean.fireplace_temperature
         - input_boolean.good_night
+        - input_boolean.guest_mode
+        - input_boolean.motivation_switch
         - input_boolean.respond_pollen_monitor
         - input_boolean.satellite_report
         - input_boolean.secure_house
@@ -67,7 +128,6 @@ cloud:
         - switch.power_strip_dishwasher_socket_2 # Coffee Maker
         - switch.bedroom_power_strip_socket_2 # Bill's CPAP
         - switch.guest_exhaust_fan
-        - switch.shellyplugu1_f0442b # tower fan
         - switch.meco_polling_switch
         - switch.wemo_delta # printer
       exclude_domains:
@@ -319,7 +379,7 @@ nest:
 # Sensors
 sensor:
   - platform: statistics
-    entity_id: sensor.meco_mileage_sensor
+    entity_id: sensor.meco_mileage
     name: Mileage Stats
 
   - platform: time_date
@@ -338,6 +398,14 @@ sensor:
       fan_speed:
         friendly_name: "Ceiling Fan Speed"
         value_template: "{{ states.fan.living_room_ceiling_fan.attributes.percentage }}"
+      garage_over_temp:
+        friendly_name: "Garage Over Temp"
+        value_template: >
+          {% set i = states('sensor.garage_temperature') | round|int %}
+          {% set o = states('sensor.weather_temperature') | int %}
+          {% set temp = i - o | int %}
+          {{ temp }}
+        unit_of_measurement: "\u00B0F"
       bedroom_fan_speed:
         friendly_name: "Bedroom Fan Speed"
         value_template: "{{ states.fan.bedroom_fan.attributes.percentage }}"
@@ -346,10 +414,10 @@ sensor:
         value_template: "{{ states.sun.sun.attributes.elevation }}"
       bill_location:
         friendly_name: "Bill's Location"
-        value_template: "{{ states.device_tracker.life360_bill_baker.attributes.place }}"
+        value_template: "{{ states.device_tracker.bill_baker.attributes.place }}"
       cricket_location:
         friendly_name: "Cricket's Location"
-        value_template: "{{ states.device_tracker.life360_cricket.attributes.place }}"
+        value_template: "{{ states.device_tracker.cricket.attributes.place }}"
       last_alexa:
         friendly_name: "Active Alexa"
         entity_id:
@@ -363,6 +431,9 @@ sensor:
           - media_player.synapse
         value_template: >
           {{ states.media_player | selectattr('attributes.last_called','eq',True) | map(attribute='entity_id') | first }}
+      meco_software:
+        friendly_name: Meco Software
+        value_template: "{{ states.update.meco_software_update.attributes.installed_version.split(' ')[0] }}"
       washing_machine_power:
         friendly_name: "Washing Machine Power"
         value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
@@ -449,8 +520,11 @@ input_boolean:
     name: Battery Monitor
     initial: off
     icon: mdi:battery
-  bed_adjust:
-    name: Sleep Number Bed Adjustment
+  bed_adjust_bill:
+    name: Bill's Bed Adjustment
+    icon: mdi:bed
+  bed_adjust_cricket:
+    name: Cricket's Bed Adjustment
     icon: mdi:bed
   bus_notify:
     name: Bus Notify
@@ -475,9 +549,16 @@ input_boolean:
   location_monitor:
     name: Location Monitor
     icon: mdi:map-marker
+  meco_rotate_tires:
+    name: Meco Rotate Tires
+    icon: mdi:tire
+    initial: off
   motion_lights:
     name: Motion Lights
     icon: mdi:motion-sensor
+  motivation_switch:
+    name: Motivate Me
+    icon: mdi:run-fast
   satellite_report:
     name: Satellite Report
     icon: mdi:space-station
@@ -531,6 +612,9 @@ input_boolean:
     icon: mdi:bug-check-outline
   debug_weather_alert:
     icon: mdi:bug-check-outline
+
+  test_alexa_speak:
+    icon: mdi:account-voice
 
   # NOTIFY
   notify_away_monitor:
@@ -597,6 +681,12 @@ input_number:
     min: 0
     max: 100
     icon: mdi:speedometer
+  meco_tire_rotation_due:
+    name: Meco Tire Rotation Due
+    min: 0
+    max: 1000000
+    icon: mdi:tire
+    mode: box
 
 input_datetime:
   wakeup_time:

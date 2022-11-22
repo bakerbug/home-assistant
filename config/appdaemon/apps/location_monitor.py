@@ -8,6 +8,7 @@ class LocationMonitor(hass.Hass):
         self.active_switch = "input_boolean.location_monitor"
         self.announce_location_change = "input_boolean.announce_location_change"
         self.announce_lock_change = "input_boolean.announce_lock_change"
+        self.guest_mode_switch = "input_boolean.guest_mode"
         self.meco_location = "device_tracker.meco_location_tracker"
         self.handle_active = self.listen_state(self.on_active_change, entity_id=self.active_switch)
         # self.handle_bill = self.listen_state(self.location_change, entity_id='sensor.bill_location')
@@ -64,12 +65,14 @@ class LocationMonitor(hass.Hass):
             self.handle_bill = self.listen_state(self.person_location, entity_id="sensor.bill_location")
             self.handle_cricket = self.listen_state(self.person_location, entity_id="sensor.cricket_location")
             self.handle_tesla = self.listen_state(self.car_location, entity_id=self.meco_location)
+            self.handle_orbit = self.listen_state(self.person_location, entity_id="device_tracker.fpebvrft_orbit")
             self.handle_front_door = self.listen_state(self.lock_change, entity_id="lock.front_door")
             self.handle_back_door = self.listen_state(self.lock_change, entity_id="lock.back_door")
             self.slack_debug("Enabled Location Monitor.")
         else:
             self.cancel_listen_state(self.handle_bill)
             self.cancel_listen_state(self.handle_cricket)
+            self.cancel_listen_state(self.handle_orbit)
             self.cancel_listen_state(self.handle_tesla)
             self.cancel_listen_state(self.handle_front_door)
             self.slack_debug("Disabled Location Monitor.")
@@ -81,6 +84,10 @@ class LocationMonitor(hass.Hass):
             self.call_service("cover/close_cover", entity_id="cover.right_bay")
 
     def person_location(self, entity, attribute, old, new, kwargs):
+        ignore_locations = ["unavailable", ""]
+        if old in ignore_locations or new in ignore_locations:
+            return
+
         self.NOTIFY = self.get_state("input_boolean.notify_location_monitor") == "on"
         self.last_entity = entity
         self.last_old = old
@@ -128,6 +135,7 @@ class LocationMonitor(hass.Hass):
         cricket_home = self.get_state("sensor.cricket_location") == "Home"
         sun_elevation = int(self.get_state("sun.sun", attribute="elevation"))
         time = self.get_state("sensor.time")
+        guest_mode = self.get_state(self.guest_mode_switch) == "On"
         hour, minute = time.split(":")
         hour = int(hour)
         light_msg = None
@@ -144,7 +152,7 @@ class LocationMonitor(hass.Hass):
                     self.turn_on("group.evening_lights")
                     light_msg = "  Turning on all lights."
                 elif 7 >= hour or hour >= 21:
-                    self.turn_on("group.all_outdoor_lights")
+                    self.turn_on("input_boolean.motion_lights")
                     self.turn_on("group.evening_lights")
                     light_msg = "Turning on some lights."
 
@@ -153,7 +161,7 @@ class LocationMonitor(hass.Hass):
             for automation in self.home_off_tuple:
                 self.turn_off(automation)
 
-        elif self.last_old == "Home" and not house_occupied:
+        elif self.last_old == "Home" and not house_occupied and not guest_mode:
             for automation in self.away_on_tuple:
                 self.turn_on(automation)
             for automation in self.away_off_tuple:
@@ -177,10 +185,12 @@ class LocationMonitor(hass.Hass):
             name = "Bill"
         elif self.last_entity == "sensor.cricket_location":
             name = "Cricket"
+        elif self.last_entity == "device_tracker.fpebvrft_orbit":
+            name = "Orbit"
         else:
             name = "Unidentified Person"
 
-        if self.last_old == "unknown":
+        if self.last_old == "unknown" or self.last_old == "away" or self.last_old == 'not_home':
             direction = "arrived at"
             location = self.last_new
         else:

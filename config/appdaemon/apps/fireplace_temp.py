@@ -8,16 +8,18 @@ class FireplaceTemp(hass.Hass):
         self.max_outdoor_temp_setting = "input_number.fireplace_max_outdoor_temp"
         self.shutdown_temp = "input_number.fireplace_shutdown_temp"
         self.OUTSIDE_FIRE_TEMP = 60
-        self.upstairs = "sensor.upstairs_thermostat_temperature"
+        self.upstairs_mode = "climate.upstairs"
+        self.downstairs_mode = "climate.downstairs"
+        self.upstairs_temp = "sensor.upstairs_thermostat_temperature"
         self.upstairs_last = 0
-        self.downstairs = "sensor.downstairs_thermostat_temperature"
+        self.downstairs_temp = "sensor.downstairs_thermostat_temperature"
         self.outside = "weather.khsv"
         self.fireplace_switch = "input_boolean.fireplace_temperature"
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_fireplace_temp"
 
         self.request_handle = self.listen_state(self.on_request, self.fireplace_switch, new="on")
-        self.upstairs_handle = self.listen_state(self.temp_change, self.upstairs)
+        self.upstairs_handle = self.listen_state(self.temp_change, self.upstairs_temp)
 
         self.yes_responses = (
             "Yes, a fire would be very nice!",
@@ -45,6 +47,8 @@ class FireplaceTemp(hass.Hass):
         self.turn_off(self.fireplace_switch)
         max_indoor_temp = int(float(self.get_state(self.max_indoor_temp_setting)))
         max_outdoor_temp = int(float(self.get_state(self.max_outdoor_temp_setting)))
+        upstairs_mode = self.get_state(self.upstairs_mode)
+        downstairs_mode = self.get_state(self.downstairs_mode)
         self._get_current_temp()
 
         self.slack_debug(
@@ -53,10 +57,14 @@ class FireplaceTemp(hass.Hass):
 
         msg = random.choice(self.yes_responses)
 
+        self.slack_debug(f"Downstairs is {downstairs_mode}, Upstairs is: {upstairs_mode}")
+
         if self.upstairs_current_temp > max_indoor_temp or self.downstairs_current_temp > max_indoor_temp:
             msg = "No, it is too warm inside to turn on the fireplace."
         elif self.outside_current_temp > max_outdoor_temp:
             msg = "No, it is too warm outside to turn on the fireplace."
+        elif upstairs_mode == "auto" or downstairs_mode == "auto":
+            msg = "No, the air conditioner is still enabled."
 
         self.alexa.respond(msg)
 
@@ -91,9 +99,9 @@ class FireplaceTemp(hass.Hass):
             self.upstairs_current_temp = 0
         self.upstairs_last_temp = self.upstairs_current_temp
         self.slack_debug(f"upstairs_last_temp is now: {self.upstairs_last_temp}")
-        self.upstairs_current_temp = int(self.get_state(self.upstairs))
+        self.upstairs_current_temp = int(self.get_state(self.upstairs_temp))
         self.slack_debug(f"upstairs_current_temp is now: {self.upstairs_current_temp}")
-        self.downstairs_current_temp = int(self.get_state(self.downstairs))
+        self.downstairs_current_temp = int(self.get_state(self.downstairs_temp))
         self.slack_debug(f"downstairs_current_temp is now: {self.downstairs_current_temp}")
         self.outside_current_temp = int(self.get_state(self.outside, attribute="temperature"))
         self.slack_debug(f"outside_current_temp is now: {self.outside_current_temp}")

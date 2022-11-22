@@ -11,10 +11,12 @@ class StatusReport(hass.Hass):
         self.motion_count_backyard = 0
         self.motion_count_driveway = 0
         self.motion_count_frontdoor = 0
-        self.tesla_bat_lvl = "sensor.meco_battery_sensor"
-        self.tesla_charge_rate = "sensor.meco_charging_rate_sensor"
-        self.tesla_charge_connected = "binary_sensor.meco_charger_sensor"
-        self.tesla_range = "sensor.meco_range_sensor"
+        self.tesla_bat_lvl = "sensor.meco_battery"
+        self.tesla_charge_rate = "sensor.meco_charging_rate"
+        self.tesla_charge_connected = "binary_sensor.meco_charger"
+        self.tesla_charge_limit = "number.meco_charge_limit"
+        self.tesla_range = "sensor.meco_range"
+        self.tesla_update = "update.meco_software_update"
         self.handler_run_report = self.listen_state(self.run_report, "input_boolean.status_report", new="on")
         self.handler_on_new_night = self.listen_state(self.on_new_night, "sun.sun", new="below_horizon")
         self.handler_backyard_motion = self.listen_state(self.on_night_motion, self.motion_backyard, new="on")
@@ -63,21 +65,30 @@ class StatusReport(hass.Hass):
     def charge_report(self):
         try:
             charge_rate = float(self.get_state(self.tesla_charge_rate))
-            charge_level = self.get_state(self.tesla_bat_lvl)
+            charge_level = int(self.get_state(self.tesla_bat_lvl))
             charge_connected = self.get_state(self.tesla_charge_connected) == "on"
             range_mi = int(round(float(self.get_state(self.tesla_range))))
+            charge_goal = int(round(float(self.get_state(self.tesla_charge_limit))))
+            update_available = self.get_state(self.tesla_update) == "on"
         except (TypeError, ValueError):
-            return "Tesla charge status is currently unavailable.  "
+            return "Tesla status is currently unavailable.  "
 
         if charge_connected:
             if charge_rate > 0:
                 charging_phrase = f"is charging at {charge_rate} miles per hour"
+            elif charge_level < charge_goal:
+                charging_phrase = "is waiting to charge "
             else:
                 charging_phrase = "has finished charging"
         else:
             charging_phrase = "is unplugged"
 
-        return f"Meeco {charging_phrase}, the battery level is {charge_level} percent, and has {range_mi} miles of range.  "
+        if update_available:
+            msg = f"Meeco has a software update available, {charging_phrase}, the battery level is {charge_level} percent, and has {range_mi} miles of range.  "
+        else:
+            msg = f"Meeco {charging_phrase}, the battery level is {charge_level} percent, and has {range_mi} miles of range.  "
+
+        return msg
 
     def motion_report(self):
         is_day = self.get_state("sun.sun") == "above_horizon"

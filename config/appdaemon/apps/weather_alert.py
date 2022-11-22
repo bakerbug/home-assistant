@@ -39,7 +39,7 @@ class WeatherAlert(hass.Hass):
         for alert_data in full_data:
             alert_msg = self.parse_alert(alert_data)
             if alert_msg is not None:
-                self.alexa.announce(alert_msg, self.debug_switch)
+                self.alexa.alert(alert_msg, self.debug_switch)
                 self.slack_msg(alert_msg)
 
 

@@ -42,6 +42,7 @@ evening_early_lights:
     - light.sofa_lamp
     - light.counter_lights
     - light.bottle_lamp
+    - light.old_lamp
 evening_lights:
   name: Evening Lights
   entities:
@@ -52,7 +53,6 @@ late_night_lights:
   name: Late Night Lights
   entities:
     - light.bottle_lamp
-    - light.corner_lamp
 bedroom_lights:
   name: Bedroom Lights
   entities:
@@ -88,6 +88,7 @@ livingroom_lights:
     - light.corner_lamp
     - light.shelf_lights
     - light.bottle_lamp
+    - light.old_lamp
 living_area_lights:
   name: Living Area Lights
   entities:

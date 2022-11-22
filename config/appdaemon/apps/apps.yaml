@@ -43,6 +43,10 @@ location_monitor:
   module: location_monitor
   class: LocationMonitor
   dependencies: alexa_speak
+motivator:
+  module: motivation
+  class: Motivator
+  dependencies: alexa_speak
 oven_monitor:
   module: oven_monitor
   class: OvenMonitor
@@ -54,6 +58,10 @@ pollen_monitor:
 reminders:
   module: reminders
   class: Reminders
+  dependencies: alexa_speak
+rotate_tires:
+  module: rotate_tires
+  class: RotateTires
   dependencies: alexa_speak
 satellite_monitor:
   module: satellite_monitor

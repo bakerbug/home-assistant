@@ -18,6 +18,7 @@ class ChargeLogger(hass.Hass):
         self.record_switch = "input_boolean.tesla_record_range"
         self.milage = "sensor.meco_mileage_sensor"
         self.range = "sensor.meco_range_sensor"
+        self.sw_version = "sensor.meco_software"
         self.auto_record = self.listen_state(self.auto_log, entity_id=self.charge_rate)
         self.manual_record = self.listen_state(self.manual_log, entity_id=self.record_switch, new="on")
         self.log("Initializing ChargeLogger")
@@ -55,13 +56,14 @@ class ChargeLogger(hass.Hass):
         mileage = self.get_state(self.milage)
         today = datetime.date.today().strftime("%x")
         level = f"{level}%"
+        version = self.get_state(self.sw_version)
 
         credentials = service_account.Credentials.from_service_account_file(self.SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         service = build("sheets", "v4", credentials=credentials)
         sheet = service.spreadsheets()
         self.log(f"Sheets: {sheet}")
 
-        value_range_body = {"range": sheet_range, "majorDimension": "COLUMNS", "values": [[today], [current_range], [mileage], [level]]}
+        value_range_body = {"range": sheet_range, "majorDimension": "COLUMNS", "values": [[today], [current_range], [mileage], [level], [version]]}
 
         request = sheet.values().append(spreadsheetId=SHEET_ID, range=sheet_range, valueInputOption="USER_ENTERED", insertDataOption="INSERT_ROWS", body=value_range_body)
         response = request.execute()

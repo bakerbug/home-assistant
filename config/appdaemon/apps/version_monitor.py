@@ -6,7 +6,7 @@ class VersionMonitor(hass.Hass):
     def initialize(self):
         self.alexa = self.get_app("alexa_speak")
         self.debug_switch = "input_boolean.debug_version_monitor"
-        self.tesla_update = "binary_sensor.meco_update_available_sensor"
+        self.tesla_update = "update.meco_software_update"
         self.update_time = datetime.time(0, 0, 0)
         self.notified_list = []
 
@@ -19,7 +19,7 @@ class VersionMonitor(hass.Hass):
         debug = self.get_state(self.debug_switch) == "on"
         if debug:
             # Initialization test
-            self.report_ha_version("0.0.0")
+            self.report_tesla_update("bogus", "2022.1.2.3", "bogus", "bogus", "bogus")
 
     def check_ha_version(self, kwargs):
         debug = self.get_state(self.debug_switch) == "on"
@@ -50,5 +50,6 @@ class VersionMonitor(hass.Hass):
         self.alexa.notify(alert_msg)
 
     def report_tesla_update(self, entity, attribute, old, new, kwargs):
-        alert_msg = "A software update from Tesla is available."
+        new_version = self.get_state(self.tesla_update, attribute="latest_version")
+        alert_msg = f"Tesla has released software update {new_version}."
         self.alexa.notify(alert_msg)
