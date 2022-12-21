@@ -12,12 +12,12 @@ class ChargeLogger(hass.Hass):
 
         self.SERVICE_ACCOUNT_FILE = f"{self.config_dir}/google_keys.json"
 
-        self.charge_connected = "binary_sensor.meco_charger_sensor"
-        self.charge_level = "sensor.meco_battery_sensor"
-        self.charge_rate = "sensor.meco_charging_rate_sensor"
+        self.charge_connected = "binary_sensor.meco_charger"
+        self.charge_level = "sensor.meco_battery"
+        self.charge_rate = "sensor.meco_charging_rate"
         self.record_switch = "input_boolean.tesla_record_range"
-        self.milage = "sensor.meco_mileage_sensor"
-        self.range = "sensor.meco_range_sensor"
+        self.milage = "sensor.meco_odometer"
+        self.range = "sensor.meco_range"
         self.sw_version = "sensor.meco_software"
         self.auto_record = self.listen_state(self.auto_log, entity_id=self.charge_rate)
         self.manual_record = self.listen_state(self.manual_log, entity_id=self.record_switch, new="on")

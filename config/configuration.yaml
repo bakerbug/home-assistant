@@ -117,6 +117,7 @@ cloud:
         - input_boolean.fireplace_temperature
         - input_boolean.good_night
         - input_boolean.guest_mode
+        - input_boolean.holiday_christmas
         - input_boolean.motivation_switch
         - input_boolean.respond_pollen_monitor
         - input_boolean.satellite_report
@@ -378,9 +379,6 @@ nest:
 
 # Sensors
 sensor:
-  - platform: statistics
-    entity_id: sensor.meco_mileage
-    name: Mileage Stats
 
   - platform: time_date
     display_options:
@@ -546,6 +544,9 @@ input_boolean:
   good_night:
     name: Good Night
     icon: mdi:weather-night
+  holiday_christmas:
+    name: Christmas Lights
+    icon: mdi:string-lights
   location_monitor:
     name: Location Monitor
     icon: mdi:map-marker

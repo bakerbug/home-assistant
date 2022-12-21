@@ -10,6 +10,7 @@ track_list = (
     {"name": "International Space Station", "id": 25544, "mag_limit": -1.5},
     {"name": "Hubble Space Telescope", "id": 20580, "mag_limit": 3.0},
     {"name": "Chinese Space Station", "id": 48274, "mag_limit": 0.0},
+    {"name": "Blue Walker 3", "id": 54247, "mag_limit": 0.0},
 )
 
 ### Previously tracked:

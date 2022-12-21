@@ -19,9 +19,9 @@ SERVICE_ACCOUNT_FILE = 'google_keys.json'
 
 class ChargeLogger(hass.Hass):
     def initialize(self):
-        self.charge_connected = "binary_sensor.meco_charger_sensor"
-        self.charge_level = "sensor.meco_battery_sensor"
-        self.range = "sensor.meco_range_sensor"
+        self.charge_connected = "binary_sensor.meco_charger"
+        self.charge_level = "sensor.meco_battery"
+        self.range = "sensor.meco_range"
         self.handle_active = self.listen_state(self.log_charge, entity_id=self.charge_level)
 
         self.log_charge('bogus', 'bogus', 'bogus', '80', 'bogus')
