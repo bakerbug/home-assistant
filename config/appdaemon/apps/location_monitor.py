@@ -64,6 +64,7 @@ class LocationMonitor(hass.Hass):
         if new == "on":
             self.handle_bill = self.listen_state(self.person_location, entity_id="sensor.bill_location")
             self.handle_cricket = self.listen_state(self.person_location, entity_id="sensor.cricket_location")
+            self.handle_kyle = self.listen_state(self.person_location, entity_id="sensor.kyle_location")
             self.handle_tesla = self.listen_state(self.car_location, entity_id=self.meco_location)
             self.handle_orbit = self.listen_state(self.person_location, entity_id="device_tracker.fpebvrft_orbit")
             self.handle_front_door = self.listen_state(self.lock_change, entity_id="lock.front_door")
@@ -72,6 +73,7 @@ class LocationMonitor(hass.Hass):
         else:
             self.cancel_listen_state(self.handle_bill)
             self.cancel_listen_state(self.handle_cricket)
+            self.cancel_listen_state(self.handle_kyle)
             self.cancel_listen_state(self.handle_orbit)
             self.cancel_listen_state(self.handle_tesla)
             self.cancel_listen_state(self.handle_front_door)
@@ -133,6 +135,7 @@ class LocationMonitor(hass.Hass):
     def presence_behavior(self):
         bill_home = self.get_state("sensor.bill_location") == "Home"
         cricket_home = self.get_state("sensor.cricket_location") == "Home"
+        kyle_home = self.get_state("sensor.kyle_location") == "Home"
         sun_elevation = int(self.get_state("sun.sun", attribute="elevation"))
         time = self.get_state("sensor.time")
         guest_mode = self.get_state(self.guest_mode_switch) == "On"
@@ -140,7 +143,7 @@ class LocationMonitor(hass.Hass):
         hour = int(hour)
         light_msg = None
 
-        if bill_home or cricket_home:
+        if bill_home or cricket_home or kyle_home:
             house_occupied = True
         else:
             house_occupied = False
@@ -187,15 +190,17 @@ class LocationMonitor(hass.Hass):
             name = "Cricket"
         elif self.last_entity == "device_tracker.fpebvrft_orbit":
             name = "Orbit"
+        elif self.last_entity == "sensor.kyle_location":
+            name = "Kyle"
         else:
             name = "Unidentified Person"
 
         if self.last_old == "unknown" or self.last_old == "away" or self.last_old == 'not_home':
             direction = "arrived at"
-            location = self.last_new
+            location = self.diction(self.last_new)
         else:
             direction = "departed from"
-            location = self.last_old
+            location = self.diction(self.last_old)
 
         message = f"{name} has {direction} {location}."
 
@@ -216,3 +221,12 @@ class LocationMonitor(hass.Hass):
         debug = self.get_state("input_boolean.debug_location_monitor") == "on"
         if debug:
             self.call_service("notify/slack_assistant", message=message)
+
+    @staticmethod
+    def diction(word):
+        proper_word = word
+
+        if word == "Dese Research":
+            proper_word = "Deese Research"
+
+        return proper_word

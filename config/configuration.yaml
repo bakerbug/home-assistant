@@ -172,6 +172,7 @@ history:
             - binary_sensor.bayberry_away
             - sensor.bill_location
             - sensor.cricket_location
+            - sensor.kyle_location
             - device_tracker.meco_location_tracker
             - lock.front_door
             - lock.back_door
@@ -416,6 +417,9 @@ sensor:
       cricket_location:
         friendly_name: "Cricket's Location"
         value_template: "{{ states.device_tracker.cricket.attributes.place }}"
+      kyle_location:
+        friendly_name: "Kyle's Location"
+        value_template: "{{ states.device_tracker.kyle_baker.attributes.place }}"
       last_alexa:
         friendly_name: "Active Alexa"
         entity_id:
@@ -432,10 +436,6 @@ sensor:
       meco_software:
         friendly_name: Meco Software
         value_template: "{{ states.update.meco_software_update.attributes.installed_version.split(' ')[0] }}"
-      washing_machine_power:
-        friendly_name: "Washing Machine Power"
-        value_template: "{{ states.switch.washing_machine.attributes.current_power_w }}"
-        unit_of_measurement: "Watts"
       weather_humidity:
         friendly_name: "Outdoor Humidity"
         unit_of_measurement: "%"
