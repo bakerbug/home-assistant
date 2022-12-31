@@ -18,7 +18,7 @@ class LaundryMonitor(hass.Hass):
 
     def check_power(self, args):
         self.DEBUG = self.get_state(self.debug_switch) == "on"
-        power_value = self.get_state("sensor.washing_machine_power")
+        power_value = self.get_state("sensor.washing_machine_current_power")
         if power_value == "unavailable":
             return
         try:
